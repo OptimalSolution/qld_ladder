@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('country');
             $table->date('birth_date');
             $table->string('sex');
+            $table->date('last_played')->nullable();
             $table->timestamps();
         });
     }

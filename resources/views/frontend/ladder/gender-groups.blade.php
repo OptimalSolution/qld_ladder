@@ -5,17 +5,18 @@
 @endsection
 
 @section("content")
-    <section class="bg-white dark:bg-gray-800">
+    <section class="bg-gray-50 dark:bg-gray-800">
         <div class="mx-auto max-w-screen-xl px-4 py-24 text-center sm:px-12">
-            
             <h1
                 class="mb-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white sm:text-6xl"
             >
                 Gender Group Ladders
             </h1>
             <p class="mb-10 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48">
-                The following tables show the current players in the QLD Gender Group Ladder. <br/>
-                There are {{ $athlete_total }} players in {{ count($gender_groups) }} gender groups.
+                The following tables show the <b class="text-gray-900 dark:text-white">{{ $ladder_total }} athletes</b> eligible for the QLD Gender Group Ladder. <br/>
+                
+                There are a total of {{ $athlete_total }} registered players in Queensland in {{ count($gender_groups) }} gender groups. 
+                To be considered for the ladder, players must have played since the start of <b class="text-gray-900 dark:text-white">{{ \Carbon\Carbon::now()->startOfYear()->subYears(1)->format('F jS, Y') }}</b>.<br/>
             </p>
             <p class="w-full mb-1 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48">
             </p>    
@@ -39,7 +40,7 @@
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                                 Rating
                                             </th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            <th scope="col" class="px-6 py-3 text-middle text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                                 Club
                                             </th>
                                         </tr>
@@ -64,7 +65,11 @@
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     <div class="text-lg text-gray-900 dark:text-white">
-                                                        {{ $athlete->club->nickname ?? '' }}
+                                                        @if(!empty($athlete->club?->website))
+                                                            <a class="text-blue-500" href="{{ $athlete->club->website }}" target="_blank">{{ $athlete->club->nickname ?? '' }}</a>
+                                                        @else
+                                                            {{ $athlete->club->nickname ?? '' }}
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -80,5 +85,4 @@
             </div>
         </div>
     </section>
-
 @endsection

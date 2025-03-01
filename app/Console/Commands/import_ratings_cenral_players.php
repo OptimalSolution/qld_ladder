@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Athlete;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class import_ratings_cenral_players extends Command
 {
@@ -12,7 +13,7 @@ class import_ratings_cenral_players extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:import_ratings_cenral_players';
+    protected $signature = 'import:players';
 
     /**
      * The console command description.
@@ -53,7 +54,6 @@ class import_ratings_cenral_players extends Command
                     if ($player) {
                         $this->info('Updating player: ' . $player_data['Name']);
                         $player->update([
-                            'ratings_central_id' => $player_data['ID'],
                             'rating' => $player_data['Rating'],
                             'club_id' => $player_data['Club'],
                             'city' => $player_data['City'],
@@ -62,7 +62,8 @@ class import_ratings_cenral_players extends Command
                             'postal_code' => $player_data['PostalCode'],
                             'country' => $player_data['Country'],
                             'birth_date' => $player_data['Birth'],
-                            'sex' => $player_data['Sex']
+                            'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
+                            'last_played' => $player_data['LastPlayed']
                         ]);
                     } else {
                         $this->info('Importing player: ' . $player_data['Name'] . ' from ' . $player_data['City']);
@@ -77,7 +78,8 @@ class import_ratings_cenral_players extends Command
                             'postal_code' => $player_data['PostalCode'],
                             'country' => $player_data['Country'],
                             'birth_date' => $player_data['Birth'],
-                            'sex' => $player_data['Sex']
+                            'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
+                            'last_played' => $player_data['LastPlayed']
                         ]);
                     }
                 }

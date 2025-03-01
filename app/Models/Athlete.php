@@ -19,10 +19,16 @@ class Athlete extends Model
         'email',
         'birth_date',
         'sex',
+        'last_played',
     ];
 
     public function club()
     {
         return $this->belongsTo(Club::class, 'club_id', 'ratings_central_club_id');
+    }
+
+    public function scopeRecentlyPlayed($query)
+    {
+        return $query->where('last_played', '>=', now()->startOfYear()->subYears(1));
     }
 }

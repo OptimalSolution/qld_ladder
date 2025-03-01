@@ -12,7 +12,7 @@ class import_ratings_central_clubs extends Command
      *
      * @var string
      */
-    protected $signature = 'tools:import_ratings_central_clubs';
+    protected $signature = 'import:clubs';
 
     /**
      * The console command description.

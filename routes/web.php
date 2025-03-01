@@ -27,7 +27,9 @@ require __DIR__.'/auth.php';
 Route::get('home', [FrontendController::class, 'index'])->name('home');
 
 // ladder sub groups
-Route::get('age-groups', [LadderController::class, 'ageGroups'])->name('age-groups');
+Route::get('age-groups/', [LadderController::class, 'ageGroups'])->name('age-groups');
+Route::get('age-groups/{gender}/{group}', [LadderController::class, 'ageGroups'])->name('age-groups-subgroup');
+
 Route::get('gender-groups', [LadderController::class, 'genderGroups'])->name('gender-groups');
 Route::get('club-groups', [LadderController::class, 'clubGroups'])->name('club-groups');
 
