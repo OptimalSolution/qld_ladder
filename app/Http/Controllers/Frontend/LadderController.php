@@ -8,6 +8,7 @@ use Barryvdh\Debugbar\Twig\Extension\Debug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
+use App\Models\Club;
 use Debugbar;
 
 class LadderController extends Controller
@@ -90,10 +91,6 @@ class LadderController extends Controller
 
         // Add an age column to the athletes for template convenience
         $athletes = $athletes->orderByDesc('rating')->get();
-        $athletes->each(function ($athlete) {
-            $athlete->age = Carbon::parse($athlete->birth_date)->age;
-        });
-
         return view('frontend.ladder.age-groups', compact('athletes', 'group', 'gender_group'))->with('age_groups', $this->age_groups);
     }
 
@@ -142,8 +139,32 @@ class LadderController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function clubGroups()
+    public function clubGroups(?string $club_id = null, ?string $club_slug = null, ?string $gender_group = 'Mixed' )
     {
-        return view('frontend.ladder.club-groups');
+        $athletes = Athlete::with('club:ratings_central_club_id,name')
+                        ->recentlyPlayed()
+                        ->orderByDesc('rating');
+
+        if ($club_id) {
+            \Debugbar::info('Looking for athletes from club ' . $club_id);
+            $athletes = $athletes->where('club_id', $club_id);
+        }
+
+        if ($gender_group && $gender_group !== 'Mixed') {
+            $athletes = $athletes->where('sex', $this->gender_groupings[$gender_group]);
+        }
+                        
+        $athletes = $athletes->get();
+        
+
+        // $club_grouped_athletes = $athletes->groupBy('club_id')->sortKeys();
+        
+        // $club_grouped_athletes = $club_grouped_athletes->mapWithKeys(function ($group, $key) {
+        //     $key = $group->first()->club ? $group->first()->club->name : 'Unaffiliated Athletes';
+        //     return [$key => $group];
+        // });
+
+        $club_groups = Club::all()->sortBy('name');
+        return view('frontend.ladder.club-groups', compact('club_groups', 'athletes'));
     }
 }

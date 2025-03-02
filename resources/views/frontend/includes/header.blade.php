@@ -1,7 +1,7 @@
 <nav class="border-b-2 border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-900">
     <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
         <a class="flex items-center space-x-3 rtl:space-x-reverse" href="/">
-            <img class="h-9 hidden" src="{{ asset("img/logo-with-text.jpg") }}" alt="{{ app_name() }} Logo" />
+            <img class="h-9 hidden" src="{{ secure_asset("img/logo-with-text.jpg") }}" alt="{{ app_name() }} Logo" />
         </a>
         <div class="flex items-center justify-end space-x-1 md:order-2 md:space-x-0 rtl:space-x-reverse">
             <button
@@ -145,7 +145,7 @@
                     data-dropdown-toggle="user-dropdown-menu"
                     type="button"
                 >
-                    <img class="h-9 rounded-md" src="{{ asset(Auth::user()->avatar) }}" alt="" />
+                    <img class="h-9 rounded-md" src="{{ secure_asset(Auth::user()->avatar) }}" alt="" />
                     <span class="ms-2 hidden sm:block">
                         {{ Auth::user()->last_name }}
                     </span>
@@ -333,7 +333,7 @@
                 </x-frontend.nav-item>
                 <x-frontend.nav-item
                     :href="route('age-groups')"
-                    :active="request()->routeIs('age-groups')"
+                    :active="request()->routeIs('age-groups') || request()->routeIs('age-groups-subgroup')"
                 >
                     {{ __("Age Groups") }}
                 </x-frontend.nav-item>

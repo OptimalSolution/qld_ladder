@@ -31,7 +31,8 @@ Route::get('age-groups/', [LadderController::class, 'ageGroups'])->name('age-gro
 Route::get('age-groups/{gender}/{group}', [LadderController::class, 'ageGroups'])->name('age-groups-subgroup');
 
 Route::get('gender-groups', [LadderController::class, 'genderGroups'])->name('gender-groups');
-Route::get('club-groups', [LadderController::class, 'clubGroups'])->name('club-groups');
+Route::get('club-groups/', [LadderController::class, 'clubGroups'])->name('club-groups');
+Route::get('clubs/{club_id}/{club_slug}/{gender_group}', [LadderController::class, 'clubGroups'])->name('club-filter');
 
 // Language Switch
 Route::get('language/{language}', [LanguageController::class, 'switch'])->name('language.switch');
