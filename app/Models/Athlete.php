@@ -34,6 +34,6 @@ class Athlete extends Model
 
     public function getAgeAttribute() : int
     {
-        return Carbon::parse($this->birth_date)->age;
+        return Carbon::parse($this->birth_date)->startOfYear()->age;
     }
 }

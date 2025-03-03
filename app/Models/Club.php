@@ -16,4 +16,9 @@ class Club extends Model
         'postal_code',
         'website',
     ];
+
+    public function athletes()
+    {
+        return $this->hasMany(Athlete::class, 'club_id', 'ratings_central_club_id');
+    }
 }

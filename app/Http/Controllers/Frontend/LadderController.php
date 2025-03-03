@@ -9,10 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use App\Models\Club;
+use Illuminate\Support\Str;
 use Debugbar;
+use App\Services\AthleteService;
 
 class LadderController extends Controller
 {
+    protected $athleteService;
+
     public $age_groups = [
         'U7' => 'Under 7',
         'U9' => 'Under 9',
@@ -41,6 +45,11 @@ class LadderController extends Controller
         'Mixed' => '-'
     ];
 
+    public function __construct(AthleteService $athleteService)
+    {
+        $this->athleteService = $athleteService;
+    }
+ 
     /**
      * Retrieves the view for the index page of the frontend.
      *
@@ -56,7 +65,7 @@ class LadderController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function ageGroups(?string $gender_group = 'Mixed', ?string $group = 'Open')
+    public function ageGroups(?string $gender_group = 'Mixed', ?string $group = 'Open', ?string $club_id = null)
     {
         // Handle invalid groups
         if (!in_array($group, array_keys($this->age_groups)) || 
@@ -64,6 +73,7 @@ class LadderController extends Controller
             return redirect()->route('age-groups');
         }
 
+        $athletes = $this->athleteService->getRecentlyPlayedAthletes($gender_group, $group, $club_id);
         $athletes = Athlete::with('club:ratings_central_club_id,name,website')
                         ->recentlyPlayed();
 
@@ -74,24 +84,25 @@ class LadderController extends Controller
         if ($group !== 'Open') {
         
             $age_group_number = explode(' ', $this->age_groups[$group])[1];
-            $date_to_compare = now()->subYears($age_group_number)->startOfYear();
+            $date_to_compare = now()->startOfYear()->subYears($age_group_number);
             
             $athletes = $athletes->where('birth_date', '!=', '');
             
             if (str_starts_with($group, 'U')) {
                 \Debugbar::info('Looking for players under ' . $age_group_number . ' and born before ' . $date_to_compare);
                 $date_minimum = now()->subYears(3)->startOfYear();
-                $athletes = $athletes->where('birth_date', '>=', $date_to_compare);
-                $athletes = $athletes->where('birth_date', '<=', $date_minimum);
+                $athletes = $athletes->where('birth_date', '>=', $date_to_compare->format('Y-m-d'));
+                $athletes = $athletes->where('birth_date', '<=', $date_minimum->format('Y-m-d'));
             } else if (str_starts_with($group, 'O')) {
                 \Debugbar::info('Looking for players over ' . $age_group_number . ' and born before ' . $date_to_compare);
                 $athletes = $athletes->where('birth_date', '<=', $date_to_compare);
             }           
         }
 
-        // Add an age column to the athletes for template convenience
         $athletes = $athletes->orderByDesc('rating')->get();
-        return view('frontend.ladder.age-groups', compact('athletes', 'group', 'gender_group'))->with('age_groups', $this->age_groups);
+        $gender_groups = $this->athleteService->getUniqueGenderGroups();
+        
+        return view('frontend.ladder.age-groups', compact('athletes', 'group', 'gender_group', 'gender_groups'))->with('age_groups', $this->age_groups);
     }
 
     /**
@@ -139,32 +150,37 @@ class LadderController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function clubGroups(?string $club_id = null, ?string $club_slug = null, ?string $gender_group = 'Mixed' )
+    public function clubGroups(?string $club_id = null, ?string $club_slug = null, ?string $gender_group = 'Mixed')
     {
+  
+        // All the clubs that have recently played athletes
+        $club_groups = Cache::remember('clubs-with-recent-athletes', 7200, function () {
+            return Club::whereHas('athletes', function ($query) {
+                $query->recentlyPlayed();
+            })
+            ->orderBy('name')
+            ->get();
+        });
+
+        // Pick a random club if no club is selected
+        if(empty($club_id)) {
+            
+            $random_club = $club_groups->random();
+            $club_id = $random_club->ratings_central_club_id;
+            $club_slug = Str::slug($random_club->name);
+        }
+
         $athletes = Athlete::with('club:ratings_central_club_id,name')
                         ->recentlyPlayed()
-                        ->orderByDesc('rating');
-
-        if ($club_id) {
-            \Debugbar::info('Looking for athletes from club ' . $club_id);
-            $athletes = $athletes->where('club_id', $club_id);
-        }
+                        ->orderByDesc('rating')
+                        ->where('club_id', $club_id);
 
         if ($gender_group && $gender_group !== 'Mixed') {
             $athletes = $athletes->where('sex', $this->gender_groupings[$gender_group]);
         }
                         
         $athletes = $athletes->get();
-        
 
-        // $club_grouped_athletes = $athletes->groupBy('club_id')->sortKeys();
-        
-        // $club_grouped_athletes = $club_grouped_athletes->mapWithKeys(function ($group, $key) {
-        //     $key = $group->first()->club ? $group->first()->club->name : 'Unaffiliated Athletes';
-        //     return [$key => $group];
-        // });
-
-        $club_groups = Club::all()->sortBy('name');
-        return view('frontend.ladder.club-groups', compact('club_groups', 'athletes'));
+        return view('frontend.ladder.club-groups', compact('club_groups', 'athletes', 'club_id', 'club_slug', 'gender_group'));
     }
 }

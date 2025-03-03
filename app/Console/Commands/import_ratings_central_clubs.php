@@ -83,7 +83,7 @@ class import_ratings_central_clubs extends Command
     private function eligible_club($player_data)
     {
         return $player_data['Province'] === 'Queensland' && 
-                $player_data['Country'] === 'AUS' && 
-                $player_data['Status'] === 'Active';
+                $player_data['Country'] === 'AUS';
+                // $player_data['Status'] === 'Active';
     }
 }

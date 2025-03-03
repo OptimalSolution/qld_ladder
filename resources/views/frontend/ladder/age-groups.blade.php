@@ -12,9 +12,9 @@
             >
                 Age Group Ladders
             </h1>
-            <p class="mb-10 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48">
-                The following tables show the <b class="text-gray-900 dark:text-white">{{ $athletes->count() }} athletes</b> eligible for the QLD <b class="text-gray-900 dark:text-white">{{ $age_groups[$group] }}</b>     Ladder. <br/>
-                To be considered for this ladder, players must have played since <b class="text-gray-900 dark:text-white">{{ \Carbon\Carbon::now()->startOfYear()->subYears(1)->format('F jS, Y') }}</b>.<br/>
+            <p class="mb-10 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48" style="text-align: justify;">
+                The following tables show the <b class="text-gray-900 dark:text-white">{{ $athletes->count() }} athletes</b> eligible for the QLD <b class="text-gray-900 dark:text-white">{{ $age_groups[$group] }}</b> Ladder.
+                To be considered for this ladder, players must have played since <b class="text-gray-900 dark:text-white">{{ \Carbon\Carbon::now()->startOfYear()->subYears(1)->format('F jS, Y') }}</b>.
                 Junior ages listed below represent the age of the player by the <b class="text-gray-900 dark:text-white">end of the year</b>.
             </p>
             <p class="w-full mb-1 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48">
@@ -30,7 +30,7 @@
                 <div class="mt-10">
                     <h2 class="text-4xl font-bold text-gray-900 dark:text-white" style="line-height: 26px;">{{ $age_groups[$group] }} <br/><span class="text-gray-500 dark:text-gray-400 text-lg">({{ $athletes->count() }} athlete{{ $athletes->count() == 1 ? '' : 's' }})</span></h2>
                     <div class="gender-groups mt-4">
-                    @foreach(['Male', 'Female', 'Mixed'] as $gender) 
+                    @foreach($gender_groups as $gender) 
                         <a href="{{ route('age-groups-subgroup', ['group' => $group, 'gender' => $gender]) }}" class="inline-block px-4 py-2 m-1 text-sm font-medium {{ $gender == $gender_group ? 'text-blue-700 bg-gray-100 border-blue-700 ring-2 ring-blue-700 dark:bg-gray-700 dark:text-white dark:border-blue-700' : 'text-gray-900 bg-white border border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600' }} rounded-full hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:hover:text-white dark:hover:bg-gray-700">
                             {{ $gender }}
                         </a>
@@ -91,6 +91,7 @@
                                                         </div>
                                                     @else
                                                         <div class="text-lg text-gray-900 dark:text-gray-400">
+                                                            21+
                                                         </div>
                                                     @endif
                                                 </td>
