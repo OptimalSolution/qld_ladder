@@ -347,7 +347,7 @@
                     :href="route('club-groups')"
                     :active="request()->routeIs('club-groups')"
                 >
-                    {{ __("Club Groups") }}
+                    {{ __("Clubs") }}
                 </x-frontend.nav-item>
                 <!--
                 <x-frontend.nav-item
