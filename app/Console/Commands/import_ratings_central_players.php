@@ -6,7 +6,7 @@ use App\Models\Athlete;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 
-class import_ratings_cenral_players extends Command
+class import_ratings_central_players extends Command
 {
     /**
      * The name and signature of the console command.
@@ -29,7 +29,7 @@ class import_ratings_cenral_players extends Command
     {
         $this->info('Importing players info...');
 
-        $file = storage_path('app/public/RatingList.csv');
+        $file = storage_path('app/public/RC_Lists/RatingList.csv');
         $csv = [];
         $handle = fopen($file, 'r');
         $header = null;

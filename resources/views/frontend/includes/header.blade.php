@@ -335,7 +335,7 @@
                     :href="route('age-groups')"
                     :active="request()->routeIs('age-groups') || request()->routeIs('age-groups-subgroup')"
                 >
-                    {{ __("Age Groups") }}
+                    {{ __("Age Divisions") }}
                 </x-frontend.nav-item>
                 <x-frontend.nav-item
                     :href="route('gender-groups')"

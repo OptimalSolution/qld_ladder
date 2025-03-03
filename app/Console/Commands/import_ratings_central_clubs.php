@@ -28,7 +28,7 @@ class import_ratings_central_clubs extends Command
     {
         $this->info('Importing club info...');
 
-        $file = storage_path('app/public/ClubList.csv');
+        $file = storage_path('app/public/RC_Lists/ClubList.csv');
         $csv = [];
         $handle = fopen($file, 'r');
         $header = null;

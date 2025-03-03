@@ -10,7 +10,7 @@
             <h1
                 class="mb-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white sm:text-6xl"
             >
-                Age Group Ladders
+                Age Division Ladders
             </h1>
             <p class="mb-10 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48" style="text-align: justify;">
                 The following tables show the <b class="text-gray-900 dark:text-white">{{ $athletes->count() }} athletes</b> eligible for the QLD <b class="text-gray-900 dark:text-white">{{ $age_groups[$group] }}</b> Ladder.
