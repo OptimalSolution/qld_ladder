@@ -180,7 +180,7 @@ class LadderController extends Controller
         }
                         
         $athletes = $athletes->get();
-
-        return view('frontend.ladder.club-groups', compact('club_groups', 'athletes', 'club_id', 'club_slug', 'gender_group'));
+        $genders = $this->athleteService->getUniqueGenderGroups();
+        return view('frontend.ladder.club-groups', compact('club_groups', 'athletes', 'club_id', 'club_slug', 'gender_group', 'genders'));
     }
 }

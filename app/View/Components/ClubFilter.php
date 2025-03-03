@@ -24,9 +24,7 @@ class ClubFilter extends Component
             })
             ->orderBy('name')
             ->get();
-        });;
-
-        $this->clubs = Club::all();
+        });
     }
 
     /**

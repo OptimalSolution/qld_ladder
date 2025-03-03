@@ -14,7 +14,7 @@ Junior ages listed below represent the age of the player by the <b class="text-g
             </p>
             <p class="mb-1 text-md font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48">
             <div class="flex justify-center">
-                <div class="relative inline-block text-left">
+                <div class="relative inline-block text-center">
                     <div class="mb-2 text-lg font-medium text-gray-700 dark:text-gray-300">
                         Select a club from the dropdown menu to view their ladder:
                     </div>
@@ -22,7 +22,7 @@ Junior ages listed below represent the age of the player by the <b class="text-g
                         
                         <select id="clubSelect" class="block w-full px-4 py-2 text-xl text-gray-700 bg-white dark:bg-gray-700 dark:text-white border-0 focus:outline-none focus:ring-0 rounded-full">
                             @foreach($club_groups as $club)
-                                <option value="{{ route('club-filter', ['club_id' => $club->ratings_central_club_id, 'club_slug' => $club ? Str::slug($club->name) . '1' : 'unaffiliated', 'gender_group' => 'Mixed']) }}" {{ $club_id == $club->ratings_central_club_id ? 'selected' : '' }}>{{ $club->name }}</option>
+                                <option value="{{ route('club-filter', ['club_id' => $club->ratings_central_club_id, 'club_slug' => $club ? Str::slug($club->name) : 'unaffiliated', 'gender_group' => $gender_group]) }}" {{ $club_id == $club->ratings_central_club_id ? 'selected' : '' }}>{{ $club->name }}</option>
                             @endforeach
                         </select>
                         <button id="copyLinkBtn" class="ml-2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" title="Copy link to clipboard" alt="Copy link to clipboard">
@@ -70,6 +70,13 @@ Junior ages listed below represent the age of the player by the <b class="text-g
                 </div>
             </div>
             </p>
+            <div class="gender-groups mt-4 flex justify-center">
+            @foreach($genders as $gender) 
+                <a href="{{ route('club-filter', ['club_id' => $club_id, 'club_slug' => $club_slug, 'gender_group' => $gender]) }}" class="inline-block px-4 py-2 m-1 text-sm font-medium {{ $gender == $gender_group ? 'text-blue-700 bg-gray-100 border-blue-700 ring-2 ring-blue-700 dark:bg-gray-700 dark:text-white dark:border-blue-700' : 'text-gray-900 bg-white border border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600' }} rounded-full hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:hover:text-white dark:hover:bg-gray-700">
+                    {{ $gender }}
+                </a>
+            @endforeach
+            </div>
             <div class="my-6 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="py-2 align-middle inline-block w-full sm:px-2 lg:px-2">
                             <div class="shadow overflow-hidden border border-gray-200 sm:rounded-lg">

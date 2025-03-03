@@ -1,5 +1,4 @@
 
-
 <div class="gender-groups mt-4">
     @foreach($genders as $gender) 
         <a href="{{ route($routeName, ['group' => $age_group, 'gender' => $gender]) }}" 
