@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Athlete;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Facades\Cache;
 
 class AthleteService
 {
@@ -72,18 +73,19 @@ class AthleteService
      */
     public function getUniqueGenderGroups(): SupportCollection
     {
-        $genderGroups = Athlete::recentlyPlayed()->pluck('sex')->unique()->map(function($sex) {
-            return match($sex) {
-                'M' => 'Male',
-                'F' => 'Female',
-                default => 'Not Specified',
-            };
+        return \Cache::remember('unique-gender-groups', 7200, function () {
+            $genderGroups = Athlete::recentlyPlayed()->pluck('sex')->unique()->map(function($sex) {
+                return match($sex) {
+                    'M' => 'Male',
+                    'F' => 'Female',
+                    default => 'Not Specified',
+                };
+            });
+            
+            // Add Mixed option
+            $genderGroups->push('Mixed');
+            return $genderGroups;
         });
-        
-        // Add Mixed option
-        $genderGroups->push('Mixed');
-        
-        return $genderGroups;
     }
 
     /**

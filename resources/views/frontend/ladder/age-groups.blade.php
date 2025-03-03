@@ -81,17 +81,13 @@
                                                     </div>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
-                                                    @if($athlete->age == 0 && empty($athlete->birth_date))
+                                                    @if(empty($athlete->birth_date))
                                                         <div class="text-lg text-gray-200 dark:text-gray-600">
                                                             [Unlisted]
                                                         </div>
-                                                    @elseif($athlete->age < 22 && $athlete->age > 3)
+                                                    @else
                                                         <div class="text-lg text-gray-900 dark:text-white">
                                                             {{ $athlete->age }}
-                                                        </div>
-                                                    @else
-                                                        <div class="text-lg text-gray-900 dark:text-gray-400">
-                                                            21+
                                                         </div>
                                                     @endif
                                                 </td>

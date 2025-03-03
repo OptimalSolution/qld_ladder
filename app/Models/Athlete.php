@@ -32,8 +32,9 @@ class Athlete extends Model
         return $query->where('last_played', '>=', now()->startOfYear()->subYears(1));
     }
 
-    public function getAgeAttribute() : int
+    public function getAgeAttribute() : int|string
     {
-        return Carbon::parse($this->birth_date)->startOfYear()->age;
+        $start_of_year_age = (empty($this->birth_date)) ? 0 : Carbon::parse($this->birth_date)->startOfYear()->age;
+        return $start_of_year_age > 21 ? '21+' : $start_of_year_age;
     }
 }

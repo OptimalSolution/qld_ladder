@@ -121,18 +121,15 @@ Junior ages listed below represent the age of the player by the <b class="text-g
                                                         </div>
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
-                                                        @if($athlete->age == 0 && empty($athlete->birth_date))
-                                                            <div class="text-lg text-gray-200 dark:text-gray-600">
-                                                                [Unlisted]
-                                                            </div>
-                                                        @elseif($athlete->age < 22 && $athlete->age > 3)
-                                                            <div class="text-lg text-gray-900 dark:text-white">
-                                                                {{ $athlete->age }}
-                                                            </div>
-                                                        @else
-                                                            <div class="text-lg text-gray-900 dark:text-gray-400">
-                                                            </div>
-                                                        @endif
+                                                    @if(empty($athlete->birth_date))
+                                                        <div class="text-lg text-gray-200 dark:text-gray-600">
+                                                            [Unlisted]
+                                                        </div>
+                                                    @else
+                                                        <div class="text-lg text-gray-900 dark:text-white">
+                                                            {{ $athlete->age }}
+                                                        </div>
+                                                    @endif
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
                                                         <div class="text-lg text-gray-900 dark:text-white">
