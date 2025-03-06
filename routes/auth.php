@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\SocialLoginController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Auth;
 // Check if registration is enabled
 if (user_registration()) {
     Route::middleware('guest')->group(function () {
@@ -21,6 +21,14 @@ if (user_registration()) {
         Route::post('register', [RegisteredUserController::class, 'store']);
     });
 }
+
+Route::get('/test-auth', function () {
+    // Try a simple authentication attempt
+    if (Auth::attempt(['email' => 'super@admin.com', 'password' => 'secret'])) {
+        return 'Authentication successful';
+    }
+    return 'Authentication failed';
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])

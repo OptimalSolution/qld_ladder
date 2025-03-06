@@ -31,8 +31,8 @@ Route::get('age-divisions/', [LadderController::class, 'ageGroups'])->name('age-
 Route::get('age-divisions/{gender}/{group}', [LadderController::class, 'ageGroups'])->name('age-groups-subgroup');
 
 Route::get('gender-groups', [LadderController::class, 'genderGroups'])->name('gender-groups');
-Route::get('club-groups/', [LadderController::class, 'clubGroups'])->name('club-groups');
-Route::get('clubs/{club_id}/{club_slug}/{gender_group}', [LadderController::class, 'clubGroups'])->name('club-filter');
+Route::get('club-groups/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-groups');
+Route::get('clubs/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-filter');
 
 // Language Switch
 Route::get('language/{language}', [LanguageController::class, 'switch'])->name('language.switch');
@@ -72,6 +72,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
 * --------------------------------------------------------------------
 */
 Route::group(['namespace' => 'App\Http\Controllers\Backend', 'prefix' => 'admin', 'as' => 'backend.', 'middleware' => ['auth', 'can:view_backend']], function () {
+    
     /**
      * Backend Dashboard
      * Namespaces indicate folder structure.

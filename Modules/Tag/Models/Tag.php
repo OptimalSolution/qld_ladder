@@ -5,6 +5,7 @@ namespace Modules\Tag\Models;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Club;
 
 class Tag extends BaseModel
 {
@@ -19,6 +20,11 @@ class Tag extends BaseModel
     public function posts()
     {
         return $this->morphedByMany('Modules\Post\Models\Post', 'taggable');
+    }
+
+    public function clubs()
+    {
+        return $this->belongsToMany(Club::class);
     }
 
     /**

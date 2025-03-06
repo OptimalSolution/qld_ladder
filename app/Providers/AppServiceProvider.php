@@ -51,34 +51,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function registerEventListeners()
     {
-        /**
-         * Auth Event Listeners.
-         */
-        // Event::listen(
-        //     'App\Events\Auth\UserLoginSuccess',
-        //     'App\Listeners\Auth\UpdateLoginData',
-        //     'App\Listeners\Auth\SendPodcastNotification'
-        // );
 
-        /**
-         * Frontend Event Listeners.
-         */
-        // Event::listen('App\Events\Frontend\UserRegistered',
-        //     'App\Listeners\Frontend\UserRegistered\EmailNotificationOnUserRegistered'
-        // );
-
-        /**
-         * Backend Event Listeners.
-         */
-        // Event::listen(
-        //     'App\Events\Backend\UserCreated',
-        //     'App\Listeners\Backend\UserCreated\UserCreatedProfileCreate',
-        //     'App\Listeners\Backend\UserCreated\UserCreatedNotifySuperUser'
-        // );
-
-        // Event::listen(
-        //     'App\Events\Backend\UserUpdated',
-        //     'App\Listeners\Backend\UserUpdated\UserUpdatedNotifyUser'
-        // );
     }
 }

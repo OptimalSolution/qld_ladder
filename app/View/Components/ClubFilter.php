@@ -7,18 +7,24 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\Club;
 use Illuminate\Support\Facades\Cache;
+use Modules\Tag\Models\Tag;
 
 class ClubFilter extends Component
 {
     public $clubs;
-    public $something;
+    public $regions;
+    public $sub_regions;
+
     /**
      * Create a new component instance.
      */
-    public function __construct($something = null)
+    public function __construct()
     {
+        $this->regions = Tag::with('clubs')->select('id', 'name')->where('group_name', 'Regions')->orderBy('name')->get();
+        $this->sub_regions = Tag::with('clubs')->select('id', 'name')->where('group_name', 'Sub Regions')->orderBy('name')->get();
+
         // All the clubs that have recently played athletes
-        $this->clubs = Cache::remember('clubs-with-recent-athletes', 7200, function () {
+        $this->clubs = Cache::remember('all-clubs-with-recent-athletes',0, function () {
             return Club::whereHas('athletes', function ($query) {
                 $query->recentlyPlayed();
             })
@@ -32,6 +38,9 @@ class ClubFilter extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.club-filter')->with('clubs', $this->clubs)->with('something', $this->something);
+        return view('components.club-filter')
+                ->with('club_groups', $this->clubs)
+                ->with('regions', $this->regions)
+                ->with('sub_regions', $this->sub_regions);
     }
 }

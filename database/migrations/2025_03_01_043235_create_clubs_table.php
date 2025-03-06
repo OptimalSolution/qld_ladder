@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('province');
             $table->string('postal_code');
             $table->string('website');
+            $table->string('status');
             $table->timestamps();
         });
     }

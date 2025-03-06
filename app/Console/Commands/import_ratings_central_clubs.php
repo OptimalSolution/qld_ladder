@@ -59,6 +59,7 @@ class import_ratings_central_clubs extends Command
                             'province' => $player_data['Province'],
                             'postal_code' => $player_data['PostalCode'],
                             'website' => $player_data['Website'],
+                            'status' => $player_data['Status'],
                         ]);
                     } else {
                         $this->info('Importing club: ' . $player_data['Name']);
@@ -71,6 +72,7 @@ class import_ratings_central_clubs extends Command
                             'province' => $player_data['Province'],
                             'postal_code' => $player_data['PostalCode'],
                             'website' => $player_data['Website'],
+                            'status' => $player_data['Status'],
                         ]);
                     }
                 }

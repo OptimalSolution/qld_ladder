@@ -40,7 +40,6 @@ class AuthenticatedSessionController extends Controller
             $user = auth()->user();
 
             event(new UserLoginSuccess($request, $user));
-
             return redirect()->intended(route('home', absolute: false));
         }
 

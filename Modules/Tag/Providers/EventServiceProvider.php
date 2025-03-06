@@ -14,9 +14,19 @@ class EventServiceProvider extends ServiceProvider
         'Modules\Tag\Events\Backend\NewCreated' => [
             'Modules\Tag\Listeners\Backend\NewCreated\UpdateAllOnNewCreated',
         ],
+        'App\Events\Backend\UserUpdated' => [
+            'App\Listeners\Backend\UserUpdated\UserUpdatedNotifyUser',
+        ],
 
-    /**
-     * Frontend.
-     */
+        /**
+         * Frontend.
+         */
+        'App\Events\Auth\UserLoginSuccess' => [
+            'App\Listeners\Auth\UpdateLoginData',
+        ],
+        'App\Events\Frontend\UserRegistered' => [
+            'App\Listeners\Frontend\UserRegistered\EmailNotificationOnUserRegistered',
+        ],
+
     ];
 }

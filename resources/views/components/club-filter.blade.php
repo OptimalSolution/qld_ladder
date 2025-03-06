@@ -1,13 +1,28 @@
-<div class="relative inline-block text-left">
-<div class="mb-2 text-lg font-medium text-gray-700 dark:text-gray-300">
-    To narrow it down to a certain club, select one below:
-</div>
+@props(['gender_group', 'club_id', 'preferred_route' => null])
+
+@php
+    use Illuminate\Support\Facades\Route;
+    $preferred_route = $preferred_route ?? Route::currentRouteName();
+@endphp
 <div class="flex items-center">
-    
     <select id="clubSelect" class="block w-full px-4 py-2 text-xl text-gray-700 bg-white dark:bg-gray-700 dark:text-white border-0 focus:outline-none focus:ring-0 rounded-full">
-        @foreach($clubs as $club)
-            <option value="{{ route('club-filter', ['club_id' => $club->ratings_central_club_id, 'club_slug' => Str::slug($club->name), 'gender_group' => 'Mixed']) }}" {{ ($club_id ?? 0) == $club->ratings_central_club_id ? 'selected' : '' }}>{{ $club->name }}</option>
+    <option value="{{ route($preferred_route, ['club_id' => 'all', 'club_slug' => 'combined', 'gender_group' => $gender_group]) }}" {{ $club_id == 'all' ? 'selected' : '' }}>All Clubs Combined ({{ $club_groups->count() }} Clubs)</option>
+        <optgroup label="Regions">
+            
+            @foreach($regions as $region)
+                <option value="{{ route($preferred_route, ['club_id' => 'region-' . $region->id, 'club_slug' => Str::slug($region->name), 'gender_group' => $gender_group]) }}" {{ $club_id == 'region-' . $region->id ? 'selected' : '' }}>{{ $region->name }} ({{ $region->clubs->count() }} Clubs)</option>
+            @endforeach
+        </optgroup>
+        <optgroup label="Sub Regions">
+            @foreach($sub_regions as $sub_region)
+                <option value="{{ route($preferred_route, ['club_id' => 'sub-region-' . $sub_region->id, 'club_slug' => Str::slug($sub_region->name), 'gender_group' => $gender_group]) }}" {{ $club_id == 'sub-region-' . $sub_region->id ? 'selected' : '' }}>{{ $sub_region->name }} ({{ $sub_region->clubs->count() }} Clubs)</option>
+            @endforeach
+        </optgroup>
+        <optgroup label="Clubs">
+        @foreach($club_groups as $club)
+            <option value="{{ route($preferred_route, ['club_id' => $club->ratings_central_club_id, 'club_slug' => $club ? Str::slug($club->name) : 'unaffiliated', 'gender_group' => $gender_group]) }}" {{ $club_id == $club->ratings_central_club_id ? 'selected' : '' }}>{{ $club->name }} {{ $club->status === 'Inactive' ? '(Inactive)' : '' }}</option>
         @endforeach
+        </optgroup>
     </select>
     <button id="copyLinkBtn" class="ml-2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" title="Copy link to clipboard" alt="Copy link to clipboard">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,4 +66,3 @@
         });
     });
 </script>
-</div>

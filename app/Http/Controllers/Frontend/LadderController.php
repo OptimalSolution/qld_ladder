@@ -152,28 +152,48 @@ class LadderController extends Controller
      */
     public function clubGroups(?string $club_id = null, ?string $club_slug = null, ?string $gender_group = 'Mixed')
     {
-  
-        // All the clubs that have recently played athletes
-        $club_groups = Cache::remember('clubs-with-recent-athletes', 7200, function () {
-            return Club::whereHas('athletes', function ($query) {
-                $query->recentlyPlayed();
-            })
-            ->orderBy('name')
-            ->get();
-        });
+        $mixed_clubs = true;
 
         // Pick a random club if no club is selected
         if(empty($club_id)) {
-            
-            $random_club = $club_groups->random();
+            $random_club = Club::whereHas('athletes', function ($query) {
+                $query->recentlyPlayed();
+            })->inRandomOrder()->first();
             $club_id = $random_club->ratings_central_club_id;
             $club_slug = Str::slug($random_club->name);
-        }
+        } 
+        
+        $athletes = Athlete::with('club:ratings_central_club_id,name,website')
+            ->recentlyPlayed()
+            ->orderByDesc('rating');
 
-        $athletes = Athlete::with('club:ratings_central_club_id,name')
-                        ->recentlyPlayed()
-                        ->orderByDesc('rating')
-                        ->where('club_id', $club_id);
+        // Region & sub-region filter
+        if (str_starts_with($club_id, 'region-') || str_starts_with($club_id, 'sub-region-')) {
+
+            // Extract the ID from either region-X or sub-region-X pattern
+            $parts = explode('-', $club_id);
+            $region_id = end($parts);
+            
+            // Find all athletes in this region
+            $athletes = Athlete::with('club:ratings_central_club_id,name,website')
+                            ->recentlyPlayed()
+                            ->orderByDesc('rating')
+                            ->whereHas('club', function($query) use ($region_id) {
+                                $query->whereHas('tags', function($tagQuery) use ($region_id) {
+                                    $tagQuery->where('tags.id', $region_id);
+                                });
+                            });
+            
+            // $athletes = $athletes->get();
+            // $genders = $this->athleteService->getUniqueGenderGroups();
+            // return view('frontend.ladder.club-groups', compact('athletes', 'club_id', 'club_slug', 'gender_group', 'genders', 'mixed_clubs'));
+
+        } else if ($club_id !== 'all') {
+
+            // Single club filter
+            $mixed_clubs = false;
+            $athletes = $athletes->where('club_id', $club_id);
+        }
 
         if ($gender_group && $gender_group !== 'Mixed') {
             $athletes = $athletes->where('sex', $this->gender_groupings[$gender_group]);
@@ -181,6 +201,6 @@ class LadderController extends Controller
                         
         $athletes = $athletes->get();
         $genders = $this->athleteService->getUniqueGenderGroups();
-        return view('frontend.ladder.club-groups', compact('club_groups', 'athletes', 'club_id', 'club_slug', 'gender_group', 'genders'));
+        return view('frontend.ladder.club-groups', compact('athletes', 'club_id', 'club_slug', 'gender_group', 'genders', 'mixed_clubs'));
     }
 }
