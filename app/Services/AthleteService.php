@@ -19,22 +19,30 @@ class AthleteService
      */
     public function getRecentlyPlayedAthletes(?string $gender = null, ?string $ageGroup = null, ?string $clubId = null): Collection
     {
-        $query = Athlete::with('club:ratings_central_club_id,name,website')
-                        ->recentlyPlayed();
+        // Create a cache key based on the filter parameters
+        $cacheKey = 'recently-played-athletes-' . md5($gender . '-' . $ageGroup . '-' . $clubId);
+        
+        $recentlyPlayedAthletes = Cache::remember($cacheKey, 7200, function () use ($gender, $ageGroup, $clubId) {
+            $query = Athlete::with('club:ratings_central_club_id,name,website')
+                            ->recentlyPlayed();
+    
+            if ($gender && $gender !== '-') {
+                $query->where('sex', $gender);
+            }
+    
+            if ($ageGroup) {
+                $this->applyAgeGroupFilter($query, $ageGroup);
+            }
+    
+            if ($clubId) {
+                $query->where('club_id', $clubId);
+            }
+    
+            return $query->orderByDesc('rating')->get();
+        });
+        
 
-        if ($gender && $gender !== '-') {
-            $query->where('sex', $gender);
-        }
-
-        if ($ageGroup) {
-            $this->applyAgeGroupFilter($query, $ageGroup);
-        }
-
-        if ($clubId) {
-            $query->where('club_id', $clubId);
-        }
-
-        return $query->orderByDesc('rating')->get();
+        return $recentlyPlayedAthletes;
     }
 
     /**
@@ -85,26 +93,6 @@ class AthleteService
             // Add Mixed option
             $genderGroups->push('Mixed');
             return $genderGroups;
-        });
-    }
-
-    /**
-     * Group athletes by gender
-     *
-     * @param Collection $athletes
-     * @return SupportCollection
-     */
-    public function groupAthletesByGender(Collection $athletes): SupportCollection
-    {
-        $genderGroupedAthletes = $athletes->groupBy('sex')->sortKeys();
-
-        return $genderGroupedAthletes->mapWithKeys(function ($group, $key) {
-            $key = match ($key) {
-                'M' => 'Male',
-                'F' => 'Female',
-                default => 'Other',
-            };
-            return [$key => $group];
         });
     }
 } 

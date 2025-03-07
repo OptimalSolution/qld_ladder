@@ -183,10 +183,6 @@ class LadderController extends Controller
                                     $tagQuery->where('tags.id', $region_id);
                                 });
                             });
-            
-            // $athletes = $athletes->get();
-            // $genders = $this->athleteService->getUniqueGenderGroups();
-            // return view('frontend.ladder.club-groups', compact('athletes', 'club_id', 'club_slug', 'gender_group', 'genders', 'mixed_clubs'));
 
         } else if ($club_id !== 'all') {
 
