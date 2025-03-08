@@ -56,5 +56,9 @@ class processRatingsCentralZipInfo extends Command
         // Import the player info
         $this->info("Importing player info...");
         $this->call('import:players');
+
+        // Import regions
+        $this->info("Importing regions...");
+        $this->call('import:regions');
     }
 }
