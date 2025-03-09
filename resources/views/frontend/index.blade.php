@@ -14,7 +14,7 @@
                 Queensland State Ladder
             </h1>
             <p class="mb-1 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48">
-            This project is a collaborative initiative between clubs to create an interactive ladder ranking system for table tennis players in Queensland, utilising the RatingsCentral system. Feel free to select the different categories, or search for an athlete. 
+            This project is a collaborative initiative between clubs to create an interactive ladder ranking system for table tennis players in Queensland, utilising the RatingsCentral system. Feel free to select the different categories, or search for an athlete below:
             </p>
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
                 <a href="{{ route('age-groups') }}" class="w-32 sm:w-auto">
