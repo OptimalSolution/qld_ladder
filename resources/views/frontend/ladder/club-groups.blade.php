@@ -11,7 +11,7 @@
 @endphp
     <section class="bg-white dark:bg-gray-800">
         <div class="mx-auto max-w-screen-xl px-4 py-12 text-center sm:px-12">
-            <h1 class="mb-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white sm:text-6xl">Club Ladders</h1>
+            <h1 class="mb-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white sm:text-6xl">Club & RegionalLadders</h1>
             <p class="mb-10 text-md font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48" style="text-align: justify;">
                 The following table shows the <b class="text-gray-900 dark:text-white">{{ $athletes->count() }} {{ $athletes->count() > 1 ? 'athletes' : 'athlete' }}</b> eligible for the <b class="text-gray-900 dark:text-white">{{ $gender_group }} Club Ladder</b>. To be considered for this ladder, players must have played since <b class="text-gray-900 dark:text-white">{{ \Carbon\Carbon::now()->startOfYear()->subYears(1)->format('F jS, Y') }}</b>.
 Junior ages listed below represent the age of the player by the <b class="text-gray-900 dark:text-white">end of the year</b>.
