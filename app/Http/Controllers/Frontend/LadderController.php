@@ -12,7 +12,7 @@ use App\Models\Club;
 use Illuminate\Support\Str;
 use Debugbar;
 use App\Services\AthleteService;
-
+use Illuminate\Support\Facades\Log;
 class LadderController extends Controller
 {
     protected $athleteService;
@@ -137,12 +137,15 @@ class LadderController extends Controller
             };
             return [$key => $group];
         });
+
+        $page_title = 'Gender Groups';
         $gender_groups = $gender_grouped_athletes->keys();
         return view('frontend.ladder.gender-groups', 
                 compact('gender_grouped_athletes', 
                     'gender_groups', 
                     'athlete_total',
-                    'ladder_total'));
+                    'ladder_total',
+                    'page_title'));
     }
 
     /**
@@ -156,12 +159,21 @@ class LadderController extends Controller
 
         // Pick a random club if no club is selected
         if(empty($club_id)) {
-            $random_club = Club::whereHas('athletes', function ($query) {
+            $selected_club = Club::whereHas('athletes', function ($query) {
                 $query->recentlyPlayed();
             })->inRandomOrder()->first();
-            $club_id = $random_club->ratings_central_club_id;
-            $club_slug = Str::slug($random_club->name);
-        } 
+            $club_id = $selected_club->ratings_central_club_id;
+            $page_title = 'Club & Regional Ladders'; 
+        } else {
+            $selected_club = Club::where('ratings_central_club_id', $club_id)
+                                ->whereHas('athletes', function ($query) {
+                                    $query->recentlyPlayed();
+                                })->first();
+            $page_title = $selected_club->name;
+        }
+
+        $club_slug = Str::slug($selected_club->name);
+        
         
         $athletes = Athlete::with('club:ratings_central_club_id,name,website')
             ->recentlyPlayed()
@@ -197,6 +209,6 @@ class LadderController extends Controller
                         
         $athletes = $athletes->get();
         $genders = $this->athleteService->getUniqueGenderGroups();
-        return view('frontend.ladder.club-groups', compact('athletes', 'club_id', 'club_slug', 'gender_group', 'genders', 'mixed_clubs'));
+        return view('frontend.ladder.club-groups', compact('athletes', 'club_id', 'club_slug', 'gender_group', 'genders', 'mixed_clubs', 'page_title'));
     }
 }
