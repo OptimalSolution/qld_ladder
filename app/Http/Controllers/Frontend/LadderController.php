@@ -63,7 +63,8 @@ class LadderController extends Controller
     public function ladderFilter(?string $gender_group = 'Mixed', ?string $age_group = 'Open', ?string $club_id = null, ?string $club_slug = null)
     {
         $athletes = $this->athleteService->getRecentlyPlayedAthletes($gender_group, $this->age_groups[$age_group], $club_id);
-        return view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug'))->with('age_groups', $this->age_groups);
+        $clubs = Club::all();
+        return view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug', 'clubs'))->with('age_groups', $this->age_groups);
     }
 
     /**

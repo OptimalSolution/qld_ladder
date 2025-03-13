@@ -558,3 +558,35 @@ if (! function_exists('split_name')) {
         return [$first_name, $last_name];
     }
 }
+
+/*
+ * Check if the selected age group is a junior category
+ */
+if (! function_exists('juniorCategorySelected')) {
+    /**
+     * Check if the selected age group is a junior category.
+     *
+     * @param string $age_group
+     * @return bool
+     */
+    function juniorCategorySelected($age_group)
+    {
+        return str_contains($age_group, 'Under') && $age_group !== 'Under 21';
+    }
+}
+
+/*
+ * Check if the selected age group is a senior category
+ */
+if (! function_exists('seniorCategorySelected')) {
+    /**
+     * Check if the selected age group is a senior category.
+     *
+     * @param string $age_group
+     * @return bool
+     */
+    function seniorCategorySelected($age_group)
+    {
+        return $age_group !== 'Open' && (str_contains($age_group, 'Over') || $age_group === 'Under 21');
+    }
+}
