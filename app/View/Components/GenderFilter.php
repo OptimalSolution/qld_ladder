@@ -6,8 +6,10 @@ use Illuminate\View\Component;
 use App\Models\Athlete;
 class GenderFilter extends Component
 {
-    public $selected_gender;
-    public $age_group;
+    public $genderGroup;
+    public $ageGroup;
+    public $clubId;
+    public $clubSlug;
     public $routeName;
     public $genders;
 
@@ -16,19 +18,26 @@ class GenderFilter extends Component
      *
      * @return void
      */
-    public function __construct($selectedGender, $ageGroup, $routeName = 'age-groups-subgroup')
+    public function __construct(string $genderGroup, ?string $ageGroup, ?string $clubId, ?string $clubSlug, ?string $routeName = 'ladder-filter')
     {
-        $this->selected_gender = $selectedGender;
-        $this->age_group = $ageGroup;
+        $this->genderGroup = $genderGroup;
+        $this->ageGroup = $ageGroup;
+        $this->clubId = $clubId;
+        $this->clubSlug = $clubSlug;
         $this->routeName = $routeName;
+
+        // Get unique gender values and add 'Mixed' option
+        $genders = Athlete::select('sex')->distinct()->pluck('sex')->toArray();
+        $genders[] = 'Mixed';
         
-        // Use provided genders or fetch from database if not provided
-        if ($genders) {
-            $this->genders = $genders;
-        } else {
-            // Fetch the actual marked genders from all athletes
-            $this->genders = array_merge(Athlete::select('sex')->distinct()->pluck('sex')->toArray(), ['Mixed']);
-        }
+        // Map abbreviations to full names in a single pass
+        $this->genders = collect($genders)->map(function($gender) {
+            return match($gender) {
+                'M' => 'Male',
+                'F' => 'Female',
+                default => $gender
+            };
+        })->toArray();
     }
 
     /**
@@ -39,7 +48,12 @@ class GenderFilter extends Component
     public function render()
     {
         return view('components.gender-filter', [
-            'genders' => $this->genders
+            'genders' => $this->genders,
+            'genderGroup' => $this->genderGroup,
+            'ageGroup' => $this->ageGroup,
+            'clubId' => $this->clubId,
+            'clubSlug' => $this->clubSlug,
+            'routeName' => $this->routeName
         ]);
     }
 }

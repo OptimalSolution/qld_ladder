@@ -6,7 +6,7 @@ use App\Models\Athlete;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Database\Eloquent\Builder;
 class AthleteService
 {
     /**
@@ -17,25 +17,26 @@ class AthleteService
      * @param string|null $clubId Club ID filter
      * @return Collection
      */
-    public function getRecentlyPlayedAthletes(?string $gender = null, ?string $ageGroup = null, ?string $clubId = null): Collection
+    public function getRecentlyPlayedAthletes(?string $gender = 'Mixed', ?string $age_group = null, ?string $club_id = null): Collection
     {
         // Create a cache key based on the filter parameters
-        $cacheKey = 'recently-played-athletes-' . md5($gender . '-' . $ageGroup . '-' . $clubId);
+        $cacheKey = 'recently-played-athletes-filtered-' . md5($gender . '-' . $age_group . '-' . $club_id);
         
-        $recentlyPlayedAthletes = Cache::remember($cacheKey, 7200, function () use ($gender, $ageGroup, $clubId) {
+        $recentlyPlayedAthletes = Cache::remember($cacheKey, 0, function () use ($gender, $age_group, $club_id) {
             $query = Athlete::with('club:ratings_central_club_id,name,website')
                             ->recentlyPlayed();
     
-            if ($gender && $gender !== '-') {
-                $query->where('sex', $gender);
+            if ($gender !== 'Mixed') {
+                // TODO: Change this to a validated gender that exists in the source data
+                $query->where('sex', $gender[0]); 
             }
     
-            if ($ageGroup) {
-                $this->applyAgeGroupFilter($query, $ageGroup);
+            if ($age_group) {
+                $this->applyAgeGroupFilter($query, $age_group);
             }
     
-            if ($clubId) {
-                $query->where('club_id', $clubId);
+            if ($club_id) {
+                $query->where('club_id', $club_id);
             }
     
             return $query->orderByDesc('rating')->get();
@@ -52,8 +53,9 @@ class AthleteService
      * @param string $ageGroup
      * @return void
      */
-    private function applyAgeGroupFilter($query, string $ageGroup): void
+    private function applyAgeGroupFilter(Builder &$query, string $ageGroup): void
     {
+        
         $age_group_parts = explode(' ', $ageGroup);
         if (count($age_group_parts) < 2) {
             return;

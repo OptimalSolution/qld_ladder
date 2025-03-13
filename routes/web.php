@@ -30,9 +30,10 @@ Route::get('home', [FrontendController::class, 'index'])->name('home');
 Route::get('age-divisions/', [LadderController::class, 'ageGroups'])->name('age-groups');
 Route::get('age-divisions/{gender}/{group}', [LadderController::class, 'ageGroups'])->name('age-groups-subgroup');
 
-Route::get('gender-groups', [LadderController::class, 'genderGroups'])->name('gender-groups');
+Route::get('gender-groups/{gender_group?}', [LadderController::class, 'genderGroups'])->name('gender-groups');
 Route::get('club-groups/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-groups');
 Route::get('clubs/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-filter');
+Route::get('ladder/{gender_group?}/{age_group?}/{club_id?}/{club_slug?}/', [LadderController::class, 'ladderFilter'])->name('ladder-filter');
 
 // Language Switch
 Route::get('language/{language}', [LanguageController::class, 'switch'])->name('language.switch');

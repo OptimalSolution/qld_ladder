@@ -60,6 +60,12 @@ class LadderController extends Controller
         return view('frontend.ladder.index');
     }
 
+    public function ladderFilter(?string $gender_group = 'Mixed', ?string $age_group = 'Open', ?string $club_id = null, ?string $club_slug = null)
+    {
+        $athletes = $this->athleteService->getRecentlyPlayedAthletes($gender_group, $this->age_groups[$age_group], $club_id);
+        return view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug'))->with('age_groups', $this->age_groups);
+    }
+
     /**
      * QLD Junior Ladder Page.
      *
@@ -73,7 +79,7 @@ class LadderController extends Controller
             return redirect()->route('age-groups');
         }
 
-        $athletes = $this->athleteService->getRecentlyPlayedAthletes($gender_group, $group, $club_id);
+        
         $athletes = Athlete::with('club:ratings_central_club_id,name,website')
                         ->recentlyPlayed();
 
@@ -110,42 +116,28 @@ class LadderController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function genderGroups()
+    public function genderGroups(?string $gender_group = 'Mixed')
     {
-        // Add a cache key to the query
-        $cache_key = 'recent-athletes';
-        $athletes = \Cache::remember($cache_key, 7200, function () {
-            return Athlete::with('club:ratings_central_club_id,nickname,website')
-                        ->recentlyPlayed()
-                        ->orderByDesc('rating')
-                        ->get();
-        });
-        
-        // Add caching to the total count
-        $athlete_total = Cache::remember('athlete-total', 7200, function () {
-            return Athlete::count();
-        });
+        // Handle invalid groups
+        if (!in_array($gender_group, array_keys($this->gender_groupings))) {
+            return redirect()->route('gender-groups');
+        }
 
-        $ladder_total = $athletes->count();
-        $gender_grouped_athletes = $athletes->groupBy('sex')->sortKeys();
+        $athletes = Athlete::with('club:ratings_central_club_id,name,website')
+                        ->recentlyPlayed();
 
-        $gender_grouped_athletes = $gender_grouped_athletes->mapWithKeys(function ($group, $key) {
-            $key = match ($key) {
-                'M' => 'Male',
-                'F' => 'Female',
-                default => 'Other',
-            };
-            return [$key => $group];
-        });
+        if ($gender_group !== 'Mixed') {
+            $athletes = $athletes->where('sex', $this->gender_groupings[$gender_group]);
+        }
 
+        $athletes = $athletes->orderByDesc('rating')->get();
+        $gender_groups = $this->athleteService->getUniqueGenderGroups();
         $page_title = 'Gender Groups';
-        $gender_groups = $gender_grouped_athletes->keys();
-        return view('frontend.ladder.gender-groups', 
-                compact('gender_grouped_athletes', 
-                    'gender_groups', 
-                    'athlete_total',
-                    'ladder_total',
-                    'page_title'));
+        $athlete_total = Athlete::count();
+        $ladder_total = $athletes->count();
+
+        $gender_grouped_athletes = [];
+        return view('frontend.ladder.gender-groups', compact('athletes', 'gender_group', 'gender_groups', 'page_title', 'athlete_total', 'ladder_total', 'gender_grouped_athletes'))->with('age_groups', $this->age_groups);
     }
 
     /**

@@ -332,6 +332,12 @@
                     {{ __("Home") }}
                 </x-frontend.nav-item>
                 <x-frontend.nav-item
+                    :href="route('ladder-filter')"
+                    :active="request()->routeIs('ladder-filter')"
+                >
+                    {{ __("Categories") }}
+                </x-frontend.nav-item>
+                <x-frontend.nav-item
                     :href="route('age-groups')"
                     :active="request()->routeIs('age-groups') || request()->routeIs('age-groups-subgroup')"
                 >
@@ -349,6 +355,7 @@
                 >
                     {{ __("Clubs") }}
                 </x-frontend.nav-item>
+                
                 <!--
                 <x-frontend.nav-item
                     :href="route('frontend.posts.index')"
