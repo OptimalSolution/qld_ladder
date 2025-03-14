@@ -24,7 +24,7 @@ require __DIR__.'/auth.php';
 */
 
 // home route
-Route::get('home', [FrontendController::class, 'index'])->name('home');
+Route::get('home', [LadderController::class, 'index'])->name('home');
 
 // ladder sub groups
 Route::get('age-divisions/', [LadderController::class, 'ageGroups'])->name('age-groups');
@@ -45,7 +45,7 @@ Route::get('terms', Terms::class)->name('terms');
 Route::get('privacy', Privacy::class)->name('privacy');
 
 Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.'], function () {
-    Route::get('/', 'FrontendController@index')->name('index');
+    Route::get('/', 'LadderController@index')->name('index');
 
     Route::group(['middleware' => ['auth']], function () {
         /*

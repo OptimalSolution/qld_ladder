@@ -61,7 +61,12 @@ class LadderController extends Controller
      */
     public function index()
     {
-        return view('frontend.ladder.index');
+        return redirect()->route('ladder-filter', [
+            'gender_group' => 'Mixed',
+            'age_group' => 'Open',
+            'club_id' => 'all',
+            'club_slug' => 'combined'
+        ]);
     }
 
     public function ladderFilter(?string $gender_group = 'Mixed', ?string $age_group = 'Open', ?string $club_id = null, ?string $club_slug = null)
