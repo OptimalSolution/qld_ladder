@@ -13,6 +13,10 @@ use Illuminate\Support\Str;
 use Debugbar;
 use App\Services\AthleteService;
 use Illuminate\Support\Facades\Log;
+use Modules\Tag\Models\Tag;
+
+
+
 class LadderController extends Controller
 {
     protected $athleteService;
@@ -64,8 +68,30 @@ class LadderController extends Controller
     {
         $athletes = $this->athleteService->getRecentlyPlayedAthletes($gender_group, $this->age_groups[$age_group], $club_id);
         $clubs = Club::all();
-        return view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug', 'clubs'))->with('age_groups', $this->age_groups);
+        $selected_location = $this->getLocationFromClubId($club_id);
+        return view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug', 'clubs', 'selected_location'))
+                ->with('age_groups', $this->age_groups);
     }
+
+    public function getLocationFromClubId($club_id)
+    {
+        $location = null;
+        
+        if (str_starts_with($club_id, 'region-')) {
+            $parts = explode('-', $club_id);
+            $club_id = array_pop($parts);
+            $location = Tag::with('clubs')->select('name')->where('group_name', 'Regions')->where('id', $club_id)->orderBy('name')->first()->name; 
+        } elseif (str_starts_with($club_id, 'sub-region-')) {
+            $parts = explode('-', $club_id);
+            $club_id = array_pop($parts);
+            $location = Tag::with('clubs')->select('name')->where('group_name', 'Sub Regions')->where('id', $club_id)->orderBy('name')->first()->name;
+        } elseif (!empty($club_id) && is_numeric($club_id)) {
+            $location = Club::with('tags')->select('name')->where('ratings_central_club_id', $club_id)->orderBy('name')->first()->name;
+        }
+
+        return $location;
+    }
+    
 
     /**
      * QLD Junior Ladder Page.

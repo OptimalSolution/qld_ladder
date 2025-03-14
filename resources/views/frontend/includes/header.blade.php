@@ -335,19 +335,7 @@
                     :href="route('ladder-filter')"
                     :active="request()->routeIs('ladder-filter')"
                 >
-                    {{ __("Categories") }}
-                </x-frontend.nav-item>
-                <x-frontend.nav-item
-                    :href="route('age-groups')"
-                    :active="request()->routeIs('age-groups') || request()->routeIs('age-groups-subgroup')"
-                >
-                    {{ __("Age Divisions") }}
-                </x-frontend.nav-item>
-                <x-frontend.nav-item
-                    :href="route('gender-groups')"
-                    :active="request()->routeIs('gender-groups')"
-                >
-                    {{ __("Gender Groups") }}
+                    {{ __("Ladder Categories") }}
                 </x-frontend.nav-item>
                 <x-frontend.nav-item
                     :href="route('club-groups')"

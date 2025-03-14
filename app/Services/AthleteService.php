@@ -35,7 +35,25 @@ class AthleteService
                 $this->applyAgeGroupFilter($query, $age_group);
             }
     
-            if ($club_id) {
+            // if (!empty($club_id) && $club_id !== 'all') {
+            //     $query->where('club_id', $club_id);
+            // }
+
+            // Region & sub-region filter
+            if (str_starts_with($club_id, 'region-') || str_starts_with($club_id, 'sub-region-')) {
+
+                // Extract the ID from either region-X or sub-region-X pattern
+                $parts = explode('-', $club_id);
+                $region_id = end($parts);
+                
+                // Find all athletes in this region
+                $query->whereHas('club', function($query) use ($region_id) {
+                    $query->whereHas('tags', function($tagQuery) use ($region_id) {
+                        $tagQuery->where('tags.id', $region_id);
+                    });
+                });
+
+            } else if ($club_id !== 'all') {
                 $query->where('club_id', $club_id);
             }
     

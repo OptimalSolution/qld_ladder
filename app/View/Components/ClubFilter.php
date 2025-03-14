@@ -9,6 +9,7 @@ use App\Models\Club;
 use Illuminate\Support\Facades\Cache;
 use Modules\Tag\Models\Tag;
 
+
 class ClubFilter extends Component
 {
     public $clubs;
@@ -38,9 +39,18 @@ class ClubFilter extends Component
      */
     public function render(): View|Closure|string
     {
+        $request = request();
+        $age_group = $request->input('age_group');
+        $gender_group = $request->input('gender_group');
+        $club_id = $request->input('club_id');
+        $club_slug = $request->input('club_slug');
         return view('components.club-filter')
                 ->with('club_groups', $this->clubs)
                 ->with('regions', $this->regions)
-                ->with('sub_regions', $this->sub_regions);
+                ->with('sub_regions', $this->sub_regions)
+                ->with('age_group', $age_group)
+                ->with('gender_group', $gender_group)
+                ->with('club_id', $club_id)
+                ->with('club_slug', $club_slug);
     }
 }

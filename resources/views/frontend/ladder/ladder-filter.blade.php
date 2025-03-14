@@ -4,21 +4,23 @@
     {{ $page_title ?? "Ladder Categories" }}
 @endsection
 
+@php
+    $from_club_message = $selected_location ? 'from ' . $selected_location : '';
+@endphp
+
 @section("content")
     <section class="bg-gray-50 dark:bg-gray-800">
         <div class="mx-auto max-w-screen-xl px-4 py-12 text-center sm:px-12">
-            <h1
-                class="mb-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white sm:text-6xl"
-            >
+            <h1 class="mb-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white sm:text-6xl">
                 Ladder Categories
             </h1>
             <p class="mb-1 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48" style="text-align: justify;">
-                The following table shows the <b class="text-gray-900 dark:text-white">{{ $athletes->count() }} athlete{{ $athletes->count() == 1 ? '' : 's' }}</b> eligible for the <b class="text-gray-900 dark:text-white">{{ $age_groups[$age_group] }} {{ $gender_group }}</b> ladder.
-                To be considered for the ladder, players must have played since the start of <b class="text-gray-900 dark:text-white">{{ \Carbon\Carbon::now()->startOfYear()->subYears(1)->format('F jS, Y') }}</b>
+                The following table shows the <b class="text-gray-900 dark:text-white">{{ ($athletes->count() > 1) ? $athletes->count() : '' }} athlete{{ $athletes->count() == 1 ? '' : 's' }}</b> eligible for the <b class="text-gray-900 dark:text-white">{{ $age_groups[$age_group] }} {{ $gender_group }}</b> ladder.
+                To be considered for the ladder, players <b class="text-gray-900 dark:text-white">{{ $from_club_message }}</b> must have played since the start of <b class="text-gray-900 dark:text-white">{{ \Carbon\Carbon::now()->startOfYear()->subYears(1)->format('F jS, Y') }}</b>
             </p>
 
-            <div class="py-1 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
-                <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
+            <div class="py-6 px-4 mx-auto max-w-screen-xl sm:py-14 lg:px-6">
+                <div class="space-y-8 md:grid md:grid-cols-3 lg:grid-cols-3 md:gap-12 md:space-y-0 mb-4">
                     
                     <!-- Gender Groups -->
                     <div>
@@ -72,22 +74,9 @@
                     </div>
 
                     <!-- Clubs -->
-                    <div>
+                    <div class="mb-10">
                         <h3 class="mb-2 text-xl font-bold dark:text-white">Clubs & Regions</h3>
-
-                        <button id="dropdownDividerButton" data-dropdown-toggle="clubListing" class="inline-block px-4 py-2 m-1 text-sm font-medium {{ str_contains($age_group, 'Over') ? 'text-blue-700 bg-gray-100 border-blue-700 ring-2 ring-blue-700 dark:bg-gray-700 dark:text-white dark:border-blue-700' : 'text-gray-900 bg-white border border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600' }} rounded-full hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:hover:text-white dark:hover:bg-gray-700" type="button">Clubs & Regions
-                        </button>
-
-                        <!-- Dropdown menu -->
-                        <div id="clubListing" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
-                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 text-left" aria-labelledby="dropdownDividerButton">
-                                @foreach($clubs as $club)
-                                    <li>
-                                        <a href="{{ route('ladder-filter', ['age_group' => $age_group, 'gender_group' => $gender_group, 'club_id' => $club->ratings_central_club_id, 'club_slug' => $club->slug]) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ $club->name }}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
+                        <x-club-filter :gender_group="$gender_group" :age_group="$age_group" :club_id="$club_id" :club_slug="$club_slug" :selected_location="$selected_location" />
                     </div>
                 </div>
             </div>
@@ -95,7 +84,7 @@
 
             <x-athlete-table 
                 :athletes="$athletes" 
-                :columns="['rank', 'name', 'rating', 'age', 'gender', 'club']"
+                :columns="!empty($club_id) && is_numeric($club_id) ? ['rank', 'name', 'rating', 'age', 'gender'] : ['rank', 'name', 'rating', 'age', 'gender', 'club']"
             />
 
 
