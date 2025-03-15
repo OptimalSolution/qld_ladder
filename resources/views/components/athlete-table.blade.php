@@ -59,7 +59,11 @@
                 @endif
                 @if(in_array('name', $columns))
                 <td class="px-1 py-4 w-52">
-                    {{ $athlete->name }}
+                    @if(!empty($athlete->ratings_central_id))
+                        <a href="https://www.ratingscentral.com/Player.php?PlayerID={{ $athlete->ratings_central_id }}" target="_blank" class="text-blue-500 hover:underline">{{ $athlete->name }}</a>
+                    @else
+                        {{ $athlete->name }}
+                    @endif
                 </td>
                 @endif
                 @if(in_array('rating', $columns))

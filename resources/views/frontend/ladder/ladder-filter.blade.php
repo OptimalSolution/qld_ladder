@@ -35,7 +35,7 @@
             </p>
 
             <p class="my-6 text-nd text-centerfont-normal text-gray-500 dark:text-gray-100 sm:px-16 sm:text-xl xl:px-48">
-                Use the filters below to check out view the different categories:
+                Clicking on a player's name or club will allow you to see more information about them. Use the filters below to check out view the different categories:
             </p>
 
             <hr class="mt-8 border-gray-200 dark:border-gray-600">
