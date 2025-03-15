@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->integer('ratings_central_id')->unique();
             $table->integer('rating');
+            $table->integer('stdev');
             $table->integer('club_id');
             $table->string('city')->nullable();
             $table->string('state')->nullable();

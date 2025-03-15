@@ -50,27 +50,12 @@ class import_ratings_central_players extends Command
                     }
 
                     // Update critical info if athlete exists
-                    $player = Athlete::where('ratings_central_id', $player_data['ID'])->first();
-                    if ($player) {
-                        $this->info('Updating player: ' . $player_data['Name']);
-                        $player->update([
-                            'rating' => $player_data['Rating'],
-                            'club_id' => $player_data['Club'],
-                            'city' => $player_data['City'],
-                            'state' => $player_data['State'],
-                            'province' => $player_data['Province'],
-                            'postal_code' => $player_data['PostalCode'],
-                            'country' => $player_data['Country'],
-                            'birth_date' => $player_data['Birth'],
-                            'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
-                            'last_played' => $player_data['LastPlayed']
-                        ]);
-                    } else {
-                        $this->info('Importing player: ' . $player_data['Name'] . ' from ' . $player_data['City']);
-                        $player = Athlete::create([
+                    $player = Athlete::updateOrCreate(
+                        ['ratings_central_id' => $player_data['ID']],
+                        [
                             'name' => $player_data['Name'],
-                            'ratings_central_id' => $player_data['ID'],
                             'rating' => $player_data['Rating'],
+                            'stdev' => $player_data['StDev'],
                             'club_id' => $player_data['Club'],
                             'city' => $player_data['City'],
                             'state' => $player_data['State'],
@@ -80,8 +65,11 @@ class import_ratings_central_players extends Command
                             'birth_date' => $player_data['Birth'],
                             'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
                             'last_played' => $player_data['LastPlayed']
-                        ]);
-                    }
+                        ]
+                    );
+
+                    $action = $player->wasRecentlyCreated ? 'Importing' : 'Updating';
+                    $this->info("{$action} player: " . $player_data['Name'] . ($action === 'Importing' ? ' from ' . $player_data['City'] : ''));
                 }
             }
         }

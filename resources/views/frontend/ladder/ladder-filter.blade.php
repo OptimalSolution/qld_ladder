@@ -9,6 +9,21 @@
 @endphp
 
 @section("content")
+<style>
+    #scroll-to-top {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        z-index: 1000; /* Ensure it's above other elements */
+        display: block; /* Ensure it's displayed */
+    }
+    
+    @media (max-width: 768px) {
+        #scroll-to-top {
+            right: 24px; /* More from the right on mobile */
+        }
+    }
+</style>
     <section class="bg-gray-50 dark:bg-gray-800">
         <div class="mx-auto max-w-screen-xl px-4 py-12 text-center sm:px-12">
             <h1 class="mb-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white sm:text-6xl">
@@ -19,7 +34,14 @@
                 To be considered for the ladder, players <b class="text-gray-900 dark:text-white">{{ $from_club_message }}</b> must have played since the start of <b class="text-gray-900 dark:text-white">{{ \Carbon\Carbon::now()->startOfYear()->subYears(1)->format('F jS, Y') }}</b>
             </p>
 
+            <p class="my-6 text-nd text-centerfont-normal text-gray-500 dark:text-gray-100 sm:px-16 sm:text-xl xl:px-48">
+                Use the filters below to check out view the different categories:
+            </p>
+
+            <hr class="mt-8 border-gray-200 dark:border-gray-600">
+
             <div class="py-6 px-4 mx-auto max-w-screen-xl sm:py-14 lg:px-6">
+                
                 <div class="space-y-8 md:grid md:grid-cols-3 lg:grid-cols-3 md:gap-12 md:space-y-0 mb-4">
                     
                     <!-- Gender Groups -->
@@ -86,7 +108,6 @@
                 :athletes="$athletes" 
                 :columns="!empty($club_id) && is_numeric($club_id) ? ['rank', 'name', 'rating', 'age', 'gender'] : ['rank', 'name', 'rating', 'age', 'gender', 'club']"
             />
-
-
+            <x-scroll-to-top />
     </section>
 @endsection

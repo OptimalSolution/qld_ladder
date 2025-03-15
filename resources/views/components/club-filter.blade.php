@@ -55,39 +55,3 @@
         </svg>
     </button>
 </div>
-<script>
-    document.getElementById('clubSelect').addEventListener('change', function() {
-        if (this.value) {
-            window.location.href = this.value;
-        }
-    });
-    
-    document.getElementById('copyLinkBtn').addEventListener('click', function() {
-        const selectElement = document.getElementById('clubSelect');
-        const linkToCopy = selectElement.value;
-        
-        navigator.clipboard.writeText(linkToCopy).then(function() {
-            // Create and show a toast message
-            const toast = document.createElement('div');
-            toast.textContent = 'Link copied!';
-            toast.style.position = 'absolute';
-            toast.style.top = '7px';
-            toast.style.right = '0';
-            toast.style.transform = 'translateX(100%)';
-            toast.style.backgroundColor = '#4CAF50';
-            toast.style.color = 'white';
-            toast.style.padding = '5px 10px';
-            toast.style.borderRadius = '4px';
-            toast.style.fontSize = '14px';
-            toast.style.zIndex = '1000';
-            
-            const button = document.getElementById('copyLinkBtn');
-            button.parentNode.style.position = 'relative';
-            button.parentNode.appendChild(toast);
-            
-            setTimeout(function() {
-                toast.remove();
-            }, 2000);
-        });
-    });
-</script>
