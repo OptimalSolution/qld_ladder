@@ -1,7 +1,7 @@
 <nav class="border-b-2 border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-900">
     <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
         <a class="flex items-center space-x-3 rtl:space-x-reverse" href="/">
-            <img class="h-9 hidden" src="{{ secure_asset("img/logo-with-text.jpg") }}" alt="{{ app_name() }} Logo" />
+            <img class="h-9" src="{{ secure_asset("img/logo-with-text.jpg") }}" alt="{{ app_name() }} Logo" />
         </a>
         <div class="flex items-center justify-end space-x-1 md:order-2 md:space-x-0 rtl:space-x-reverse">
             <button
@@ -328,28 +328,27 @@
             <ul
                 class="mt-4 flex flex-col rounded-lg border border-gray-100 bg-gray-50 p-4 font-medium dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:p-0 md:dark:bg-gray-900 rtl:space-x-reverse"
             >
+            
                 <x-frontend.nav-item :active="request()->routeIs('home')">
                     {{ __("Home") }}
                 </x-frontend.nav-item>
                 <x-frontend.nav-item
-                    :href="route('age-groups')"
-                    :active="request()->routeIs('age-groups') || request()->routeIs('age-groups-subgroup')"
+                    :href="route('ladder-filter')"
+                    :active="request()->routeIs('ladder-filter')"
                 >
-                    {{ __("Age Divisions") }}
+                    {{ __("Ladder Categories") }}
                 </x-frontend.nav-item>
-                <x-frontend.nav-item
-                    :href="route('gender-groups')"
-                    :active="request()->routeIs('gender-groups')"
-                >
-                    {{ __("Gender Groups") }}
-                </x-frontend.nav-item>
+            
+            
+            <!--
                 <x-frontend.nav-item
                     :href="route('club-groups')"
                     :active="request()->routeIs('club-groups')"
                 >
                     {{ __("Clubs") }}
                 </x-frontend.nav-item>
-                <!--
+                
+                
                 <x-frontend.nav-item
                     :href="route('frontend.posts.index')"
                     :active="request()->routeIs('frontend.posts.*')"

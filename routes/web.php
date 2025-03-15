@@ -24,15 +24,16 @@ require __DIR__.'/auth.php';
 */
 
 // home route
-Route::get('home', [FrontendController::class, 'index'])->name('home');
+Route::get('home', [LadderController::class, 'index'])->name('home');
 
 // ladder sub groups
 Route::get('age-divisions/', [LadderController::class, 'ageGroups'])->name('age-groups');
 Route::get('age-divisions/{gender}/{group}', [LadderController::class, 'ageGroups'])->name('age-groups-subgroup');
 
-Route::get('gender-groups', [LadderController::class, 'genderGroups'])->name('gender-groups');
+Route::get('gender-groups/{gender_group?}', [LadderController::class, 'genderGroups'])->name('gender-groups');
 Route::get('club-groups/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-groups');
 Route::get('clubs/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-filter');
+Route::get('ladder/{gender_group?}/{age_group?}/{club_id?}/{club_slug?}/', [LadderController::class, 'ladderFilter'])->name('ladder-filter');
 
 // Language Switch
 Route::get('language/{language}', [LanguageController::class, 'switch'])->name('language.switch');
@@ -44,7 +45,7 @@ Route::get('terms', Terms::class)->name('terms');
 Route::get('privacy', Privacy::class)->name('privacy');
 
 Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.'], function () {
-    Route::get('/', 'FrontendController@index')->name('index');
+    Route::get('/', 'LadderController@index')->name('index');
 
     Route::group(['middleware' => ['auth']], function () {
         /*
