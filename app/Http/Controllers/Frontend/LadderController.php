@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Athlete;
-use Barryvdh\Debugbar\Twig\Extension\Debug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
@@ -20,27 +19,7 @@ use Modules\Tag\Models\Tag;
 class LadderController extends Controller
 {
     protected $athleteService;
-
-    public $age_groups = [
-        'U7' => 'Under 7',
-        'U9' => 'Under 9',
-        'U11' => 'Under 11',
-        'U13' => 'Under 13',
-        'U15' => 'Under 15',
-        'U17' => 'Under 17',
-        'U19' => 'Under 19',
-        'U21' => 'Under 21',
-        'O30' => 'Over 30',
-        'O40' => 'Over 40',
-        'O50' => 'Over 50',
-        'O60' => 'Over 60',
-        'O65' => 'Over 65',
-        'O70' => 'Over 70',
-        'O75' => 'Over 75',
-        'O80' => 'Over 80',
-        'O85' => 'Over 85',
-        'Open' => 'Open'
-    ];
+    protected $age_groups;
 
     public $gender_groupings = [
         'Male' => 'M',
@@ -52,6 +31,7 @@ class LadderController extends Controller
     public function __construct(AthleteService $athleteService)
     {
         $this->athleteService = $athleteService;
+        $this->age_groups = $athleteService->getAgeGroupsMap();
     }
  
     /**
@@ -71,6 +51,7 @@ class LadderController extends Controller
 
     public function ladderFilter(?string $gender_group = 'Mixed', ?string $age_group = 'Open', ?string $club_id = null, ?string $club_slug = null)
     {
+        DebugBar::info('Ladder Filter: ' . $gender_group . ' ' . $age_group . ' ' . $club_id);
         $athletes = $this->athleteService->getRecentlyPlayedAthletes($gender_group, $this->age_groups[$age_group], $club_id);
         $clubs = Club::all();
         $selected_location = $this->getLocationFromClubId($club_id);

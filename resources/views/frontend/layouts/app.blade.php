@@ -19,6 +19,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <!-- jQuery CDN -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.46.0/dist/apexcharts.min.js"></script>
 
         @vite(["resources/css/app-frontend.css", "resources/js/app-frontend.js"])
 

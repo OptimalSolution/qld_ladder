@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\Athlete;
+use Debugbar;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Builder;
+
 class AthleteService
 {
     /**
@@ -29,10 +31,12 @@ class AthleteService
             if ($gender !== 'Mixed') {
                 // TODO: Change this to a validated gender that exists in the source data
                 $query->where('sex', $gender[0]); 
+                DebugBar::info('Recent Athletes: Filtered by gender - ' . $gender);
             }
     
             if ($age_group) {
                 $this->applyAgeGroupFilter($query, $age_group);
+                DebugBar::info('Recent Athletes: Filtered by age group - ' . $age_group);
             }
     
             // if (!empty($club_id) && $club_id !== 'all') {
@@ -52,9 +56,11 @@ class AthleteService
                         $tagQuery->where('tags.id', $region_id);
                     });
                 });
+                \DebugBar::info('Recent Athletes: Filtered by region - ' . $region_id);
 
             } else if ($club_id !== 'all') {
                 $query->where('club_id', $club_id);
+                \DebugBar::info('Recent Athletes: Filtered by club - ' . $club_id);
             }
     
             return $query->orderByDesc('rating')->get();
@@ -80,16 +86,17 @@ class AthleteService
         }
         
         $age_group_number = $age_group_parts[1];
-        $date_to_compare = now()->startOfYear()->subYears($age_group_number);
-        
         $query->where('birth_date', '!=', '');
-        
         if (str_starts_with($ageGroup, 'Under')) {
+            // For "Under X", get people born after Jan 1 of the year when they would turn X
+            $date_to_compare = now()->startOfYear()->subYears($age_group_number);
             $date_minimum = now()->subYears(3)->startOfYear();
             $query->where('birth_date', '>=', $date_to_compare->format('Y-m-d'))
                   ->where('birth_date', '<=', $date_minimum->format('Y-m-d'));
         } else if (str_starts_with($ageGroup, 'Over')) {
-            $query->where('birth_date', '<=', $date_to_compare);
+            // For "Over X", get people born on or before Dec 31 of the year when they turn X
+            $date_to_compare = now()->endOfYear()->subYears($age_group_number);
+            $query->where('birth_date', '<=', $date_to_compare->format('Y-m-d'));
         }
     }
 
@@ -114,5 +121,29 @@ class AthleteService
             $genderGroups->push('Mixed');
             return $genderGroups;
         });
+    }
+
+    public function getAgeGroupsMap() {
+
+        return [
+            'U7' => 'Under 7',
+            'U9' => 'Under 9',
+            'U11' => 'Under 11',
+            'U13' => 'Under 13',
+            'U15' => 'Under 15',
+            'U17' => 'Under 17',
+            'U19' => 'Under 19',
+            'U21' => 'Under 21',
+            'O30' => 'Over 30',
+            'O40' => 'Over 40',
+            'O50' => 'Over 50',
+            'O60' => 'Over 60',
+            'O65' => 'Over 65',
+            'O70' => 'Over 70',
+            'O75' => 'Over 75',
+            'O80' => 'Over 80',
+            'O85' => 'Over 85',
+            'Open' => 'Open'
+        ];
     }
 } 

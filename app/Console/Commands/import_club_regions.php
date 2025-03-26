@@ -28,7 +28,7 @@ class import_club_regions extends Command
     {
         $this->info('Importing club regions...');
 
-        $file = storage_path('app/public/CLubRegions.csv');
+        $file = storage_path('app/public/ClubRegions.csv');
         if (!file_exists($file)) {
             $this->error("File not found: $file");
             return 1;
