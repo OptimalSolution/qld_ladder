@@ -38,7 +38,7 @@
                 Clicking on a player's name or club will allow you to see more information about them. Use the filters below to check out view the different categories:
             </p>
 
-            <div id="charts-container">
+            <div id="charts-container" class="hidden">
                 <div class="flex flex-wrap justify-center items-start gap-4">
                     <x-gender-distribution />
                     <x-rating-distribution />
