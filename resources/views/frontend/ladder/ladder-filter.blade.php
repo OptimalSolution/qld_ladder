@@ -38,20 +38,39 @@
                 Clicking on a player's name or club will allow you to see more information about them. Use the filters below to check out view the different categories:
             </p>
 
+            <div id="charts-container">
+                <div class="flex flex-wrap justify-center items-start gap-4">
+                    <x-gender-distribution />
+                    <x-rating-distribution />
+                </div>
+
+                <button id="hide-charts-btn" data-collapse-toggle="charts-container" class="w-1/5 block mx-auto mt-4 mb-4 px-5 py-2.5 text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Hide Charts
+                </button>
+            </div>
+            
+            <script>
+                $(document).ready(function() {
+                    $('.show-charts-btn, #hide-charts-btn').on('click', function() {
+                        $('#charts-container').slideToggle(300);
+                    });
+                });
+            </script>
+
             <hr class="mt-8 border-gray-200 dark:border-gray-600">
 
             <div class="py-6 px-4 mx-auto max-w-screen-xl sm:py-14 lg:px-6">
-                
                 <div class="space-y-8 md:grid md:grid-cols-3 lg:grid-cols-3 md:gap-12 md:space-y-0 mb-4">
-                    
                     <!-- Gender Groups -->
-                    <div>
-                        <h3 class="mb-2 text-xl font-bold dark:text-white">Gender Groups</h3>
-                        <p class="text-gray-500 dark:text-gray-400">
-                        <div class="gender-groups mt-4">
-                            <x-gender-filter :genderGroup="$gender_group" :ageGroup="$age_group" :clubId="$club_id" :clubSlug="$club_slug" routeName="ladder-filter" />
+                    <div class="justify-center items-center">
+                        <div class="flex justify-center items-center show-charts-btn" title="Show Charts">
+                            <h3 class="mb-2 text-xl font-bold dark:text-white">Gender Groups</h3>
+                            <svg alt="Chart logo" class="w-5 h-5 ml-2 mb-1 text-white items-center" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                            </svg>
                         </div>
-                        </p>
+                        <x-gender-filter :genderGroup="$gender_group" :ageGroup="$age_group" :clubId="$club_id" :clubSlug="$club_slug" routeName="ladder-filter" />
                     </div>
 
                     <!-- Age Divisions -->
@@ -97,7 +116,14 @@
 
                     <!-- Clubs -->
                     <div class="mb-10">
+
+                    <div class="flex justify-center items-center show-charts-btn" title="Show Charts">
                         <h3 class="mb-2 text-xl font-bold dark:text-white">Clubs & Regions</h3>
+                        <svg class="w-6 h-6 ml-2 mb-1 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15v4m6-6v6m6-4v4m6-6v6M3 11l6-5 6 5 5.5-5.5"/>
+                        </svg>
+                    </div>
+
                         <x-club-filter :gender_group="$gender_group" :age_group="$age_group" :club_id="$club_id" :club_slug="$club_slug" :selected_location="$selected_location" />
                     </div>
                 </div>
