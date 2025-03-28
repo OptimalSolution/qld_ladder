@@ -49,7 +49,7 @@ class LadderController extends Controller
         ]);
     }
 
-    public function ladderFilter(?string $gender_group = 'Mixed', ?string $age_group = 'Open', ?string $club_id = null, ?string $club_slug = null)
+    public function ladderFilter(?string $gender_group = 'Mixed', ?string $age_group = 'Open', ?string $club_id = 'all', ?string $club_slug = 'combined')
     {
         DebugBar::info('Ladder Filter: ' . $gender_group . ' ' . $age_group . ' ' . $club_id);
         $athletes = $this->athleteService->getRecentlyPlayedAthletes($gender_group, $this->age_groups[$age_group], $club_id);
