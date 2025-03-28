@@ -6,7 +6,7 @@
     </div>
   </div>
   <div class="explanation text-sm text-gray-500 dark:text-gray-400 mb-4 w-full text-left">
-    This chart displays the gender distribution of active athletes in the entire QLD ladder.
+    This chart displays the rating distribution of active athletes in the <strong class="text-gray-900 dark:text-white">currently filtered</strong> QLD ladder.
     </div>
   <div id="column-chart"></div>
     <div class="hidden grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">

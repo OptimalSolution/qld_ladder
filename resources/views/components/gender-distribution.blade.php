@@ -4,7 +4,7 @@
           <h5 class="text-xl text-left font-bold leading-none text-gray-900 dark:text-white pe-1">Gender Group Breakdown</h5>
       </div>
       <div class="explanation text-sm text-gray-500 dark:text-gray-400 mb-4 w-full text-left">
-        This chart displays the gender distribution of active athletes in the entire QLD ladder.
+        This chart displays the gender distribution of active athletes in the <strong class="text-gray-900 dark:text-white">entire</strong> QLD ladder.
       </div>
       <div class="flex justify-left items-center">
           <svg data-popover-target="chart-info" data-popover-placement="bottom" class="hidden w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
