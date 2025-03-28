@@ -17,7 +17,11 @@ yarn-error.log
 /.fleet
 /.vscode
 *.cache
-
+/public/build/
+/public/mix-manifest.json
+/public/css/
+/public/js/
+/public/img/
 
 
 
