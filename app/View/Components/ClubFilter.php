@@ -21,9 +21,9 @@ class ClubFilter extends Component
      */
     public function __construct()
     {
-        $this->regions = Tag::with('clubs')->select('id', 'name')->where('group_name', 'Regions')->orderBy('name')->get();
+        $this->regions = Tag::with('clubs')->select('id', 'name')->where('group_name', 'Regions')->where('name', '!=', 'All Regions')->orderBy('name')->get();
         $this->sub_regions = Tag::with('clubs')->select('id', 'name')->where('group_name', 'Sub Regions')->orderBy('name')->get();
-
+        
         // All the clubs that have recently played athletes
         $this->clubs = Cache::remember('all-clubs-with-recent-athletes',0, function () {
             return Club::whereHas('athletes', function ($query) {
