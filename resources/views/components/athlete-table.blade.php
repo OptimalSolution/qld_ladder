@@ -4,6 +4,13 @@
     'emptyMessage' => 'No athletes are currently eligible for the ladder'
 ])
 
+<div class="md:hidden text-sm text-gray-500 dark:text-gray-300 p-2 bg-gray-50 dark:bg-gray-800 flex items-center justify-end">
+    <span>Scroll for more info</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 mt-[2px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="animation: scrollArrow 1s ease-in-out infinite;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+    </svg>
+</div>
+
 <div {{ $attributes->merge(['class' => 'relative overflow-x-auto shadow-lg rounded-lg border border-gray-200']) }}>
     <table class="w-full text-lg text-left rtl:text-right text-gray-800 dark:text-gray-200">
         <thead class="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -58,9 +65,14 @@
                 </th>
                 @endif
                 @if(in_array('name', $columns))
-                <td class="px-1 py-4 w-52">
+                <td class="px-1 py-4 w-64">
                     @if(!empty($athlete->ratings_central_id))
-                        <a href="https://www.ratingscentral.com/Player.php?PlayerID={{ $athlete->ratings_central_id }}" target="_blank" class="text-blue-500 hover:underline">{{ $athlete->name }}</a>
+                        <a href="https://goodgame.pingponghero.com/#/player/RatingsCentral/{{ $athlete->ratings_central_id }}/{{ Str::studly(Str::slug($athlete->name)) }}" class="text-blue-500 hover:underline" target="_blank">
+                            {{ $athlete->name }}
+                            <svg class="hidden w-3.5 h-3.5 ml-1 inline-block text-gray-800 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11v4.833A1.166 1.166 0 0 1 13.833 17H2.167A1.167 1.167 0 0 1 1 15.833V4.167A1.166 1.166 0 0 1 2.167 3h4.618m4.447-2H17v5.768M9.111 8.889l7.778-7.778"/>
+                            </svg>
+                        </a>
                     @else
                         {{ $athlete->name }}
                     @endif
@@ -68,7 +80,11 @@
                 @endif
                 @if(in_array('rating', $columns))
                 <td class="text-center">
-                    {{ $athlete->rating }}
+                    @if(!empty($athlete->ratings_central_id))
+                        <a href="https://www.ratingscentral.com/Player.php?PlayerID={{ $athlete->ratings_central_id }}" target="_blank" class="text-blue-500 hover:underline">{{ $athlete->rating }}</a>
+                    @else
+                        {{ $athlete->rating }}
+                    @endif
                 </td>
                 @endif
                 @if(in_array('age', $columns))
@@ -94,4 +110,11 @@
             @endforeach                        
         </tbody>
     </table>
-</div> 
+</div>
+
+<style>
+    @keyframes scrollArrow {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(3px); }
+    }
+</style> 
