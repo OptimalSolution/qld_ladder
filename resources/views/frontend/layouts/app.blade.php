@@ -30,12 +30,12 @@
         <x-google-analytics />
     </head>
 
-    <body>
+    <body class="flex flex-col min-h-screen">
         <x-selected-theme />
 
         @include("frontend.includes.header")
 
-        <main class="bg-white dark:bg-gray-800">
+        <main class="flex-grow bg-white dark:bg-gray-800">
             @yield("content")
         </main>
 
