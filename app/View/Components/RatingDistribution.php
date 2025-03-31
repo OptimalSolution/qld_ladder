@@ -10,8 +10,10 @@ use App\Services\AthleteService;
 
 class RatingDistribution extends Component
 {
+    public $ratedAthletes;
     public $ratings;
     public $ratingsBreakdown;
+    
 
     /**
      * Create a new component instance.
@@ -28,8 +30,8 @@ class RatingDistribution extends Component
         // $this->ratings = Athlete::select('rating')->get()->pluck('rating');
 
         $age_groups = $athleteService->getAgeGroupsMap();
-        $athletes = $this->athleteService->getRecentlyPlayedAthletes($genderGroup, $age_groups[$ageGroup], $clubId);
-        $this->ratings = $athletes->pluck('rating');
+        $this->ratedAthletes = $this->athleteService->getRecentlyPlayedAthletes($genderGroup, $age_groups[$ageGroup], $clubId);
+        $this->ratings = $this->ratedAthletes->pluck('rating');
 
         // Get the min and max ratings
         $minRating = $this->ratings->min();

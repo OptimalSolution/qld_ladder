@@ -27,7 +27,10 @@ class GenderFilter extends Component
         $this->routeName = $routeName;
 
         // Get unique gender values and add 'Mixed' option
-        $genders = Athlete::select('sex')->distinct()->pluck('sex')->toArray();
+        $genders = Athlete::select('sex')->distinct()
+                                            ->recentlyPlayed()
+                                            ->pluck('sex')
+                                            ->toArray();
         $genders[] = 'Mixed';
         
         // Map abbreviations to full names in a single pass
