@@ -44,7 +44,7 @@
                     <x-rating-distribution />
                 </div>
 
-                <button id="hide-charts-btn" data-collapse-toggle="charts-container" class="w-1/5 block mx-auto mt-4 mb-4 px-5 py-2.5 text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button id="hide-charts-btn" data-collapse-toggle="charts-container" class="w-48 block mx-auto mt-4 mb-4 px-5 py-2.5 text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Hide Charts
                 </button>
             </div>
