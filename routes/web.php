@@ -6,6 +6,7 @@ use App\Http\Controllers\LanguageController;
 use App\Livewire\Privacy;
 use App\Livewire\Terms;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WebsiteController;
 
 /*
 *
@@ -43,6 +44,7 @@ Route::get('dashboard', 'App\Http\Controllers\Frontend\FrontendController@index'
 // pages
 Route::get('terms', Terms::class)->name('terms');
 Route::get('privacy', Privacy::class)->name('privacy');
+Route::get('contact', [WebsiteController::class, 'contact'])->name('contact');
 
 Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.'], function () {
     Route::get('/', 'LadderController@index')->name('index');
