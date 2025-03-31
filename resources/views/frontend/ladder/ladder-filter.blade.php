@@ -27,7 +27,7 @@
     <section class="bg-gray-50 dark:bg-gray-800">
         <div class="mx-auto max-w-screen-xl px-4 py-12 text-center sm:px-12">
             <h1 class="mb-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white sm:text-6xl">
-                Queensland Table Tennis Ladder
+                Queensland Ladder
             </h1>
             <p class="mb-1 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48" style="text-align: justify;">
             This project is a collaborative initiative between clubs to create an interactive ladder ratings system of table tennis players in Queensland, utilising the RatingsCentral system. The following table shows the <b class="text-gray-900 dark:text-white">{{ ($athletes->count() > 1) ? $athletes->count() : '' }} {{ Str::plural('athlete', $athletes->count()) }}</b> eligible for the <b class="text-gray-900 dark:text-white">{{ $age_groups[$age_group] }} {{ $gender_group }}</b> ladder.
