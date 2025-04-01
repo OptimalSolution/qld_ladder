@@ -63,8 +63,10 @@
         </div>
     </form>
 
-    <div class="py-2 text-gray-600 dark:text-gray-400">
-        {{ __("Create an account?") }}
-        <a class="underline" href="{{ route("register") }}">{{ __("Register") }}</a>
-    </div>
+    @if(user_registration())
+        <div class="py-2 text-gray-600 dark:text-gray-400">
+            {{ __("Create an account?") }}
+            <a class="underline" href="{{ route("register") }}">{{ __("Register") }}</a>
+        </div>
+    @endif
 </x-guest-layout>
