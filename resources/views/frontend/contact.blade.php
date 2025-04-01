@@ -1,7 +1,7 @@
 @extends("frontend.layouts.app")
 
 @section("title")
-    {{ app_name() }}
+    Contact Us | {{ config("app.name") }}
 @endsection
 
 @section("content")

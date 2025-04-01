@@ -1,7 +1,7 @@
 @extends("frontend.layouts.app")
 
 @section("title")
-    {{ $page_title ?? "Ladder Categories" }}
+    {{ $page_title ?? config("app.name") }}
 @endsection
 
 @php
