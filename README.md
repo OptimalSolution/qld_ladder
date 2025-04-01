@@ -1,4 +1,4 @@
-# Queensland Ladder
+# Table Tennis Clubs Ladder
 
 This project is a collaborative initiative between clubs to create an interactive ladder ratings system of table tennis players in Queensland, utilising the RatingsCentral system. This project is not affiliated with Table Tennis Queensland (TTQ), [please visit their website](https://www.tabletennisqld.org/eventsttq/rankings) for more info about rankings
 
