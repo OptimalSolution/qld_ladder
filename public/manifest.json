@@ -1,20 +1,43 @@
 {
     "name": "Table Tennis Clubs Ladder",
     "short_name": "TT Ladder",
-    "start_url": "/",
+    "description": "A ranking system for local table tennis clubs.",
+    "start_url": ".",
     "display": "standalone",
+    "orientation": "portrait",
     "background_color": "#010205",
     "theme_color": "#010205",
     "icons": [
       {
+        "purpose": "maskable",
+        "src": "/img/ttcl-app-icon-128.png",
+        "sizes": "128x128",
+        "type": "image/png"
+      },
+      {
+        "purpose": "maskable",
         "src": "/img/ttcl-app-icon-192.png",
         "sizes": "192x192",
         "type": "image/png"
       },
       {
+        "purpose": "maskable",
+        "src": "/img/ttcl-app-icon-256.png",
+        "sizes": "256x256",
+        "type": "image/png"
+      },
+      {
+        "purpose": "maskable",
+        "src": "/img/ttcl-app-icon-384.png",
+        "sizes": "384x384",
+        "type": "image/png"
+      },
+      {
+        "purpose": "maskable",
         "src": "/img/ttcl-app-icon-512.png",
         "sizes": "512x512",
         "type": "image/png"
       }
     ]
-  }  
+  }
+  
