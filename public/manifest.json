@@ -1,0 +1,20 @@
+{
+    "name": "Table Tennis Clubs Ladder",
+    "short_name": "TT Ladder",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#010205",
+    "theme_color": "#010205",
+    "icons": [
+      {
+        "src": "/img/ttcl-app-icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/img/ttcl-app-icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }  

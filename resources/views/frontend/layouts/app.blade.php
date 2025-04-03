@@ -14,6 +14,11 @@
         <!-- Shortcut Icon -->
         <link href="{{ asset("img/favicon.png") }}" rel="shortcut icon" />
         <link type="image/ico" href="{{ asset("img/favicon.png") }}" rel="icon" />
+        <link rel="manifest" href="/manifest.json">
+        <link rel="apple-touch-icon" href="/img/ttcl-app-icon-192.png">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="theme-color" content="#010205">
+
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}" />
