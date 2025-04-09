@@ -30,8 +30,13 @@ class processRatingsCentralZipInfo extends Command
      */
     public function handle()
     {
+        // First delete the RC_Lists folder contents
+        $files = File::files(storage_path('app/public/RC_Lists'));
+        foreach ($files as $file) {
+            unlink($file);
+        }
+
         $zipPath = storage_path('app/public/RC_Lists.zip');
-        
         // Extract the zip file if it exists
         if (file_exists($zipPath)) {
             $this->info("Extracting zip file to: " . storage_path('app/public/RC_Lists'));
