@@ -109,6 +109,28 @@
                 total: {
                     showAlways: true,
                     show: true,
+                    label: "Gender Ratio",
+                    fontFamily: "Inter, sans-serif",
+                    formatter: function (w) {
+                        const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                        // Calculate percentages and round to whole numbers
+                        const percentagesWithIndices = w.globals.seriesTotals.map((val, index) => ({
+                            percentage: Math.round((val / total) * 100),
+                            index: index
+                        }));
+                        // Sort percentages in descending order
+                        percentagesWithIndices.sort((a, b) => b.percentage - a.percentage);
+                        // Extract just the percentage values
+                        const sortedPercentages = percentagesWithIndices.map(item => item.percentage);
+                        // Create ratio string with bigger percentages first
+                        return sortedPercentages.join(' : ');
+                    },
+                },
+
+                /*
+                grand_total: {
+                    showAlways: true,
+                    show: true,
                     label: "Total Athletes",
                     fontFamily: "Inter, sans-serif",
                     formatter: function (w) {
@@ -118,6 +140,8 @@
                         return sum
                     },
                 },
+                */
+
                 value: {
                 show: true,
                 fontFamily: "Inter, sans-serif",
