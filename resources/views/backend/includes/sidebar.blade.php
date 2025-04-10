@@ -12,11 +12,11 @@ $notifications_latest = optional($notifications)->take(5);
                     class="sidebar-brand-full"
                     src="{{ asset("img/logo-with-text.jpg") }}"
                     alt="{{ app_name() }}"
-                    height="46"
+                    width="220"
                 />
                 <img
                     class="sidebar-brand-narrow"
-                    src="{{ asset("img/logo-square.jpg") }}"
+                    src="{{ asset("img/logo.png") }}"
                     alt="{{ app_name() }}"
                     height="46"
                 />
