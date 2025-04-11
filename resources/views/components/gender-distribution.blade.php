@@ -1,10 +1,12 @@
+
 <div class="max-w-sm w-full bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 md:p-6 inline-block">
+  @if(count($genderCounts) > 0)
   <div class="flex flex-col">
       <div class="pb-4 mb-4 border-b border-gray-200 dark:border-gray-700 w-full">
           <h5 class="text-xl text-left font-bold leading-none text-gray-900 dark:text-white pe-1">Gender Group Breakdown</h5>
       </div>
       <div class="explanation text-sm text-gray-500 dark:text-gray-400 mb-4 w-full text-left">
-        This chart displays the gender distribution of active athletes in the <strong class="text-gray-900 dark:text-white">entire</strong> QLD ladder.
+        This chart displays the gender distribution of active athletes in the <strong class="text-gray-900 dark:text-white">currently filtered</strong> ladder.
       </div>
       <div class="flex justify-left items-center">
           <svg data-popover-target="chart-info" data-popover-placement="bottom" class="hidden w-3.5 h-3.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -13,7 +15,7 @@
           <div data-popover id="chart-info" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
               <div class="p-3 space-y-2">
                   <h3 class="font-semibold text-gray-900 dark:text-white">Gender Distribution</h3>
-                  <p>This chart shows the gender distribution of the active athletes in the entire.</p>
+                  <p></p>
               </div>
               <div data-popper-arrow></div>
           </div>
@@ -79,6 +81,11 @@
       </a>
     </div>
   </div>
+  @else
+  <div class="text-center py-6 text-gray-500 dark:text-gray-400">
+      No gender distribution data available for the current selection.
+  </div>
+  @endif
 </div>
 <script>
         
@@ -112,18 +119,55 @@
                     label: "Gender Ratio",
                     fontFamily: "Inter, sans-serif",
                     formatter: function (w) {
-                        const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                        // Calculate percentages and round to whole numbers
-                        const percentagesWithIndices = w.globals.seriesTotals.map((val, index) => ({
-                            percentage: Math.round((val / total) * 100),
-                            index: index
-                        }));
-                        // Sort percentages in descending order
-                        percentagesWithIndices.sort((a, b) => b.percentage - a.percentage);
-                        // Extract just the percentage values
-                        const sortedPercentages = percentagesWithIndices.map(item => item.percentage);
-                        // Create ratio string with bigger percentages first
-                        return sortedPercentages.join(' : ');
+                        // Get the raw values
+                        const a = Math.round(w.globals.seriesTotals[0]);
+                        const b = Math.round(w.globals.seriesTotals[1]);
+                        const total = a + b;
+                        
+                        // Find the greatest common divisor (GCD)
+                        const gcd = (x, y) => {
+                            while(y) {
+                                const t = y;
+                                y = x % y;
+                                x = t;
+                            }
+                            return x;
+                        };
+                        
+                        // Choose larger value as numerator for more intuitive ratio
+                        if (a >= b && b > 0) {
+                            // Calculate the simplified ratio
+                            const divisor = gcd(a, b);
+                            const simplifiedA = a / divisor;
+                            const simplifiedB = b / divisor;
+                            
+                            // Only show simplified ratio if it's reasonably small
+                            if (simplifiedA <= 20 && simplifiedB <= 20) {
+                                return `${Math.round(simplifiedA)}:${Math.round(simplifiedB)}`;
+                            } else {
+                                // Fall back to approximate ratio
+                                return `~ ${Math.round(a/b)}:1`;
+                            }
+                        } else if (b > a && a > 0) {
+                            // Calculate the simplified ratio
+                            const divisor = gcd(b, a);
+                            const simplifiedB = b / divisor;
+                            const simplifiedA = a / divisor;
+                            
+                            // Only show simplified ratio if it's reasonably small
+                            if (simplifiedB <= 20 && simplifiedA <= 20) {
+                                return `${Math.round(simplifiedB)}:${Math.round(simplifiedA)}`;
+                            } else {
+                                // Fall back to approximate ratio
+                                return `~ ${Math.round(b/a)}:1`;
+                            }
+                        } else if (a > 0 && !b) {
+                            return "All Male";
+                        } else if (b > 0 && !a) {
+                            return "All Female";
+                        } else {
+                            return "N/A";
+                        }
                     },
                 },
 
@@ -199,7 +243,11 @@
 
     if (document.getElementById("donut-chart") && typeof ApexCharts !== 'undefined') {
     const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions());
-    chart.render();
+    
+    // Check if there's data before rendering the chart
+    if ($(JSON.parse('@json($genderCounts)')).length > 0) {
+        chart.render();    
+    } 
 
     // Get all the checkboxes by their class name
     const checkboxes = document.querySelectorAll('#age-groups input[type="checkbox"]');

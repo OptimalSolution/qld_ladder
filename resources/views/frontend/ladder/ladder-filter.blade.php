@@ -50,9 +50,26 @@
             </div>
             
             <script>
+
+                function isChartsVisible() {
+                    return localStorage.getItem('chartsVisible') === 'true';
+                }
+
                 $(document).ready(function() {
+                    // Check localStorage for saved preference
+                    const chartsVisible = localStorage.getItem('chartsVisible') === 'true';
+                    
+                    // Apply saved preference on page load
+                    if (chartsVisible) {
+                        $('#charts-container').removeClass('hidden').show();
+                    }
+                    
+                    // Toggle charts visibility and save preference
                     $('.show-charts-btn, #hide-charts-btn').on('click', function() {
-                        $('#charts-container').slideToggle(300);
+                        $('#charts-container').slideToggle(300, function() {
+                            // Save preference to localStorage after animation completes
+                            localStorage.setItem('chartsVisible', $(this).is(':visible'));
+                        });
                     });
                 });
             </script>

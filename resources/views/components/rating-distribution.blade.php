@@ -1,12 +1,13 @@
 
 <div class="max-w-sm w-full bg-white rounded-lg shadow-sm dark:bg-gray-800 p-4 md:p-6 inline-block">
+@if($ratingsBreakdown)
   <div class="flex justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700">
     <div class="flex items-center">
       <h5 class="text-xl text-left font-bold dark:text-white">Rating Distribution</h5>
     </div>
   </div>
   <div class="explanation text-sm text-gray-500 dark:text-gray-400 mb-4 w-full text-left">
-    This chart displays the rating distribution of active athletes in the <strong class="text-gray-900 dark:text-white">currently filtered</strong> ladder of {{ $ratedAthletes->count() }} {{ Str::plural('athlete', $ratedAthletes->count()) }}.
+    This chart displays the rating distribution of active athletes in the <strong class="text-gray-900 dark:text-white">currently filtered</strong> ladder.
     </div>
   <div id="column-chart"></div>
     <div class="hidden grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between">
@@ -53,6 +54,11 @@
         </a>
       </div>
     </div>
+@else
+    <div class="text-center py-6 text-gray-500 dark:text-gray-400">
+        No rating distribution data available for the current selection.
+    </div>
+@endif
 </div>
 <script>
 
@@ -153,8 +159,11 @@
 
     if(document.getElementById("column-chart") && typeof ApexCharts !== 'undefined') {
     const chart = new ApexCharts(document.getElementById("column-chart"), options);
-    chart.render();
     
+    // Check if there's data before rendering the chart
+    if ($(JSON.parse('@json($ratingsBreakdown)')).length > 0) {
+        chart.render();    
+    }
     // Listen for theme changes and update chart colors
     const observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
