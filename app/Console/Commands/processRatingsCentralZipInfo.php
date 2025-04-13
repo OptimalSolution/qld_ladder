@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Zip;
 
 
-class processRatingsCentralZipInfo extends Command
+class ProcessRatingsCentralZipInfo extends Command
 {
     /**
      * The name and signature of the console command.
@@ -30,10 +30,13 @@ class processRatingsCentralZipInfo extends Command
      */
     public function handle()
     {
-        // First delete the RC_Lists folder contents
-        $files = File::files(storage_path('app/public/RC_Lists'));
-        foreach ($files as $file) {
-            unlink($file);
+        // First, delete the RC_Lists folder contents
+        $rcListsPath = storage_path('app/public/RC_Lists');
+        if (!File::exists($rcListsPath)) {
+            File::makeDirectory($rcListsPath, 0755, true);
+            $this->info("Created directory: " . $rcListsPath);
+        } else {
+            File::cleanDirectory($rcListsPath);
         }
 
         $zipPath = storage_path('app/public/RC_Lists.zip');
@@ -54,16 +57,8 @@ class processRatingsCentralZipInfo extends Command
             unlink($zipPath);
         } 
 
-        // Import the club info
-        $this->info("Importing club info...");
         $this->call('import:clubs');
-
-        // Import the player info
-        $this->info("Importing player info...");
         $this->call('import:players');
-
-        // Import regions
-        $this->info("Importing regions...");
         $this->call('import:regions');
     }
 }

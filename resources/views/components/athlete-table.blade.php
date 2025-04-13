@@ -99,8 +99,8 @@
                 @endif
                 @if(in_array('club', $columns))
                 <td class="px-2 py-1 whitespace-nowrap">
-                @if(!empty($athlete->club?->website))
-                    <a class="text-blue-500" href="{{ $athlete->club->website }}" target="_blank">{{ $athlete->club->name ?? '' }}</a>
+                @if(!empty($athlete->clubWebsite()))
+                    <a class="text-blue-500" href="{{ $athlete->clubWebsite() }}" target="_blank">{{ $athlete->club->name ?? '' }}</a>
                 @else
                     {{ $athlete->club->name ?? '' }}
                 @endif

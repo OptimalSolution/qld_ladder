@@ -29,7 +29,10 @@ class import_ratings_central_clubs extends Command
         $this->info('Importing club info...');
 
         $file = storage_path('app/public/RC_Lists/ClubList.csv');
-        $csv = [];
+        if (!file_exists($file)) {
+            $this->error("Club file not found: $file");
+            return 1;
+        }
         $handle = fopen($file, 'r');
         $header = null;
         while (!feof($handle)) {

@@ -38,4 +38,24 @@ class Athlete extends Model
         $start_of_year_age = (empty($this->birth_date)) ? 0 : Carbon::parse($this->birth_date)->startOfYear()->age;
         return $start_of_year_age > 21 ? '21+' : $start_of_year_age;
     }
+
+    public function clubWebsite()
+    {
+        $special_case_clubs = [
+            '164' => 'https://tabletenniscairns.com.au',
+            '175' => 'https://townsvilletabletennis.org.au',
+            '169' => 'https://www.revolutionise.com.au/mackaytta',
+            '172' => 'https://www.rockhamptontabletennis.com',
+            '163' => 'https://www.revolutionise.com.au/bundytt/',
+            '173' => 'https://www.sunshinecoasttabletennis.club',
+            '174' => 'https://toowoombatabletennis.club',
+        ];
+
+        $website = $this->club?->website;
+        if($this->club_id && empty($website)) {
+            $website = $special_case_clubs[$this->club_id] ?? null;
+        }
+
+        return $website;
+    }
 }
