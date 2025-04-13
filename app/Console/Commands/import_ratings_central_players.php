@@ -30,7 +30,10 @@ class import_ratings_central_players extends Command
         $this->info('Importing players info...');
 
         $file = storage_path('app/public/RC_Lists/RatingList.csv');
-        $csv = [];
+        if (!file_exists($file)) {
+            $this->error("Player file not found: $file");
+            return 1;
+        }
         $handle = fopen($file, 'r');
         $header = null;
         while (!feof($handle)) {
