@@ -9,3 +9,11 @@ use Illuminate\Support\Facades\Log;
 //     (new \App\Console\Commands\DownloadRatingsCentralZips)->handle();
 // })->purpose('Download the latest zip files from Ratings Central')
 //   ->cron(sprintf('0 %d %d */2 * *', rand(0, 59), rand(3, 5)));
+
+// Update RatingsCentral ratings daily at 3:00 AM
+Artisan::command('update:rc-ratings', function () {
+    Log::info('Updating RatingsCentral ratings');
+    (new \App\Console\Commands\UpdateRatingsCentralRatings)->handle();
+})->purpose('Update RatingsCentral ratings')
+  ->between('3:00', '3:59')->dailyAt('3:00');
+

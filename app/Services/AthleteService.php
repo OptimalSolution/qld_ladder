@@ -28,15 +28,16 @@ class AthleteService
             $query = Athlete::with('club:ratings_central_club_id,name,website')
                             ->recentlyPlayed();
     
+            DebugBar::info('Recent Athletes - Unfiltered: ' . $query->count());
             if ($gender !== 'Mixed') {
                 // TODO: Change this to a validated gender that exists in the source data
                 $query->where('sex', $gender[0]); 
-                DebugBar::info('Recent Athletes: Filtered by gender - ' . $gender);
+                DebugBar::info('Recent Athletes: Filtered by gender - ' . $gender . ' - ' . $query->count());
             }
     
             if ($age_group) {
                 $this->applyAgeGroupFilter($query, $age_group);
-                DebugBar::info('Recent Athletes: Filtered by age group - ' . $age_group);
+                DebugBar::info('Recent Athletes: Filtered by age group - ' . $age_group . ' - ' . $query->count());
             }
     
             // if (!empty($club_id) && $club_id !== 'all') {

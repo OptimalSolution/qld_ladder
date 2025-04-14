@@ -29,23 +29,36 @@ class RatingsService
                         continue;
                     }
 
+                    // NOTE: PrimaryClub is for ratings updates while Club is from Director zips
+                    $club_id = 1380; // Default club ID (TTA)
+                    if (!empty($player_data['PrimaryClub'])) {
+                        $club_id = $player_data['PrimaryClub'];
+                    } elseif (!empty($player_data['Club'])) {
+                        $club_id = $player_data['Club'];
+                    }
+                    
+                    $update_data = [
+                        'name' => $player_data['Name'],
+                        'rating' => $player_data['Rating'],
+                        'stdev' => $player_data['StDev'],
+                        'club_id' => $club_id,
+                        'city' => $player_data['City'],
+                        'state' => $player_data['State'],
+                        'province' => $player_data['Province'],
+                        'postal_code' => $player_data['PostalCode'],
+                        'country' => $player_data['Country'],
+                        'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
+                        'last_played' => $player_data['LastPlayed']
+                    ];
+
+                    if (!empty($player_data['Birth'])) {
+                        $update_data['birth_date'] = $player_data['Birth'];
+                    }
+
                     // Update critical info if athlete exists
                     $player = Athlete::updateOrCreate(
                         ['ratings_central_id' => $player_data['ID']],
-                        [
-                            'name' => $player_data['Name'],
-                            'rating' => $player_data['Rating'],
-                            'stdev' => $player_data['StDev'],
-                            'club_id' => $player_data['Club'],
-                            'city' => $player_data['City'],
-                            'state' => $player_data['State'],
-                            'province' => $player_data['Province'],
-                            'postal_code' => $player_data['PostalCode'],
-                            'country' => $player_data['Country'],
-                            'birth_date' => isset($player_data['Birth']) ? $player_data['Birth'] : null,
-                            'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
-                            'last_played' => $player_data['LastPlayed']
-                        ]
+                        $update_data
                     );
 
                     if ($player->wasRecentlyCreated) {

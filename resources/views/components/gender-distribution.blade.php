@@ -124,6 +124,10 @@
                         const b = Math.round(w.globals.seriesTotals[1]);
                         const total = a + b;
                         
+                        // Get the actual labels
+                        const labelA = w.globals.labels[0];
+                        const labelB = w.globals.labels[1];
+                        
                         // Find the greatest common divisor (GCD)
                         const gcd = (x, y) => {
                             while(y) {
@@ -162,9 +166,9 @@
                                 return `~ ${Math.round(b/a)}:1`;
                             }
                         } else if (a > 0 && !b) {
-                            return "All Male";
+                            return `All ${labelA}`;
                         } else if (b > 0 && !a) {
-                            return "All Female";
+                            return `All ${labelB}`;
                         } else {
                             return "N/A";
                         }
