@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Athlete;
+
+class RatingsService
+{
+    public function updateRatingsCentralRatingsFromStoredFile($file)
+    {
+        $handle = fopen($file, 'r');
+        $header = null;
+        $created_count = 0;
+        $updated_count = 0;
+        
+        while (!feof($handle)) {
+            $row = fgetcsv($handle, 1000, ",");
+            if ($row) {
+
+                if ($header === null) {
+                    $header = $row;
+                    // Make sure header is only alphanumeric
+                    $header = preg_replace('/[^a-zA-Z0-9]/', '', $header);
+                    continue;
+                } else {
+                    
+                    $player_data = array_combine($header, $row);
+                    if (! $this->eligibleRatingsCentralAthlete($player_data)) {
+                        continue;
+                    }
+
+                    // Update critical info if athlete exists
+                    $player = Athlete::updateOrCreate(
+                        ['ratings_central_id' => $player_data['ID']],
+                        [
+                            'name' => $player_data['Name'],
+                            'rating' => $player_data['Rating'],
+                            'stdev' => $player_data['StDev'],
+                            'club_id' => $player_data['Club'],
+                            'city' => $player_data['City'],
+                            'state' => $player_data['State'],
+                            'province' => $player_data['Province'],
+                            'postal_code' => $player_data['PostalCode'],
+                            'country' => $player_data['Country'],
+                            'birth_date' => isset($player_data['Birth']) ? $player_data['Birth'] : null,
+                            'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
+                            'last_played' => $player_data['LastPlayed']
+                        ]
+                    );
+
+                    if ($player->wasRecentlyCreated) {
+                        $created_count++;
+                    } else {
+                        $updated_count++;
+                    }
+                }
+            }
+        }
+        fclose($handle);
+
+        return "Players info imported successfully. Created: $created_count, Updated: $updated_count, Total: " . Athlete::count();
+    }
+
+    private function eligibleRatingsCentralAthlete($player_data)
+    {
+        return $player_data['Province'] === 'QLD' && 
+                $player_data['Country'] === 'AUS' && 
+                $player_data['Deceased'] === '';
+    }
+} 
