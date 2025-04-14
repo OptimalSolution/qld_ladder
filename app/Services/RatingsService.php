@@ -48,12 +48,9 @@ class RatingsService
                         'postal_code' => $player_data['PostalCode'],
                         'country' => $player_data['Country'],
                         'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
-                        'last_played' => $player_data['LastPlayed']
+                        'last_played' => $player_data['LastPlayed'],
+                        'birth_date' => !empty($player_data['Birth']) ? $player_data['Birth'] : now()
                     ];
-
-                    if (!empty($player_data['Birth'])) {
-                        $update_data['birth_date'] = $player_data['Birth'];
-                    }
 
                     // Update critical info if athlete exists
                     $player = Athlete::updateOrCreate(

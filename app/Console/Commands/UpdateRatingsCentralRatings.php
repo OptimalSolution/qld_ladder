@@ -6,6 +6,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
 use App\Services\RatingsService;
+use App\Models\Setting;
+
+
 class UpdateRatingsCentralRatings extends Command
 {
     /**
@@ -40,6 +43,7 @@ class UpdateRatingsCentralRatings extends Command
         
         // Get the data from the API, and only save it if it has changed
         $newContent = Http::get($url)->body();
+        Setting::add('ratings_last_checked', now(), 'datetime');
         $contentChanged = true;
         if (File::exists($path)) {
             $newHash = md5($newContent);
@@ -58,6 +62,7 @@ class UpdateRatingsCentralRatings extends Command
             $ratingsService = new RatingsService();
             $result = $ratingsService->updateRatingsCentralRatingsFromStoredFile($path);
             $this->info('Rating update result: ' . $result);
+            Setting::add('ratings_last_updated', now(), 'datetime');
         }        
     }
 }
