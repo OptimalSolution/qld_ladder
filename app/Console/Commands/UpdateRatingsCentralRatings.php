@@ -60,7 +60,7 @@ class UpdateRatingsCentralRatings extends Command
             File::put($path, $newContent);
             $this->info('RatingsCentral ratings updated and saved to ' . $path);
             $ratingsService = new RatingsService();
-            $result = $ratingsService->updateRatingsCentralRatingsFromStoredFile($path);
+            $result = $ratingsService->updateRatingsCentralRatingsFromStoredFile($path, true);
             $this->info('Rating update result: ' . $result);
             Setting::add('ratings_last_updated', now(), 'datetime');
         }        

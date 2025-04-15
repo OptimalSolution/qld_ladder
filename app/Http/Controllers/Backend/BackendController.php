@@ -20,10 +20,12 @@ class BackendController extends Controller
         // Get the raw date values
         $ratings_last_checked_raw = Setting::get('ratings_last_checked');
         $ratings_last_updated_raw = Setting::get('ratings_last_updated');
-        
+        $full_ratings_last_updated_raw = Setting::get('full_ratings_last_updated');
+
         // Format dates to be human readable if they exist
         $ratings_last_checked = $ratings_last_checked_raw ? Carbon::parse($ratings_last_checked_raw)->format('F jS, h:i A') : '[Never]';
         $ratings_last_updated = $ratings_last_updated_raw ? Carbon::parse($ratings_last_updated_raw)->format('F jS, h:i A') : '[Never]';
+        $full_ratings_last_updated = $full_ratings_last_updated_raw ? Carbon::parse($full_ratings_last_updated_raw)->format('F jS, h:i A') : '[Never]';
 
         // Common cutoffs
         $age_minimum = now()->subYears(3)->startOfYear();
@@ -95,7 +97,8 @@ class BackendController extends Controller
             'club_count',
             'club_percentage',
             'inaccurate_birthdate_count',
-            'inaccurate_birthdate_percentage'
+            'inaccurate_birthdate_percentage',
+            'full_ratings_last_updated'
         ));
     }
 }

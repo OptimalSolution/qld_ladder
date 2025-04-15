@@ -56,7 +56,7 @@
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis-inverse">{{ $ladder_juniors_percentage }}% of {{ $junior_athletes_count }} eligible juniors</small>
+                <small class="text-medium-emphasis-inverse">{{ $ladder_juniors_percentage }}% of {{ $junior_athletes_count }} juniors</small>
             </div>
         </div>
     </div>
@@ -76,7 +76,7 @@
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis-inverse">{{ $ladder_seniors_percentage }}% of {{ $senior_athletes_count }} eligible seniors</small>
+                <small class="text-medium-emphasis-inverse">{{ $ladder_seniors_percentage }}% of {{ $senior_athletes_count }} seniors</small>
             </div>
         </div>
     </div>
@@ -147,22 +147,22 @@
         </div>
     </div>
     <!-- /.col-->
-    <div class="col-sm-6 col-lg-3" style="display: none">
+    <div class="col-sm-6 col-lg-3">
         <div class="card mb-4">
             <div class="card-body">
-                <div class="fs-4 fw-semibold">$98.111,00</div>
-                <div>Widget title</div>
+                <div class="fs-4 fw-semibold">Full Athlete Import</div>
+                <div>{{ $full_ratings_last_updated }}</div>
                 <div class="progress progress-thin my-2">
                     <div
-                        class="progress-bar bg-warning"
+                        class="progress-bar bg-info"
                         role="progressbar"
-                        style="width: 25%"
-                        aria-valuenow="25"
+                        style="width: 100%"
+                        aria-valuenow="100"
                         aria-valuemin="0"
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis">Widget helper text</small>
+                <small class="text-medium-emphasis">RatingsCentral Athlete Import</small>
             </div>
         </div>
     </div>
