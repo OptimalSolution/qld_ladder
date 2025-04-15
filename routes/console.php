@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Log;
 //   ->cron(sprintf('0 %d %d */2 * *', rand(0, 59), rand(3, 5)));
 
 // Update RatingsCentral ratings daily at 3:00 AM
-Artisan::command('update:rc-ratings', function () {
+Artisan::command('update:rc-ratings-scheduler', function () {
     Log::info('Updating RatingsCentral ratings');
-    (new \App\Console\Commands\UpdateRatingsCentralRatings)->handle();
+    Artisan::call('update:rc-ratings');
 })->purpose('Update RatingsCentral ratings')
   ->between('3:00', '3:59')->dailyAt('3:00');
 
