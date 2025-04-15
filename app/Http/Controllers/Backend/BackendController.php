@@ -68,17 +68,16 @@ class BackendController extends Controller
             ->where('birth_date', '<=', $junior_cutoff_date->format('Y-m-d'))
             ->recentlyPlayed()->count();
 
-        $ladder_juniors_percentage = round($ladder_juniors_count / $junior_athletes_count * 100);
-        $ladder_seniors_percentage = round($ladder_seniors_count / $senior_athletes_count * 100);        
-
-        $ladder_athletes_percentage = round($ladder_athletes_count / $athletes_count * 100);
+        $ladder_juniors_percentage = $junior_athletes_count > 0 ? round($ladder_juniors_count / $junior_athletes_count * 100) : 0;
+        $ladder_seniors_percentage = $senior_athletes_count > 0 ? round($ladder_seniors_count / $senior_athletes_count * 100) : 0;        
+        $ladder_athletes_percentage = $athletes_count > 0 ? round($ladder_athletes_count / $athletes_count * 100) : 0;
         
         $inaccurate_birthdate_count = Athlete::where('birth_date', '')
             ->orWhere('birth_date', '>', $age_minimum->format('Y-m-d'))
             ->recentlyPlayed()
             ->count();
 
-        $inaccurate_birthdate_percentage = round($inaccurate_birthdate_count / $ladder_athletes_count * 100);
+        $inaccurate_birthdate_percentage = $ladder_athletes_count > 0 ? round($inaccurate_birthdate_count / $ladder_athletes_count * 100) : 0;
 
         return view('backend.index', compact(
             'ratings_last_checked',
