@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Athlete;
 use Illuminate\Console\Command;
 use App\Services\RatingsService;
-
+use App\Models\Setting;
 class import_ratings_central_players extends Command
 {
     /**
@@ -31,5 +31,6 @@ class import_ratings_central_players extends Command
         $file = storage_path('app/public/RC_Lists/RatingList.csv');
         $results = $ratingsService->updateRatingsCentralRatingsFromStoredFile($file);
         $this->info("Player import result: $results");
+        Setting::add('full_ratings_last_updated', now(), 'datetime');
     }
 }

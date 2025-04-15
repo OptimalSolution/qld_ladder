@@ -6,7 +6,7 @@ use App\Models\Athlete;
 
 class RatingsService
 {
-    public function updateRatingsCentralRatingsFromStoredFile($file)
+    public function updateRatingsCentralRatingsFromStoredFile($file, $update_existing_only = false)
     {
         $handle = fopen($file, 'r');
         $header = null;
@@ -49,19 +49,28 @@ class RatingsService
                         'country' => $player_data['Country'],
                         'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
                         'last_played' => $player_data['LastPlayed'],
-                        'birth_date' => !empty($player_data['Birth']) ? $player_data['Birth'] : now()
                     ];
 
-                    // Update critical info if athlete exists
-                    $player = Athlete::updateOrCreate(
-                        ['ratings_central_id' => $player_data['ID']],
-                        $update_data
-                    );
-
-                    if ($player->wasRecentlyCreated) {
-                        $created_count++;
+                    if ($update_existing_only) {
+                        $player = Athlete::where('ratings_central_id', $player_data['ID'])->first();
+                        if ($player) {
+                            $player->update($update_data);
+                            $updated_count++;
+                        }   
                     } else {
-                        $updated_count++;
+                        // Add birth_date to update data when creating or updating
+                        $update_data['birth_date'] = !empty($player_data['Birth']) ? $player_data['Birth'] : now();
+                        // Update critical info if athlete exists
+                        $player = Athlete::updateOrCreate(
+                            ['ratings_central_id' => $player_data['ID']],
+                            $update_data
+                        );
+
+                        if ($player->wasRecentlyCreated) {
+                            $created_count++;
+                        } else {
+                            $updated_count++;
+                        }
                     }
                 }
             }
