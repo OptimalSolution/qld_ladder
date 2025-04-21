@@ -7,6 +7,9 @@ use App\Models\Athlete;
 use App\Models\Setting;
 use App\Models\Club;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Artisan;
 
 class BackendController extends Controller
 {
@@ -100,5 +103,20 @@ class BackendController extends Controller
             'inaccurate_birthdate_percentage',
             'full_ratings_last_updated'
         ));
+    }
+
+    public function uploadRatings(Request $request)
+    {
+        $request->validate([
+            'ratings_file' => 'required|file|mimes:zip|max:10240', // 10MB max
+        ]);
+
+        $file = $request->file('ratings_file');
+        Storage::disk('public')->putFileAs('', $file, 'RC_Lists.zip');
+        flash("Ratings file uploaded successfully. Processing in progress...")->success()->important();
+
+        // Run the artisan command import:rc-info
+        Artisan::call('import:rc-info');
+        return redirect()->back();
     }
 }

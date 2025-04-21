@@ -124,6 +124,53 @@ class AthleteService
         });
     }
 
+    /**
+     * Calculate the age range for a given age based on defined age groups
+     *
+     * @param int $age The athlete's age
+     * @return string The age range description
+     */
+    public function calculateAgeRange(int $age): string {
+        // Handle specific age ranges based on examples
+        if ($age < 7) {
+            return "Under 7";
+        } elseif ($age >= 7 && $age < 9) {
+            return "7-8";
+        } elseif ($age >= 9 && $age < 11) {
+            return "9-10";
+        } elseif ($age >= 11 && $age < 13) {
+            return "11-12";
+        } elseif ($age >= 13 && $age < 15) {
+            return "13-14";
+        } elseif ($age >= 15 && $age < 17) {
+            return "15-16";
+        } elseif ($age >= 17 && $age < 19) {
+            return "17-18";
+        } elseif ($age >= 19 && $age < 21) {
+            return "19-20";
+        } elseif ($age >= 21 && $age < 30) {
+            return "21-29";
+        } elseif ($age >= 30 && $age < 40) {
+            return "30-39";
+        } elseif ($age >= 40 && $age < 50) {
+            return "40-49";
+        } elseif ($age >= 50 && $age < 60) {
+            return "50-59";
+        } elseif ($age >= 60 && $age < 65) {
+            return "60-64";
+        } elseif ($age >= 65 && $age < 70) {
+            return "65-69";
+        } elseif ($age >= 70 && $age < 75) {
+            return "70-74";
+        } elseif ($age >= 75 && $age < 80) {
+            return "75-79";
+        } elseif ($age >= 80 && $age < 85) {
+            return "80-84";
+        } else {
+            return "85+";
+        }
+    }
+
     public function getAgeGroupsMap() {
 
         return [
