@@ -9,8 +9,8 @@
                     <div
                         class="progress-bar"
                         role="progressbar"
-                        style="width: 100%"
-                        aria-valuenow="100"
+                        style="width: {{ $club_percentage }}%"
+                        aria-valuenow="{{ $club_percentage }}"
                         aria-valuemin="0"
                         aria-valuemax="100"
                     ></div>
@@ -85,7 +85,7 @@
 <!-- /.row-->
 
 <div class="row">
-<div class="col-sm-6 col-lg-3">
+    <div class="col-sm-6 col-lg-3">
         <div class="card bg-danger mb-4 text-white">
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $inaccurate_birthdate_count }}</div>
@@ -104,53 +104,10 @@
             </div>
         </div>
     </div>
-</div>
-
-<div class="row">
     <div class="col-sm-6 col-lg-3">
         <div class="card mb-4">
             <div class="card-body">
-                <div class="fs-4 fw-semibold">Last Ratings Check</div>
-                <div>{{ $ratings_last_checked }}</div>
-                <div class="progress progress-thin my-2">
-                    <div
-                        class="progress-bar bg-success"
-                        role="progressbar"
-                        style="width: 100%"
-                        aria-valuenow="100"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                    ></div>
-                </div>
-                <small class="text-medium-emphasis">RatingsCentral Ratings</small>
-            </div>
-        </div>
-    </div>
-    <!-- /.col-->
-    <div class="col-sm-6 col-lg-3">
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="fs-4 fw-semibold">Last Ratings Update</div>
-                <div>{{ $ratings_last_updated }}</div>
-                <div class="progress progress-thin my-2">
-                    <div
-                        class="progress-bar bg-success"
-                        role="progressbar"
-                        style="width: 100%"
-                        aria-valuenow="100"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                    ></div>
-                </div>
-                <small class="text-medium-emphasis">Ladder Ratings</small>
-            </div>
-        </div>
-    </div>
-    <!-- /.col-->
-    <div class="col-sm-6 col-lg-3">
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="fs-4 fw-semibold">Full Athlete Import</div>
+                <div class="fs-4 fw-semibold">Last RC Ratings Import</div>
                 <div>{{ $full_ratings_last_updated }}</div>
                 <div class="progress progress-thin my-2">
                     <div
@@ -162,7 +119,7 @@
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis">RatingsCentral Athlete Import</small>
+                <small class="text-medium-emphasis">RatingsCentral ED zip file</small>
             </div>
         </div>
     </div>
@@ -200,6 +157,50 @@
         </div>
     </div>
     <!-- /.col-->
+</div>
+
+<div class="row">
+    <div class="col-sm-6 col-lg-3" style="display: none;">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="fs-4 fw-semibold">Last Ratings Check</div>
+                <div>{{ $ratings_last_checked }}</div>
+                <div class="progress progress-thin my-2">
+                    <div
+                        class="progress-bar bg-success"
+                        role="progressbar"
+                        style="width: 100%"
+                        aria-valuenow="100"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    ></div>
+                </div>
+                <small class="text-medium-emphasis">RatingsCentral Ratings</small>
+            </div>
+        </div>
+    </div>
+    <!-- /.col-->
+    <div class="col-sm-6 col-lg-3"  style="display: none;">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="fs-4 fw-semibold">Last Ratings Update</div>
+                <div>{{ $ratings_last_updated }}</div>
+                <div class="progress progress-thin my-2">
+                    <div
+                        class="progress-bar bg-success"
+                        role="progressbar"
+                        style="width: 100%"
+                        aria-valuenow="100"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    ></div>
+                </div>
+                <small class="text-medium-emphasis">Ladder Ratings</small>
+            </div>
+        </div>
+    </div>
+    <!-- /.col-->
+    
 </div>
 <!-- /.row-->
 
