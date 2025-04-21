@@ -34,6 +34,12 @@ class import_club_regions extends Command
             return 1;
         }
 
+        $region_count = 0;
+        $regions_created = 0;
+        $regions_updated = 0;
+        $sub_regions_created = 0;
+        $sub_regions_updated = 0;
+
         $csv = [];
         $handle = fopen($file, 'r');
         $header = null;
@@ -46,6 +52,7 @@ class import_club_regions extends Command
                     continue;
                 } else {
                     $club_data = array_combine($header, $row);
+                    $region_count++;
                     
                     // Find the club by Ratings Central ID
                     $club = Club::where('ratings_central_club_id', $club_data['RC Club ID'])->first();
@@ -67,7 +74,11 @@ class import_club_regions extends Command
                             
                             // Attach the region tag to the club
                             $club->tags()->syncWithoutDetaching([$regionTag->id]);
-                            $this->info('Updating club region: ' . $club_data['Club Name'] . ' to ' . $club_data['Region']);
+                            if($regionTag->wasRecentlyCreated) {
+                                $regions_created++;
+                            } else {
+                                $regions_updated++;
+                            }
                         }
 
                         // Find or create the sub-region tag
@@ -79,17 +90,21 @@ class import_club_regions extends Command
                             
                             // Attach the sub-region tag to the club
                             $club->tags()->syncWithoutDetaching([$subRegionTag->id]);
-                            $this->info('Updating club sub-region: ' . $club_data['Club Name'] . ' to ' . $club_data['Sub Region']);
+                            if($subRegionTag->wasRecentlyCreated) {
+                                $sub_regions_created++;
+                            } else {
+                                $sub_regions_updated++;
+                            }
                         }
                     } else {
-                        $this->warn('Club not found: ' . $club_data['Club Name'] . ' (ID: ' . $club_data['RC Club ID'] . ')');
+                        $this->error('Club not found: ' . $club_data['Club Name'] . ' (ID: ' . $club_data['RC Club ID'] . ')');
                     }
                 }
             }
         }
         
         fclose($handle);
-        $this->info('Club regions imported successfully.');
-       
+        $this->info("Regions Created: $regions_created, Updated: $regions_updated | Sub Regions Created: $sub_regions_created, Updated: $sub_regions_updated");
+        \Log::info("[Club Region Import] Regions Created: $regions_created, Updated: $regions_updated | Sub Regions Created: $sub_regions_created, Updated: $sub_regions_updated");
     }
 }

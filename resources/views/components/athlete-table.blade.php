@@ -89,7 +89,7 @@
                 @endif
                 @if(in_array('age', $columns))
                 <td class="text-center">
-                    {{ $athlete->age }}
+                    {{ $athlete->ageRange() }}
                 </td>
                 @endif
                 @if(in_array('gender', $columns))

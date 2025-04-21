@@ -8,7 +8,15 @@ class RatingsService
 {
     public function updateRatingsCentralRatingsFromStoredFile($file, $update_existing_only = false)
     {
+        if (!file_exists($file)) {
+            return "Error: File not found: $file";
+        }
+        
         $handle = fopen($file, 'r');
+        if (!$handle) {
+            return "Error: Unable to open file: $file";
+        }
+        
         $header = null;
         $created_count = 0;
         $updated_count = 0;
@@ -76,8 +84,7 @@ class RatingsService
             }
         }
         fclose($handle);
-
-        return "Players info imported successfully. Created: $created_count, Updated: $updated_count, Total: " . Athlete::count();
+        return "Players Created: $created_count, Updated: $updated_count, Total: " . Athlete::count();
     }
 
     private function eligibleRatingsCentralAthlete($player_data)

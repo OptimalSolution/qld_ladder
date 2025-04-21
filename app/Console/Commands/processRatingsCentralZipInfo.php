@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Zip;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Bus;
+
 
 
 class ProcessRatingsCentralZipInfo extends Command
@@ -57,8 +60,17 @@ class ProcessRatingsCentralZipInfo extends Command
             unlink($zipPath);
         } 
 
-        $this->call('import:clubs');
-        $this->call('import:players');
-        $this->call('import:regions');
+        // Queue the commands directly
+        $this->info('Dispatching import jobs to queue...');
+        
+        // Option 1: Using Bus::chain with closures
+        Bus::chain([
+            fn() => Artisan::call('import:clubs'),
+            fn() => Artisan::call('import:players'),
+            fn() => Artisan::call('import:regions'),
+            fn() => Artisan::call('cache:clear'),
+        ])->dispatch();
+        
+        $this->info('All import jobs have been queued!');
     }
 }

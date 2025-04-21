@@ -89,7 +89,7 @@
         <div class="card bg-danger mb-4 text-white">
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $inaccurate_birthdate_count }}</div>
-                <div>Inaccurate birthdates</div>
+                <div>Inaccurate birth dates</div>
                 <div class="progress progress-white progress-thin my-2">
                     <div
                         class="progress-bar"
@@ -167,22 +167,35 @@
         </div>
     </div>
     <!-- /.col-->
-    <div class="col-sm-6 col-lg-3"  style="display: none">
-        <div class="card mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card mb-4"  style="min-height: 136px;">
             <div class="card-body">
-                <div class="fs-4 fw-semibold">2 TB</div>
-                <div>Widget title</div>
+                <div class="fs-4 fw-semibold">Process RC Ratings Zip</div>
                 <div class="progress progress-thin my-2">
                     <div
-                        class="progress-bar bg-danger"
+                        class="progress-bar bg-info"
                         role="progressbar"
-                        style="width: 25%"
-                        aria-valuenow="25"
+                        style="width: 100%"
+                        aria-valuenow="100"
                         aria-valuemin="0"
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis">Widget helper text</small>
+                <div>
+                    <form action="{{ route('backend.upload.ratings') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="input-group input-group-sm mb-2">
+                            <input type="file" class="form-control form-control-sm" name="ratings_file" accept=".zip" onchange="toggleUploadButton(this)">
+                            <button class="btn btn-xs btn-primary" type="submit" id="uploadButton" disabled>Upload</button>
+                        </div>
+                    </form>
+                    
+                    <script>
+                        function toggleUploadButton(fileInput) {
+                            document.getElementById('uploadButton').disabled = !fileInput.files.length;
+                        }
+                    </script>
+                </div>
             </div>
         </div>
     </div>

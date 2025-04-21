@@ -33,6 +33,11 @@ class import_ratings_central_clubs extends Command
             $this->error("Club file not found: $file");
             return 1;
         }
+
+        $club_count = 0;
+        $clubs_created = 0;
+        $clubs_updated = 0;
+
         $handle = fopen($file, 'r');
         $header = null;
         while (!feof($handle)) {
@@ -51,9 +56,11 @@ class import_ratings_central_clubs extends Command
                         continue;
                     }
 
+                    $club_count++;
+
                     $club = Club::where('ratings_central_club_id', $player_data['ID'])->first();
                     if ($club) {
-                        $this->info('Updating club: ' . $player_data['Name']);
+                        // $this->info('Updating club: ' . $player_data['Name']);
                         $club->update([
                             'name' => $player_data['Name'],
                             'nickname' => $player_data['Nickname'],
@@ -64,8 +71,9 @@ class import_ratings_central_clubs extends Command
                             'website' => $player_data['Website'],
                             'status' => $player_data['Status'],
                         ]);
+                        $clubs_updated++;
                     } else {
-                        $this->info('Importing club: ' . $player_data['Name']);
+                        // $this->info('Importing club: ' . $player_data['Name']);
                         $club = Club::create([
                             'name' => $player_data['Name'],
                             'ratings_central_club_id' => $player_data['ID'],
@@ -77,12 +85,14 @@ class import_ratings_central_clubs extends Command
                             'website' => $player_data['Website'],
                             'status' => $player_data['Status'],
                         ]);
+                        $clubs_created++;
                     }
                 }
             }
         }
         fclose($handle);
-        $this->info('Club info imported successfully. Club total: ' . Club::count());
+        $this->info('Clubs Created: ' . $clubs_created . ', Updated: ' . $clubs_updated . ' | Total: ' . Club::count());
+        \Log::info("[Club Import] Clubs Created: $clubs_created, Updated: $clubs_updated | Total: " . Club::count());
     }
 
     private function eligible_club($player_data)

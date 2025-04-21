@@ -29,8 +29,14 @@ class import_ratings_central_players extends Command
     {   
         $ratingsService = new RatingsService(); 
         $file = storage_path('app/public/RC_Lists/RatingList.csv');
+        if (!file_exists($file)) {
+            $this->error("Player file not found: $file");
+            return 1;
+        }
+
         $results = $ratingsService->updateRatingsCentralRatingsFromStoredFile($file);
-        $this->info("Player import result: $results");
+        $this->info($results);
+        \Log::info("[Player Import] " . $results);
         Setting::add('full_ratings_last_updated', now(), 'datetime');
     }
 }
