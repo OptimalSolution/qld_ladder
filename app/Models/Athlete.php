@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\Services\AthleteService;
+
 class Athlete extends Model
 {
     protected $fillable = [
@@ -35,8 +37,7 @@ class Athlete extends Model
 
     public function getAgeAttribute() : int|string
     {
-        $start_of_year_age = (empty($this->birth_date)) ? 0 : Carbon::parse($this->birth_date)->startOfYear()->age;
-        return $start_of_year_age > 21 ? '21+' : $start_of_year_age;
+        return Carbon::parse($this->birth_date)->startOfYear()->age;   
     }
 
     public function clubWebsite()
@@ -57,5 +58,13 @@ class Athlete extends Model
         }
 
         return $website;
+    }
+
+    public function ageRange()
+    {
+        $start_of_year_age = (empty($this->birth_date)) ? 0 : Carbon::parse($this->birth_date)->startOfYear()->age;
+        return $start_of_year_age > 21 ? '21+' : $start_of_year_age;
+
+        // return $this->age . ' => ' . (new AthleteService())->calculateAgeRange(intval($this->age));
     }
 }
