@@ -6,28 +6,34 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+                'resources/css/app.css',
                 'resources/css/app-frontend.css',
+                'resources/js/app.js',
                 'resources/js/app-frontend.js',
-
-                'resources/sass/app-backend.scss',
-                'resources/js/app-backend.js',
             ],
-            // refresh: true,
-            refresh: [
-                'app/View/Components/**',
-                'lang/**',
-                'resources/lang/**',
-                'resources/views/**',
-                'resources/routes/**',
-                'routes/**',
-                'Modules/**/Resources/lang/**',
-                'Modules/**/Resources/views/**/*.blade.php',
-            ],
+            refresh: true,
         }),
     ],
     resolve: {
         alias: {
             '~coreui': path.resolve(__dirname, 'node_modules/@coreui/coreui'),
+            crypto: 'crypto-browserify'
         }
     },
+    optimizeDeps: {
+        esbuildOptions: {
+            define: {
+                global: 'globalThis'
+            }
+        }
+    },
+    define: {
+        'process.env': {},
+        'global': 'globalThis'
+    },
+    build: {
+        commonjsOptions: {
+            transformMixedEsModules: true
+        }
+    }
 });
