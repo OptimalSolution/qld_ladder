@@ -60,14 +60,12 @@ class ProcessRatingsCentralZipInfo extends Command
             unlink($zipPath);
         } 
 
-        // Queue the commands directly
         $this->info('Dispatching import jobs to queue...');
-        
-        // Option 1: Using Bus::chain with closures
         Bus::chain([
             fn() => Artisan::call('import:clubs'),
             fn() => Artisan::call('import:players'),
             fn() => Artisan::call('import:regions'),
+            fn() => Artisan::call('cache:clear'),
         ])->dispatch();
         
         $this->info('All import jobs have been queued!');
