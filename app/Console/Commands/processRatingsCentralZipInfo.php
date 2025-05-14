@@ -3,12 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Zip;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Bus;
+use App\Models\Setting;
 
 
 
@@ -66,6 +64,7 @@ class ProcessRatingsCentralZipInfo extends Command
             fn() => Artisan::call('import:players'),
             fn() => Artisan::call('import:regions'),
             fn() => Artisan::call('cache:clear'),
+            fn() => Setting::add('rc_zip_last_processed', now(), 'datetime')
         ])->dispatch();
         
         $this->info('All import jobs have been queued!');

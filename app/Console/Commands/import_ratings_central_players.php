@@ -37,6 +37,6 @@ class import_ratings_central_players extends Command
         $results = $ratingsService->updateRatingsCentralRatingsFromStoredFile($file);
         $this->info($results);
         \Log::info("[Player Import] " . $results);
-        Setting::add('full_ratings_last_updated', now(), 'datetime');
+        Setting::add('rc_zip_last_processed', now(), 'datetime');
     }
 }

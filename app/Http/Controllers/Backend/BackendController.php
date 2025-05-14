@@ -20,15 +20,8 @@ class BackendController extends Controller
      */
     public function index()
     {
-        // Get the raw date values
-        $ratings_last_checked_raw = Setting::get('ratings_last_checked');
-        $ratings_last_updated_raw = Setting::get('ratings_last_updated');
-        $full_ratings_last_updated_raw = Setting::get('full_ratings_last_updated');
-
-        // Format dates to be human readable if they exist
-        $ratings_last_checked = $ratings_last_checked_raw ? Carbon::parse($ratings_last_checked_raw)->format('F jS, h:i A') : '[Never]';
-        $ratings_last_updated = $ratings_last_updated_raw ? Carbon::parse($ratings_last_updated_raw)->format('F jS, h:i A') : '[Never]';
-        $full_ratings_last_updated = $full_ratings_last_updated_raw ? Carbon::parse($full_ratings_last_updated_raw)->format('F jS, h:i A') : '[Never]';
+        $rc_zip_last_processed_raw = Setting::get('rc_zip_last_processed');
+        $rc_zip_last_processed = $rc_zip_last_processed_raw ? Carbon::parse($rc_zip_last_processed_raw)->format('F jS, h:i A') : '[Never]';
 
         // Common cutoffs
         $age_minimum = now()->subYears(3)->startOfYear();
@@ -90,8 +83,6 @@ class BackendController extends Controller
         $inaccurate_birthdate_percentage = $ladder_athletes_count > 0 ? round($inaccurate_birthdate_count / $ladder_athletes_count * 100) : 0;
 
         return view('backend.index', compact(
-            'ratings_last_checked',
-            'ratings_last_updated',
             'athletes_count',
             'junior_athletes_count',
             'senior_athletes_count',
@@ -106,7 +97,7 @@ class BackendController extends Controller
             'club_percentage',
             'inaccurate_birthdate_count',
             'inaccurate_birthdate_percentage',
-            'full_ratings_last_updated',
+            'rc_zip_last_processed',
             'registered_ladder_athletes_count',
             'registered_ladder_athletes_percentage'
         ));
