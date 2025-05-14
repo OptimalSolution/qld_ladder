@@ -11,6 +11,7 @@ class Athlete extends Model
     protected $fillable = [
         'name',
         'ratings_central_id',
+        'tta_id',
         'rating',
         'stdev',
         'club_id',
@@ -33,6 +34,11 @@ class Athlete extends Model
     public function scopeRecentlyPlayed($query)
     {
         return $query->where('last_played', '>=', now()->startOfYear()->subYears(1))->where('stdev', '<', 200);
+    }
+
+    public function scopeRegisteredWithTTA($query)
+    {
+        return $query->whereNotNull('tta_id')->where('tta_id', '!=', '0');
     }
 
     public function getAgeAttribute() : int|string

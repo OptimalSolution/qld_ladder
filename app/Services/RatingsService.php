@@ -57,6 +57,7 @@ class RatingsService
                         'country' => $player_data['Country'],
                         'sex' => empty($player_data['Sex']) ? 'Other' : $player_data['Sex'],
                         'last_played' => $player_data['LastPlayed'],
+                        'tta_id' => $player_data['TTA'],
                     ];
 
                     if ($update_existing_only) {

@@ -86,6 +86,25 @@
 
 <div class="row">
     <div class="col-sm-6 col-lg-3">
+        <div class="card bg-primary mb-4 text-white">
+            <div class="card-body">
+                <div class="fs-4 fw-semibold">{{ $registered_ladder_athletes_count }}</div>
+                <div>TTA Registered Ladder Athletes</div>
+                <div class="progress progress-white progress-thin my-2">
+                    <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: {{ $registered_ladder_athletes_percentage }}%"
+                        aria-valuenow="{{ $registered_ladder_athletes_percentage }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    ></div>
+                </div>
+                <small class="text-medium-emphasis-inverse">{{ $registered_ladder_athletes_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
         <div class="card bg-danger mb-4 text-white">
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $inaccurate_birthdate_count }}</div>
