@@ -38,6 +38,5 @@ class import_ratings_central_players extends Command
         $this->info($results);
         \Log::info("[Player Import] " . $results);
         Setting::add('full_ratings_last_updated', now(), 'datetime');
-        Setting::flushCache();
     }
 }
