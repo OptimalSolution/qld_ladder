@@ -145,9 +145,10 @@ class Setting extends BaseModel
      */
     public static function getAllSettings()
     {
-        return Cache::rememberForever('settings.all', function () {
-            return self::all();
-        });
+        return self::all();
+        // return Cache::rememberForever('settings.all', function () {
+        //     return self::all();
+        // });
     }
 
     /**
