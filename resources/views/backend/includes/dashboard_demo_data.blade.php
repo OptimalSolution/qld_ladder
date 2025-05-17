@@ -127,7 +127,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="fs-4 fw-semibold">Last RC Ratings Import</div>
-                <div>{{ $full_ratings_last_updated }}</div>
+                <div>{{ $rc_zip_last_processed }}</div>
                 <div class="progress progress-thin my-2">
                     <div
                         class="progress-bar bg-info"
@@ -182,11 +182,11 @@
     <div class="col-sm-6 col-lg-3" style="display: none;">
         <div class="card mb-4">
             <div class="card-body">
-                <div class="fs-4 fw-semibold">Last Ratings Check</div>
-                <div>{{ $ratings_last_checked }}</div>
+                <div class="fs-4 fw-semibold">Heading</div>
+                <div>Something</div>
                 <div class="progress progress-thin my-2">
                     <div
-                        class="progress-bar bg-success"
+                        class="progress-bar bg-info"
                         role="progressbar"
                         style="width: 100%"
                         aria-valuenow="100"
@@ -202,8 +202,8 @@
     <div class="col-sm-6 col-lg-3"  style="display: none;">
         <div class="card mb-4">
             <div class="card-body">
-                <div class="fs-4 fw-semibold">Last Ratings Update</div>
-                <div>{{ $ratings_last_updated }}</div>
+                <div class="fs-4 fw-semibold">Heading</div>
+                <div>Something</div>
                 <div class="progress progress-thin my-2">
                     <div
                         class="progress-bar bg-success"
@@ -214,7 +214,7 @@
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis">Ladder Ratings</small>
+                <small class="text-medium-emphasis">Under construction</small>
             </div>
         </div>
     </div>
