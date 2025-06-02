@@ -73,4 +73,9 @@ class Athlete extends Model
 
         // return $this->age . ' => ' . (new AthleteService())->calculateAgeRange(intval($this->age));
     }
+
+    public function eventInfo()
+    {
+        return $this->hasOne(EventInfo::class, 'athlete_id', 'ratings_central_id');
+    }
 }

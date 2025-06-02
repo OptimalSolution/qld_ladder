@@ -1,6 +1,6 @@
 @props([
     'athletes',
-    'columns' => ['rung', 'name', 'rating', 'age', 'gender', 'club'],
+    'columns' => ['rung', 'name', 'rating', 'age', 'gender', 'events', 'club'],
     'emptyMessage' => 'No athletes are currently eligible for the ladder'
 ])
 
@@ -48,18 +48,23 @@
                 </th>
                 @endif
                 @if(in_array('rating', $columns))
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 text-center">
                     Rating
                 </th>
                 @endif
                 @if(in_array('age', $columns))
-                <th scope="col" class="px-2 py-3">
+                <th scope="col" class="px-2 py-3 text-center">
                     Age
                 </th>
                 @endif
                 @if(in_array('gender', $columns))
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3 text-center">
                     Gender
+                </th>
+                @endif
+                @if(in_array('events', $columns))
+                <th scope="col" class="px-6 py-3 text-center">
+                    Events
                 </th>
                 @endif
                 @if(in_array('club', $columns))
@@ -111,13 +116,18 @@
                 </td>
                 @endif
                 @if(in_array('age', $columns))
-                <td class="text-center">
+                <td class="text-center text-center">
                     {{ $athlete->ageRange() }}
                 </td>
                 @endif
                 @if(in_array('gender', $columns))
                 <td class="text-center">
                     {{ $athlete->sex }}
+                </td>
+                @endif
+                @if(in_array('events', $columns))
+                <td class="px-2 py-1 text-center">
+                    {{ $athlete->eventInfo?->number_of_recent_events ?? '-' }}
                 </td>
                 @endif
                 @if(in_array('club', $columns))

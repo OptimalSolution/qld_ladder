@@ -149,7 +149,7 @@
 
             <x-athlete-table 
                 :athletes="$athletes" 
-                :columns="!empty($club_id) && is_numeric($club_id) ? ['rung', 'name', 'rating', 'age', 'gender'] : ['rung', 'name', 'rating', 'age', 'gender', 'club']"
+                :columns="!empty($club_id) && is_numeric($club_id) ? ['rung', 'name', 'rating', 'age', 'gender'] : ['rung', 'name', 'rating', 'age', 'gender', 'events', 'club']"
             />
             <x-scroll-to-top />
     </section>

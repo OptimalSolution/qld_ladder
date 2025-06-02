@@ -75,12 +75,30 @@ class BackendController extends Controller
         $ladder_athletes_percentage = $athletes_count > 0 ? round($ladder_athletes_count / $athletes_count * 100) : 0;
         $registered_ladder_athletes_percentage = $ladder_athletes_count > 0 ? round($registered_ladder_athletes_count / $ladder_athletes_count * 100) : 0;
         
+        /********************
+         * Birthday Stats
+         ********************/
         $inaccurate_birthdate_count = Athlete::where('birth_date', '')
             ->orWhere('birth_date', '>', $age_minimum->format('Y-m-d'))
             ->recentlyPlayed()
             ->count();
 
         $inaccurate_birthdate_percentage = $ladder_athletes_count > 0 ? round($inaccurate_birthdate_count / $ladder_athletes_count * 100) : 0;
+
+        /********************
+         * Atheles with 2 or more number of recent events
+         ********************/
+        $athletes_with_2_or_more_recent_events = Athlete::whereHas('eventInfo', function ($query) {
+            $query->where('number_of_recent_events', '>=', 2);
+        })->count();
+
+        $athletes_with_2_or_more_recent_events_percentage = $ladder_athletes_count > 0 ? round($athletes_with_2_or_more_recent_events / $ladder_athletes_count * 100) : 0;
+
+        /********************
+         * Unchecked Athletes
+         ********************/
+        $unchecked_athletes = Athlete::recentlyPlayed()->whereDoesntHave('eventInfo')->count();
+        $unchecked_athletes_percentage = $ladder_athletes_count > 0 ? round($unchecked_athletes / $ladder_athletes_count * 100) : 0;
 
         return view('backend.index', compact(
             'athletes_count',
@@ -99,7 +117,11 @@ class BackendController extends Controller
             'inaccurate_birthdate_percentage',
             'rc_zip_last_processed',
             'registered_ladder_athletes_count',
-            'registered_ladder_athletes_percentage'
+            'registered_ladder_athletes_percentage',
+            'athletes_with_2_or_more_recent_events',
+            'athletes_with_2_or_more_recent_events_percentage',
+            'unchecked_athletes',
+            'unchecked_athletes_percentage'
         ));
     }
 
