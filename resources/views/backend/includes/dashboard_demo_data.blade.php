@@ -113,7 +113,7 @@
                     <div
                         class="progress-bar"
                         role="progressbar"
-                        style="width: 100%"
+                        style="width: {{ $inaccurate_birthdate_percentage }}%"
                         aria-valuenow="100"
                         aria-valuemin="0"
                         aria-valuemax="100"
@@ -179,42 +179,42 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-6 col-lg-3" style="display: none;">
+    <div class="col-sm-6 col-lg-3">
         <div class="card mb-4">
             <div class="card-body">
-                <div class="fs-4 fw-semibold">Heading</div>
-                <div>Something</div>
+                <div class="fs-4 fw-semibold">{{ $athletes_with_2_or_more_recent_events }}</div>
+                <div>Athletes with 2+ recent events</div>
                 <div class="progress progress-thin my-2">
                     <div
                         class="progress-bar bg-info"
                         role="progressbar"
-                        style="width: 100%"
+                        style="width: {{ $athletes_with_2_or_more_recent_events_percentage }}%"
                         aria-valuenow="100"
                         aria-valuemin="0"
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis">RatingsCentral Ratings</small>
+                <small class="text-medium-emphasis">{{ $athletes_with_2_or_more_recent_events_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
             </div>
         </div>
     </div>
     <!-- /.col-->
-    <div class="col-sm-6 col-lg-3"  style="display: none;">
-        <div class="card mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card mb-4 bg-danger text-white">
             <div class="card-body">
-                <div class="fs-4 fw-semibold">Heading</div>
-                <div>Something</div>
-                <div class="progress progress-thin my-2">
+                <div class="fs-4 fw-semibold bg-danger">{{ $unchecked_athletes }}</div>
+                <div>Unchecked Athletes</div>
+                <div class="progress progress-white progress-thin my-2">
                     <div
-                        class="progress-bar bg-success"
+                        class="progress-bar"
                         role="progressbar"
-                        style="width: 100%"
+                        style="width: {{ $unchecked_athletes_percentage }}%"
                         aria-valuenow="100"
                         aria-valuemin="0"
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis">Under construction</small>
+                <small class="text-medium-emphasis">{{ $unchecked_athletes_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
             </div>
         </div>
     </div>
