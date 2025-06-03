@@ -183,7 +183,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $athletes_with_2_or_more_recent_events }}</div>
-                <div>Athletes with 2+ recent events</div>
+                <div>Athletes with 2+ total events</div>
                 <div class="progress progress-thin my-2">
                     <div
                         class="progress-bar bg-info"
@@ -200,9 +200,9 @@
     </div>
     <!-- /.col-->
     <div class="col-sm-6 col-lg-3">
-        <div class="card mb-4 bg-danger text-white">
+        <div class="card mb-4 text-white{{ $unchecked_athletes > 0 ? ' bg-danger' : '' }}">
             <div class="card-body">
-                <div class="fs-4 fw-semibold bg-danger">{{ $unchecked_athletes }}</div>
+                <div class="fs-4 fw-semibold">{{ $unchecked_athletes }}</div>
                 <div>Unchecked Athletes</div>
                 <div class="progress progress-white progress-thin my-2">
                     <div
