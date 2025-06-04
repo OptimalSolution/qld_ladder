@@ -182,19 +182,19 @@
     <div class="col-sm-6 col-lg-3">
         <div class="card mb-4">
             <div class="card-body">
-                <div class="fs-4 fw-semibold">{{ $athletes_with_2_or_more_recent_events }}</div>
+                <div class="fs-4 fw-semibold">{{ $athletes_with_2_or_more_events }}</div>
                 <div>Athletes with 2+ total events</div>
                 <div class="progress progress-thin my-2">
                     <div
                         class="progress-bar bg-info"
                         role="progressbar"
-                        style="width: {{ $athletes_with_2_or_more_recent_events_percentage }}%"
+                        style="width: {{ $athletes_with_2_or_more_events_percentage }}%"
                         aria-valuenow="100"
                         aria-valuemin="0"
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis">{{ $athletes_with_2_or_more_recent_events_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
+                <small class="text-medium-emphasis">{{ $athletes_with_2_or_more_events_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
             </div>
         </div>
     </div>
