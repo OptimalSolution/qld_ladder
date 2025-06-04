@@ -33,7 +33,13 @@ class Athlete extends Model
 
     public function scopeRecentlyPlayed($query)
     {
-        return $query->where('last_played', '>=', now()->startOfYear()->subYears(1))->where('stdev', '<', 200);
+        return $query->where('last_played', '>=', now()->startOfYear()->subYears(1))
+                     ->where('stdev', '<', 200)
+                     ->where(function ($query) {
+                        $query->whereHas('eventInfo', function ($subQuery) {
+                            $subQuery->where('number_of_events', '>=', 2);
+                        })->orWhereDoesntHave('eventInfo');
+                     });
     }
 
     public function scopeRegisteredWithTTA($query)

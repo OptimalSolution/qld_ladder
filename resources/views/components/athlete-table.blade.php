@@ -27,7 +27,7 @@
                         <input type="search" id="athlete-search" class="block w-80 m-0 p-2 ps-10 text-sm text-gray-900 border rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search athletes..." />
                     </div>                    
                 </th>
-                <th scope="col" class="px-2 py-3 float-end">
+                <th scope="col col-span-4" class="px-2 py-3 hidden">
                     <button type="button" disabled class="flex items-center justify-center text-gray-400 bg-gray-200 cursor-not-allowed font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-700 dark:text-gray-500">
                         <svg class="w-4 h-4 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z"/>
@@ -60,11 +60,6 @@
                 @if(in_array('gender', $columns))
                 <th scope="col" class="px-6 py-3 text-center">
                     Gender
-                </th>
-                @endif
-                @if(in_array('events', $columns))
-                <th scope="col" class="px-6 py-3 text-center">
-                    Events
                 </th>
                 @endif
                 @if(in_array('club', $columns))
@@ -123,11 +118,6 @@
                 @if(in_array('gender', $columns))
                 <td class="text-center">
                     {{ $athlete->sex }}
-                </td>
-                @endif
-                @if(in_array('events', $columns))
-                <td class="px-2 py-1 text-center">
-                    {{ $athlete->eventInfo?->number_of_recent_events ?? '-' }}
                 </td>
                 @endif
                 @if(in_array('club', $columns))
