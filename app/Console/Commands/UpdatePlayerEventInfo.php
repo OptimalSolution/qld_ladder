@@ -33,7 +33,7 @@ class UpdatePlayerEventInfo extends Command
         $athletes = Athlete::recentlyPlayed()->where(function($query) {
             $query->whereDoesntHave('eventInfo')
                   ->orWhereHas('eventInfo', function($subQuery) {
-                      $subQuery->where('number_of_recent_events', 0);
+                      $subQuery->where('number_of_recent_events', '<', 2);
                   });
         })
         ->leftJoin('event_infos', 'athletes.ratings_central_id', '=', 'event_infos.athlete_id')
