@@ -104,7 +104,20 @@
                 @if(in_array('rating', $columns))
                 <td class="text-center">
                     @if(!empty($athlete->ratings_central_id))
-                        <a href="https://www.ratingscentral.com/Player.php?PlayerID={{ $athlete->ratings_central_id }}" target="_blank" class="text-blue-500 hover:underline">{{ $athlete->rating }}</a>
+                        
+                        <a href="https://www.ratingscentral.com/Player.php?PlayerID={{ $athlete->ratings_central_id }}" 
+                        @if(!empty($athlete->eventInfo->point_change))
+                           target="_blank" 
+                           data-tooltip-target="rating-tooltip-{{ $athlete->id }}"
+                           data-tooltip-placement="top"
+                        @endif
+                           class="text-blue-500 hover:underline">
+                            {{ $athlete->rating }}
+                        </a>
+                        <div id="rating-tooltip-{{ $athlete->id }}" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                            {!! $athlete->eventInfo?->relative_point_change ?? '' !!} since the last event
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
                     @else
                         {{ $athlete->rating }}
                     @endif
