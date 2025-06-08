@@ -13,7 +13,7 @@ class UpdatePlayerEventInfo extends Command
      *
      * @var string
      */
-    protected $signature = 'cron:update-player-event-info {--batch-size=10}';
+    protected $signature = 'cron:update-player-event-info {--batch-size=100}';
 
     /**
      * The console command description.
@@ -33,7 +33,7 @@ class UpdatePlayerEventInfo extends Command
         $athletes = Athlete::recentlyPlayed()->where(function($query) {
             $query->whereDoesntHave('eventInfo')
                   ->orWhereHas('eventInfo', function($subQuery) {
-                      $subQuery->where('number_of_recent_events', '<', 2);
+                      $subQuery->where('number_of_events', '<', 2);
                   });
         })
         ->leftJoin('event_infos', 'athletes.ratings_central_id', '=', 'event_infos.athlete_id')
@@ -50,7 +50,7 @@ class UpdatePlayerEventInfo extends Command
 
             sleep(rand(3, 10));
             $tally++;
-            $this->info("========  {$athlete->name} ({$tally}/{$batch_size}) ======== ");
+            $this->info("========  {$athlete->name} ({$tally}/" . $athletes->count() . ") ======== ");
 
             try {
                 $response = Http::get('https://www.ratingscentral.com/PlayerHistory.php?PlayerID=' . $athlete->ratings_central_id . '&CSV_Output=Text');
