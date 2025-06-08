@@ -75,7 +75,7 @@ class Athlete extends Model
     public function ageRange()
     {
         $start_of_year_age = (empty($this->birth_date)) ? 0 : Carbon::parse($this->birth_date)->startOfYear()->age;
-        return $start_of_year_age > 21 ? '21+' : $start_of_year_age;
+        return $start_of_year_age > 21 ? (new AthleteService())->calculateAgeRange(intval($this->age)) : $start_of_year_age;
 
         // return $this->age . ' => ' . (new AthleteService())->calculateAgeRange(intval($this->age));
     }
