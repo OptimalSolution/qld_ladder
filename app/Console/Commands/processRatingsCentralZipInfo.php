@@ -64,7 +64,8 @@ class ProcessRatingsCentralZipInfo extends Command
             fn() => Artisan::call('import:players'),
             fn() => Artisan::call('import:regions'),
             fn() => Artisan::call('cache:clear'),
-            fn() => Setting::add('rc_zip_last_processed', now(), 'datetime')
+            fn() => Setting::add('rc_zip_last_processed', now(), 'datetime'),
+            fn() => Artisan::call('cron:update-player-event-info')
         ])->dispatch();
         
         $this->info('All import jobs have been queued!');
