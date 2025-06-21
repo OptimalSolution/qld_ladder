@@ -88,11 +88,11 @@ class BackendController extends Controller
         /********************
          * Atheles with 2 or more number of recent events
          ********************/
-        $athletes_with_2_or_more_events = Athlete::whereHas('eventInfo', function ($query) {
-            $query->where('number_of_events', '>=', 2);
+        $athletes_with_just_1_event_count = Athlete::whereHas('eventInfo', function ($query) {
+            $query->where('number_of_events', '=', 1);
         })->count();
 
-        $athletes_with_2_or_more_events_percentage = $ladder_athletes_count > 0 ? round($athletes_with_2_or_more_events / $ladder_athletes_count * 100) : 0;
+        $athletes_with_just_1_event_percentage = $ladder_athletes_count > 0 ? round($athletes_with_just_1_event_count / $ladder_athletes_count * 100) : 0;
 
         /********************
          * Unchecked Athletes
@@ -118,8 +118,8 @@ class BackendController extends Controller
             'rc_zip_last_processed',
             'registered_ladder_athletes_count',
             'registered_ladder_athletes_percentage',
-            'athletes_with_2_or_more_events',
-            'athletes_with_2_or_more_events_percentage',
+            'athletes_with_just_1_event_count',
+            'athletes_with_just_1_event_percentage',
             'unchecked_athletes',
             'unchecked_athletes_percentage'
         ));

@@ -111,8 +111,8 @@
                            data-tooltip-target="rating-tooltip-{{ $athlete->id }}"
                            data-tooltip-placement="top"
                         @endif
-                           class="text-blue-500 hover:underline">
-                            {{ $athlete->rating }}
+                           class="text-blue-500">
+                            {{ $athlete->rating }} {!! $athlete->ratingSign !!}
                         </a>
                         <div id="rating-tooltip-{{ $athlete->id }}" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                             {!! $athlete->eventInfo?->relative_point_change ?? '' !!} since the last event
@@ -125,7 +125,7 @@
                 @endif
                 @if(in_array('age', $columns))
                 <td class="text-center text-center">
-                    {{ $athlete->ageRange() }}
+                    <nobr>{{ $athlete->ageRange() }}</nobr>
                 </td>
                 @endif
                 @if(in_array('gender', $columns))
@@ -213,6 +213,10 @@
                     
                     tbody[0].appendChild(fragment);
                     
+                    if (typeof initTooltips !== 'undefined') {
+                        initTooltips();
+                    }
+                    
                     if (endIndex < totalRows) {
                         // Schedule next batch
                         setTimeout(() => appendBatch(endIndex), 0);
@@ -233,6 +237,10 @@
                 });
                 
                 tbody[0].appendChild(fragment);
+                
+                if (typeof initTooltips !== 'undefined') {
+                    initTooltips();
+                }
                 
                 // If no results found and we have a search term, show a message
                 if (matchCount === 0) {
