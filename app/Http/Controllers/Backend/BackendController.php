@@ -139,4 +139,11 @@ class BackendController extends Controller
         Artisan::call('import:rc-info');
         return redirect()->back();
     }
+
+    public function updateLadder(Request $request)
+    {
+        Artisan::call('cron:update-ladder');
+        flash("Ladder update started...")->success()->important();
+        return redirect()->back();
+    }
 }

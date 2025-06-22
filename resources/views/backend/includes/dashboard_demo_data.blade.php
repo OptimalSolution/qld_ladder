@@ -126,7 +126,7 @@
     <div class="col-sm-6 col-lg-3">
         <div class="card mb-4">
             <div class="card-body">
-                <div class="fs-4 fw-semibold">Last RC Ratings Import</div>
+                <div class="fs-4 fw-semibold">Last Ladder Update</div>
                 <div>{{ $rc_zip_last_processed }}</div>
                 <div class="progress progress-thin my-2">
                     <div
@@ -138,7 +138,15 @@
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis">RatingsCentral ED zip file</small>
+                <!-- <small class="text-medium-emphasis">RatingsCentral ED zip file</small> -->
+                <form action="{{ route('backend.update.ladder') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="input-group input-group-sm mb-0">
+                        <!-- <input type="file" class="form-control form-control-sm" name="ratings_file" accept=".zip" onchange="toggleUploadButton(this)">
+                        <button class="btn btn-xs btn-primary" type="submit" id="uploadButton" disabled>Upload</button> -->
+                        <button class="btn btn-xs btn-warning py-0" type="submit" id="startNowButton">Download & Process RC Info Now <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -158,11 +166,12 @@
                     ></div>
                 </div>
                 <div>
-                    <form action="{{ route('backend.upload.ratings') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('backend.update.ladder') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="input-group input-group-sm mb-2">
-                            <input type="file" class="form-control form-control-sm" name="ratings_file" accept=".zip" onchange="toggleUploadButton(this)">
-                            <button class="btn btn-xs btn-primary" type="submit" id="uploadButton" disabled>Upload</button>
+                            <!-- <input type="file" class="form-control form-control-sm" name="ratings_file" accept=".zip" onchange="toggleUploadButton(this)">
+                            <button class="btn btn-xs btn-primary" type="submit" id="uploadButton" disabled>Upload</button> -->
+                            <button class="btn btn-xs btn-primary" type="submit" id="startNowButton">Start Now</button>
                         </div>
                     </form>
                     

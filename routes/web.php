@@ -83,6 +83,7 @@ Route::group(['namespace' => 'App\Http\Controllers\Backend', 'prefix' => 'admin'
     Route::get('/', 'BackendController@index')->name('home');
     Route::get('dashboard', 'BackendController@index')->name('dashboard');
     Route::post('upload/ratings', 'BackendController@uploadRatings')->name('upload.ratings');
+    Route::post('update/ladder', 'BackendController@updateLadder')->name('update.ladder');
 
     /*
      *
