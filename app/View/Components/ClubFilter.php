@@ -25,7 +25,7 @@ class ClubFilter extends Component
         $this->sub_regions = Tag::with('clubs')->select('id', 'name')->where('group_name', 'Sub Regions')->orderBy('name')->get();
         
         // All the clubs that have recently played athletes
-        $this->clubs = Cache::remember('all-clubs-with-recent-athletes',0, function () {
+        $this->clubs = Cache::remember('all-clubs-with-recent-athletes', 3600, function () {
             return Club::whereHas('athletes', function ($query) {
                 $query->recentlyPlayed();
             })

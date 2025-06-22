@@ -24,7 +24,7 @@ class AthleteService
         // Create a cache key based on the filter parameters
         $cacheKey = 'recently-played-athletes-filtered-' . md5($gender . '-' . $age_group . '-' . $club_id);
         
-        $recentlyPlayedAthletes = Cache::remember($cacheKey, 0, function () use ($gender, $age_group, $club_id) {
+        $recentlyPlayedAthletes = Cache::remember($cacheKey, 3600, function () use ($gender, $age_group, $club_id) {
             $query = Athlete::with('club:ratings_central_club_id,name,website')
                             ->recentlyPlayed();
     
