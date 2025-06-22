@@ -10,7 +10,7 @@ use App\Models\Setting;
 
 
 
-class ProcessRatingsCentralZipInfo extends Command
+class ProcessRatingsCentralZipCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -56,18 +56,10 @@ class ProcessRatingsCentralZipInfo extends Command
             }
             // delete the zip file
             unlink($zipPath);
-        } 
-
-        $this->info('Dispatching import jobs to queue...');
-        Bus::chain([
-            fn() => Artisan::call('import:clubs'),
-            fn() => Artisan::call('import:players'),
-            fn() => Artisan::call('import:regions'),
-            fn() => Artisan::call('cache:clear'),
-            fn() => Setting::add('rc_zip_last_processed', now(), 'datetime'),
-            fn() => Artisan::call('cron:update-player-event-info')
-        ])->dispatch();
-        
-        $this->info('All import jobs have been queued!');
+            \Log::info("Ratings Central zip file has been processed");
+        } else {
+            \Log::error("Zip file not found at: " . $zipPath);
+            throw new \Exception("Zip file not found at: " . $zipPath);
+        }
     }
 }
