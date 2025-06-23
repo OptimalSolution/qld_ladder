@@ -15,10 +15,14 @@ class DownloadRatingsCentralZip extends Command
     {
         $this->info('Downloading Ratings Central zip file');
         $output = [];
-        $result = exec('node scripts/download-rc-zip.js', $output, $code);
+
+        $result = exec('node -v', $output, $code);
+        Log::info('Node version: ' . $result);
+        $result = exec('cd ' . base_path() . '/scripts && node download-rc-zip.js', $output, $code);
     
         if ($code !== 0) {
-            Log::error('Download script failed', ['output' => $output]);
+            Log::error('Download script failed. Output', ['output' => $output]);
+            Log::error('Script exit code: ' . $code);
             throw new \Exception('download:ratings-central-zip failed: ' . $result);
         } else {
             $this->info($result);
