@@ -5,20 +5,17 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Athlete;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
 use App\Models\Club;
 use Illuminate\Support\Str;
-use Debugbar;
 use App\Services\AthleteService;
-use Illuminate\Support\Facades\Log;
 use Modules\Tag\Models\Tag;
+use App\Services\ClubService;
+use Debugbar;
 
 
 
 class LadderController extends Controller
 {
-    protected $athleteService;
     protected $age_groups;
 
     public $gender_groupings = [
@@ -28,9 +25,8 @@ class LadderController extends Controller
         'Mixed' => '-'
     ];
 
-    public function __construct(AthleteService $athleteService)
+    public function __construct(protected AthleteService $athleteService, protected ClubService $clubService)
     {
-        $this->athleteService = $athleteService;
         $this->age_groups = $athleteService->getAgeGroupsMap();
     }
  
@@ -53,7 +49,7 @@ class LadderController extends Controller
     {
         DebugBar::info('Ladder Filter: ' . $gender_group . ' ' . $age_group . ' ' . $club_id);
         $athletes = $this->athleteService->getRecentlyPlayedAthletes($gender_group, $this->age_groups[$age_group], $club_id);
-        $clubs = Club::all();
+        $clubs = $this->clubService->getClubs();
         $selected_location = $this->getLocationFromClubId($club_id);
         return view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug', 'clubs', 'selected_location'))
                 ->with('age_groups', $this->age_groups);
@@ -108,12 +104,12 @@ class LadderController extends Controller
             $athletes = $athletes->where('birth_date', '!=', '');
             
             if (str_starts_with($group, 'U')) {
-                \Debugbar::info('Looking for players under ' . $age_group_number . ' and born before ' . $date_to_compare);
+                Debugbar::info('Looking for players under ' . $age_group_number . ' and born before ' . $date_to_compare);
                 $date_minimum = now()->subYears(3)->startOfYear();
                 $athletes = $athletes->where('birth_date', '>=', $date_to_compare->format('Y-m-d'));
                 $athletes = $athletes->where('birth_date', '<=', $date_minimum->format('Y-m-d'));
             } else if (str_starts_with($group, 'O')) {
-                \Debugbar::info('Looking for players over ' . $age_group_number . ' and born before ' . $date_to_compare);
+                Debugbar::info('Looking for players over ' . $age_group_number . ' and born before ' . $date_to_compare);
                 $athletes = $athletes->where('birth_date', '<=', $date_to_compare);
             }           
         }
@@ -174,10 +170,10 @@ class LadderController extends Controller
                                 ->whereHas('athletes', function ($query) {
                                     $query->recentlyPlayed();
                                 })->first();
-            $page_title = $selected_club->name;
+            $page_title = $selected_club?->name;
         }
 
-        $club_slug = Str::slug($selected_club->name);
+        $club_slug = Str::slug($selected_club?->name);
         
         
         $athletes = Athlete::with('club:ratings_central_club_id,name,website')

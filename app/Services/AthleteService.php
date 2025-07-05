@@ -23,9 +23,9 @@ class AthleteService
     {
         // Create a cache key based on the filter parameters
         $cacheKey = 'recently-played-athletes-filtered-' . md5($gender . '-' . $age_group . '-' . $club_id);
-        
-        $recentlyPlayedAthletes = Cache::remember($cacheKey, 3600, function () use ($gender, $age_group, $club_id) {
-            $query = Athlete::with('club:ratings_central_club_id,name,website')
+       
+        return Cache::remember($cacheKey, 3600, function () use ($gender, $age_group, $club_id) {
+            $query = Athlete::with(['club:ratings_central_club_id,name,website', 'eventInfo'])
                             ->recentlyPlayed();
     
             DebugBar::info('Recent Athletes - Unfiltered: ' . $query->count());
@@ -39,10 +39,6 @@ class AthleteService
                 $this->applyAgeGroupFilter($query, $age_group);
                 DebugBar::info('Recent Athletes: Filtered by age group - ' . $age_group . ' - ' . $query->count());
             }
-    
-            // if (!empty($club_id) && $club_id !== 'all') {
-            //     $query->where('club_id', $club_id);
-            // }
 
             // Region & sub-region filter
             if (str_starts_with($club_id, 'region-') || str_starts_with($club_id, 'sub-region-')) {
@@ -63,12 +59,9 @@ class AthleteService
                 $query->where('club_id', $club_id);
                 \DebugBar::info('Recent Athletes: Filtered by club - ' . $club_id);
             }
-    
+            
             return $query->orderByDesc('rating')->get();
         });
-        
-
-        return $recentlyPlayedAthletes;
     }
 
     /**
@@ -110,7 +103,10 @@ class AthleteService
     public function getUniqueGenderGroups(): SupportCollection
     {
         return \Cache::remember('unique-gender-groups', 7200, function () {
-            $genderGroups = Athlete::recentlyPlayed()->pluck('sex')->unique()->map(function($sex) {
+            $genderGroups = Athlete::recentlyPlayed()
+                                ->pluck('sex')
+                                ->unique()
+                                ->map(function($sex) {
                 return match($sex) {
                     'M' => 'Male',
                     'F' => 'Female',

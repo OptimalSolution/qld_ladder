@@ -3,7 +3,8 @@
 namespace App\View\Components;
 
 use Illuminate\View\Component;
-use App\Models\Athlete;
+use App\Services\AthleteService;
+
 class GenderFilter extends Component
 {
     public $genderGroup;
@@ -18,7 +19,7 @@ class GenderFilter extends Component
      *
      * @return void
      */
-    public function __construct(string $genderGroup, ?string $ageGroup, ?string $clubId, ?string $clubSlug, ?string $routeName = 'ladder-filter')
+    public function __construct(protected AthleteService $athleteService, string $genderGroup, ?string $ageGroup, ?string $clubId, ?string $clubSlug, ?string $routeName = 'ladder-filter')
     {
         $this->genderGroup = $genderGroup;
         $this->ageGroup = $ageGroup;
@@ -27,20 +28,16 @@ class GenderFilter extends Component
         $this->routeName = $routeName;
 
         // Get unique gender values and add 'Mixed' option
-        $genders = Athlete::select('sex')->distinct()
-                                            ->recentlyPlayed()
-                                            ->pluck('sex')
-                                            ->toArray();
-        $genders[] = 'Mixed';
+        $this->genders = $this->athleteService->getUniqueGenderGroups()->toArray();
         
-        // Map abbreviations to full names in a single pass
-        $this->genders = collect($genders)->map(function($gender) {
-            return match($gender) {
-                'M' => 'Male',
-                'F' => 'Female',
-                default => $gender
-            };
-        })->toArray();
+        // // Map abbreviations to full names in a single pass
+        // $this->genders = collect($genders)->map(function($gender) {
+        //     return match($gender) {
+        //         'M' => 'Male',
+        //         'F' => 'Female',
+        //         default => $gender
+        //     };
+        // })->toArray();
     }
 
     /**

@@ -83,8 +83,4 @@ class Athlete extends Model
         return $this->hasOne(EventInfo::class, 'athlete_id', 'ratings_central_id');
     }
 
-    public function getRatingSignAttribute()
-    {
-        return $this->eventInfo?->point_change > 0 ? '<span class="text-green-600">▲</span>' : '<span class="text-red-500">▼</span>';
-    }
 }
