@@ -27,15 +27,15 @@ require __DIR__.'/auth.php';
 // home route
 Route::get('home', [LadderController::class, 'index'])->name('home');
 
-if(env('APP_ENV') == 'local') {
-    // ladder sub groups
-    Route::get('age-divisions/', [LadderController::class, 'ageGroups'])->name('age-groups');
-    Route::get('age-divisions/{gender}/{group}', [LadderController::class, 'ageGroups'])->name('age-groups-subgroup');
 
-    Route::get('gender-groups/{gender_group?}', [LadderController::class, 'genderGroups'])->name('gender-groups');
-    Route::get('club-groups/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-groups');
-    Route::get('clubs/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-filter');
-}
+// ladder sub groups
+Route::get('age-divisions/', [LadderController::class, 'ageGroups'])->name('age-groups');
+Route::get('age-divisions/{gender}/{group}', [LadderController::class, 'ageGroups'])->name('age-groups-subgroup');
+
+Route::get('gender-groups/{gender_group?}', [LadderController::class, 'genderGroups'])->name('gender-groups');
+Route::get('club-groups/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-groups');
+Route::get('clubs/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-filter');
+
 
 Route::get('qld/{gender_group?}/{age_group?}/{club_id?}/{club_slug?}/', [LadderController::class, 'ladderFilter'])->name('ladder-filter');
 
