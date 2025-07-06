@@ -201,6 +201,7 @@ class AthleteService
             'O80' => 'Over 80',
             'O85' => 'Over 85',
             'Open' => 'Open',
+            'open' => 'Open',
         ];
 
         $junior_age_bands = $this->getJuniorAgeBandsMap();
