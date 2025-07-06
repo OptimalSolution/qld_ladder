@@ -8,6 +8,7 @@ use Illuminate\View\Component;
 use App\Models\Club;
 use Illuminate\Support\Facades\Cache;
 use Modules\Tag\Models\Tag;
+use App\Services\ClubService;
 
 
 class ClubFilter extends Component
@@ -19,19 +20,11 @@ class ClubFilter extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(protected ClubService $clubService)
     {
-        $this->regions = Tag::with('clubs')->select('id', 'name')->where('group_name', 'Regions')->where('name', '!=', 'All Regions')->orderBy('name')->get();
-        $this->sub_regions = Tag::with('clubs')->select('id', 'name')->where('group_name', 'Sub Regions')->orderBy('name')->get();
-        
-        // All the clubs that have recently played athletes
-        $this->clubs = Cache::remember('all-clubs-with-recent-athletes', 3600, function () {
-            return Club::whereHas('athletes', function ($query) {
-                $query->recentlyPlayed();
-            })
-            ->orderBy('name')
-            ->get();
-        });
+        $this->regions = $this->clubService->getClubRegions();
+        $this->sub_regions = $this->clubService->getClubSubRegions();
+        $this->clubs = $this->clubService->getClubsWithRecentAthletes();
     }
 
     /**

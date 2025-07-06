@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\AthleteService;
+
 /*
  * Global helpers file with misc functions.
  */
@@ -571,7 +573,8 @@ if (! function_exists('juniorCategorySelected')) {
      */
     function juniorCategorySelected($age_group)
     {
-        return str_contains($age_group, 'Under') && $age_group !== 'Under 21';
+        $athleteService = new AthleteService();
+        return in_array($age_group, $athleteService->getJuniorAgeBandsMap()) || in_array($age_group, $athleteService->getJuniorAgeGroupsMap());
     }
 }
 
@@ -587,6 +590,7 @@ if (! function_exists('seniorCategorySelected')) {
      */
     function seniorCategorySelected($age_group)
     {
-        return $age_group !== 'Open' && (str_contains($age_group, 'Over') || $age_group === 'Under 21');
+        $athleteService = new AthleteService();
+        return $age_group !== 'Open' && (in_array($age_group, $athleteService->getSeniorAgeBandsMap()) || in_array($age_group, $athleteService->getSeniorAgeGroupsMap()));
     }
 }

@@ -26,4 +26,9 @@ class EventInfo extends Model
             return 'No change';
         }
     }
+
+    public function getRatingSignAttribute()
+    {
+        return $this->point_change > 0 ? '<span class="text-green-600">▲</span>' : '<span class="text-red-500">▼</span>';
+    }
 }

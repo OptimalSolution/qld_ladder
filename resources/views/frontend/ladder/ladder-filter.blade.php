@@ -17,6 +17,10 @@
         z-index: 1000; /* Ensure it's above other elements */
         display: block; /* Ensure it's displayed */
     }
+
+    .age-band-entry {
+        display: none;
+    }
     
     @media (max-width: 768px) {
         #scroll-to-top {
@@ -71,6 +75,32 @@
                             localStorage.setItem('chartsVisible', $(this).is(':visible'));
                         });
                     });
+
+                    // Check localStorage for saved age bands preference and apply it to ALL checkboxes
+                    var showAgeBands = localStorage.getItem('showAgeBands') === 'true';
+                    $('.show-age-bands').prop('checked', showAgeBands);
+                    if (showAgeBands) {
+                        $('.age-group-entry').hide();
+                        $('.age-band-entry').show();
+                    }
+                    
+                    // Age bands toggle functionality with persistence - sync all checkboxes
+                    $('.show-age-bands').on('change', function() {
+                        const isChecked = $(this).is(':checked');
+                        
+                        // Update ALL checkboxes to match the one that was clicked
+                        $('.show-age-bands').prop('checked', isChecked);
+                        
+                        if (isChecked) {
+                            $('.age-group-entry').hide();
+                            $('.age-band-entry').show();
+                        } else {
+                            $('.age-group-entry').show();
+                            $('.age-band-entry').hide();
+                        }
+                        
+                        localStorage.setItem('showAgeBands', isChecked);
+                    });
                 });
             </script>
 
@@ -100,13 +130,23 @@
                         <!-- Dropdown menu -->
                         <div id="juniorListing" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDividerButton">
-                                @foreach($age_groups as $age_group_slug => $age_group_name)
-                                    @if(juniorCategorySelected($age_group_name))
-                                        <li>
-                                            <a href="{{ route('ladder-filter', ['age_group' => $age_group_slug, 'gender_group' => $gender_group, 'club_id' => $club_id, 'club_slug' => $club_slug]) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ $age_group_name }}</a>
-                                        </li>
-                                    @endif
+                                @foreach($junior_age_groups as $age_group_slug => $age_group_name)
+                                    <li>
+                                        <a href="{{ route('ladder-filter', ['age_group' => $age_group_slug, 'gender_group' => $gender_group, 'club_id' => $club_id, 'club_slug' => $club_slug]) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white age-group-entry">{{ $age_group_name }}</a>
+                                    </li>
                                 @endforeach
+                                @foreach($junior_age_bands as $junior_age_band_slug => $junior_age_band_name)
+                                    <li>
+                                        <a href="{{ route('ladder-filter', ['age_group' => $junior_age_band_slug, 'gender_group' => $gender_group, 'club_id' => $club_id, 'club_slug' => $club_slug]) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white age-band-entry">{{ $junior_age_band_name }}</a>
+                                    </li>
+                                @endforeach
+                                <hr class="my-2"/>
+                                <li>
+                                    <label class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 show-age-bands" id="show-junior-age-bands" />
+                                        <span class="ml-2">Show age ranges</span>
+                                    </label>
+                                </li>
                             </ul>
                         </div>
 
@@ -116,13 +156,23 @@
                         <!-- Dropdown menu -->
                         <div id="seniorsListing" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDividerButton">
-                                @foreach($age_groups as $age_group_slug => $age_group_name)
-                                    @if(seniorCategorySelected($age_group_name))
-                                        <li>
-                                            <a href="{{ route('ladder-filter', ['age_group' => $age_group_slug, 'gender_group' => $gender_group, 'club_id' => $club_id, 'club_slug' => $club_slug]) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ $age_group_name }}</a>
-                                        </li>
-                                    @endif
+                                @foreach($senior_age_groups as $age_group_slug => $age_group_name)
+                                    <li>
+                                        <a href="{{ route('ladder-filter', ['age_group' => $age_group_slug, 'gender_group' => $gender_group, 'club_id' => $club_id, 'club_slug' => $club_slug]) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white age-group-entry">{{ $age_group_name }}</a>
+                                    </li>
                                 @endforeach
+                                @foreach($senior_age_bands as $senior_age_band_slug => $senior_age_band_name)
+                                    <li>
+                                        <a href="{{ route('ladder-filter', ['age_group' => $senior_age_band_slug, 'gender_group' => $gender_group, 'club_id' => $club_id, 'club_slug' => $club_slug]) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white age-band-entry">{{ $senior_age_band_name }}</a>
+                                    </li>
+                                @endforeach
+                                <hr class="my-2"/>
+                                <li>
+                                    <label class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 show-age-bands" id="show-senior-age-bands" />
+                                        <span class="ml-2">Show age ranges</span>
+                                    </label>
+                                </li>
                             </ul>
                         </div>
 
