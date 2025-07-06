@@ -24,7 +24,7 @@ class AthleteService
         // Create a cache key based on the filter parameters
         $cacheKey = 'recently-played-athletes-filtered-' . md5($gender . '-' . $age_group . '-' . $club_id);
        
-        return Cache::remember($cacheKey, 3600, function () use ($gender, $age_group, $club_id) {
+        return Cache::remember($cacheKey, 0, function () use ($gender, $age_group, $club_id) {
             $query = Athlete::with(['club:ratings_central_club_id,name,website', 'eventInfo'])
                             ->recentlyPlayed();
     
@@ -73,15 +73,19 @@ class AthleteService
      */
     private function applyAgeGroupFilter(Builder &$query, string $ageGroup): void
     {
-        
-        $age_group_parts = explode(' ', $ageGroup);
+        if (str_contains($ageGroup, ' to ')) {
+            $age_group_parts = explode(' to ', $ageGroup);
+        } else {
+            $age_group_parts = explode(' ', $ageGroup);
+        }
+
         if (count($age_group_parts) < 2) {
             return;
         }
         
         $age_group_number = $age_group_parts[1];
         $query->where('birth_date', '!=', '');
-        if (str_starts_with($ageGroup, 'Under')) {
+        if (str_starts_with($ageGroup, 'Under') || str_starts_with($ageGroup, 'Up')) {
             // For "Under X", get people born after Jan 1 of the year when they would turn X
             $date_to_compare = now()->startOfYear()->subYears($age_group_number);
             $date_minimum = now()->subYears(3)->startOfYear();
@@ -91,6 +95,15 @@ class AthleteService
             // For "Over X", get people born on or before Dec 31 of the year when they turn X
             $date_to_compare = now()->endOfYear()->subYears($age_group_number);
             $query->where('birth_date', '<=', $date_to_compare->format('Y-m-d'));
+        } else {
+            DebugBar::info('Age band filter: ' . $age_group_parts[0] . ' - ' . $age_group_parts[1]);
+            $age_group_minimum = $age_group_parts[0];
+            $age_group_maximum = $age_group_parts[1];
+            $date_to_compare = now()->startOfYear()->subYears($age_group_maximum);
+            $date_minimum = now()->subYears($age_group_minimum)->startOfYear();
+            $query->where('birth_date', '>=', $date_to_compare->format('Y-m-d'))
+                  ->where('birth_date', '<=', $date_minimum->format('Y-m-d'));
+
         }
     }
 
@@ -169,7 +182,7 @@ class AthleteService
 
     public function getAgeGroupsMap() {
 
-        return [
+        $base_age_groups = [
             'U7' => 'Under 7',
             'U9' => 'Under 9',
             'U11' => 'Under 11',
@@ -187,7 +200,66 @@ class AthleteService
             'O75' => 'Over 75',
             'O80' => 'Over 80',
             'O85' => 'Over 85',
-            'Open' => 'Open'
+            'Open' => 'Open',
+        ];
+
+        $junior_age_bands = $this->getJuniorAgeBandsMap();
+        $senior_age_bands = $this->getSeniorAgeBandsMap();
+
+        return array_merge($base_age_groups, $junior_age_bands, $senior_age_bands);
+    }
+    public function getJuniorAgeGroupsMap() {
+        return [
+            'U7' => 'Under 7',
+            'U9' => 'Under 9',
+            'U11' => 'Under 11',
+            'U13' => 'Under 13',
+            'U15' => 'Under 15',
+            'U17' => 'Under 17',
+            'U19' => 'Under 19',
+        ];
+    }
+
+    public function getSeniorAgeGroupsMap() {
+        return [
+            'U21' => 'Under 21',
+            'O30' => 'Over 30',
+            'O40' => 'Over 40',
+            'O50' => 'Over 50',
+            'O60' => 'Over 60',
+            'O65' => 'Over 65',
+            'O70' => 'Over 70',
+            'O75' => 'Over 75',
+            'O80' => 'Over 80',
+            'O85' => 'Over 85',
+        ];
+    }
+
+    public function getJuniorAgeBandsMap() {
+        return [
+            'U7' => 'Under 7',
+            'U9' => 'Under 9',
+            'U11' => 'Under 11',
+            '12-13' => '12 to 13',
+            '14-15' => '14 to 15',
+            '16-17' => '16 to 17',
+            '18-19' => '18 to 19',
+        ];
+    }
+
+    public function getSeniorAgeBandsMap() {
+        return [
+            '20-21' => '20 to 21',
+            '22-29' => '22 to 29',
+            '30-39' => '30 to 39',
+            '40-49' => '40 to 49',
+            '50-59' => '50 to 59',
+            '60-64' => '60 to 64',
+            '65-69' => '65 to 69',
+            '70-74' => '70 to 74',
+            '75-79' => '75 to 79',
+            '80-84' => '80 to 84',
+            '85+' => 'Over 85',
         ];
     }
 } 

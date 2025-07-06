@@ -17,7 +17,11 @@ use Debugbar;
 class LadderController extends Controller
 {
     protected $age_groups;
-
+    protected $junior_age_bands;
+    protected $senior_age_bands;
+    protected $junior_age_groups;
+    protected $senior_age_groups;
+    
     public $gender_groupings = [
         'Male' => 'M',
         'Female' => 'F',
@@ -28,6 +32,10 @@ class LadderController extends Controller
     public function __construct(protected AthleteService $athleteService, protected ClubService $clubService)
     {
         $this->age_groups = $athleteService->getAgeGroupsMap();
+        $this->junior_age_bands = $athleteService->getJuniorAgeBandsMap();
+        $this->senior_age_bands = $athleteService->getSeniorAgeBandsMap();
+        $this->junior_age_groups = $athleteService->getJuniorAgeGroupsMap();
+        $this->senior_age_groups = $athleteService->getSeniorAgeGroupsMap();
     }
  
     /**
@@ -52,7 +60,11 @@ class LadderController extends Controller
         $clubs = $this->clubService->getClubs();
         $selected_location = $this->getLocationFromClubId($club_id);
         return view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug', 'clubs', 'selected_location'))
-                ->with('age_groups', $this->age_groups);
+                ->with('age_groups', $this->age_groups)
+                ->with('junior_age_groups', $this->junior_age_groups)
+                ->with('senior_age_groups', $this->senior_age_groups)
+                ->with('junior_age_bands', $this->junior_age_bands)
+                ->with('senior_age_bands', $this->senior_age_bands);
     }
 
     public function getLocationFromClubId($club_id)
