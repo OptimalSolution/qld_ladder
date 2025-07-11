@@ -144,7 +144,7 @@
                                 <li>
                                     <label class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                         <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 show-age-bands" id="show-junior-age-bands" />
-                                        <span class="ml-2">Show age ranges</span>
+                                        <span class="ml-2">Show Only Age Ranges</span>
                                     </label>
                                 </li>
                             </ul>
@@ -170,7 +170,7 @@
                                 <li>
                                     <label class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                         <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 show-age-bands" id="show-senior-age-bands" />
-                                        <span class="ml-2">Show age ranges</span>
+                                        <span class="ml-2">Show Only Age Ranges</span>
                                     </label>
                                 </li>
                             </ul>
