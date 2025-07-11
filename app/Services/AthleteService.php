@@ -100,7 +100,7 @@ class AthleteService
             $age_group_minimum = $age_group_parts[0];
             $age_group_maximum = $age_group_parts[1];
             $date_to_compare = now()->startOfYear()->subYears($age_group_maximum);
-            $date_minimum = now()->subYears($age_group_minimum)->startOfYear();
+            $date_minimum = now()->subYears($age_group_minimum)->endOfYear();
             $query->where('birth_date', '>=', $date_to_compare->format('Y-m-d'))
                   ->where('birth_date', '<=', $date_minimum->format('Y-m-d'));
 
