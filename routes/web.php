@@ -29,12 +29,12 @@ Route::get('home', [LadderController::class, 'index'])->name('home');
 
 
 // ladder sub groups
-Route::get('age-divisions/', [LadderController::class, 'ageGroups'])->name('age-groups');
-Route::get('age-divisions/{gender}/{group}', [LadderController::class, 'ageGroups'])->name('age-groups-subgroup');
-
-Route::get('gender-groups/{gender_group?}', [LadderController::class, 'genderGroups'])->name('gender-groups');
-Route::get('club-groups/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-groups');
-Route::get('clubs/{club_id?}/{club_slug?}/{gender_group?}', [LadderController::class, 'clubGroups'])->name('club-filter');
+// 301 redirects for old ladder sub group routes
+Route::redirect('age-divisions/', '/', 301);
+Route::redirect('age-divisions/{gender}/{group}', '/', 301);
+Route::redirect('gender-groups/{gender_group?}', '/', 301);
+Route::redirect('club-groups/{club_id?}/{club_slug?}/{gender_group?}', '/', 301);
+Route::redirect('clubs/{club_id?}/{club_slug?}/{gender_group?}', '/', 301);
 
 
 Route::get('qld/{gender_group?}/{age_group?}/{club_id?}/{club_slug?}/', [LadderController::class, 'ladderFilter'])->name('ladder-filter');
@@ -156,11 +156,4 @@ Route::group(['namespace' => 'App\Http\Controllers\Backend', 'prefix' => 'admin'
     Route::patch("{$module_name}/{id}/block", ['as' => "{$module_name}.block", 'uses' => "{$controller_name}@block", 'middleware' => ['can:block_users']]);
     Route::patch("{$module_name}/{id}/unblock", ['as' => "{$module_name}.unblock", 'uses' => "{$controller_name}@unblock", 'middleware' => ['can:block_users']]);
     Route::resource("{$module_name}", "{$controller_name}");
-});
-
-/**
- * File Manager Routes.
- */
-Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth', 'can:view_backend']], function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
 });

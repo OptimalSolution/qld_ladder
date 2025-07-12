@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Athlete;
-use Debugbar;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Cache;
@@ -53,11 +53,11 @@ class AthleteService
                         $tagQuery->where('tags.id', $region_id);
                     });
                 });
-                \DebugBar::info('Recent Athletes: Filtered by region - ' . $region_id);
+                Debugbar::info('Recent Athletes: Filtered by region - ' . $region_id);
 
             } else if ($club_id !== 'all') {
                 $query->where('club_id', $club_id);
-                \DebugBar::info('Recent Athletes: Filtered by club - ' . $club_id);
+                Debugbar::info('Recent Athletes: Filtered by club - ' . $club_id);
             }
             
             return $query->orderByDesc('rating')->get();
@@ -83,7 +83,7 @@ class AthleteService
             return;
         }
         
-        $age_group_number = $age_group_parts[1];
+        $age_group_number = (int) $age_group_parts[1];
         $query->where('birth_date', '!=', '');
         if (str_starts_with($ageGroup, 'Under') || str_starts_with($ageGroup, 'Up')) {
             // For "Under X", get people born after Jan 1 of the year when they would turn X
@@ -97,8 +97,8 @@ class AthleteService
             $query->where('birth_date', '<=', $date_to_compare->format('Y-m-d'));
         } else {
             DebugBar::info('Age band filter: ' . $age_group_parts[0] . ' - ' . $age_group_parts[1]);
-            $age_group_minimum = $age_group_parts[0];
-            $age_group_maximum = $age_group_parts[1];
+            $age_group_minimum = (int) $age_group_parts[0];
+            $age_group_maximum = (int) $age_group_parts[1];
             $date_to_compare = now()->startOfYear()->subYears($age_group_maximum);
             $date_minimum = now()->subYears($age_group_minimum)->endOfYear();
             $query->where('birth_date', '>=', $date_to_compare->format('Y-m-d'))
@@ -115,7 +115,7 @@ class AthleteService
      */
     public function getUniqueGenderGroups(): SupportCollection
     {
-        return \Cache::remember('unique-gender-groups', 7200, function () {
+        return Cache::remember('unique-gender-groups', 7200, function () {
             $genderGroups = Athlete::recentlyPlayed()
                                 ->pluck('sex')
                                 ->unique()
