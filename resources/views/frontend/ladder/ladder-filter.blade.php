@@ -34,7 +34,7 @@
             Table Tennis Clubs Ladder
             </h1>
             <p class="mb-1 text-nd font-normal text-gray-500 dark:text-gray-400 sm:px-16 sm:text-xl xl:px-48" style="text-align: justify;">
-            This project is a collaborative initiative between clubs to create an interactive ratings system of table tennis players in Queensland, utilising the RatingsCentral system. The following table shows the <b class="text-gray-900 dark:text-white">{{ ($athletes->count() > 1) ? $athletes->count() : '' }} {{ Str::plural('athlete', $athletes->count()) }}</b> eligible for the <b class="text-gray-900 dark:text-white">{{ $age_groups[$age_group] }} {{ $gender_group }}</b> ladder.
+            This project is a collaborative initiative between clubs to create an interactive ratings system of table tennis players who reside in Queensland, utilising the RatingsCentral system. The following table shows the <b class="text-gray-900 dark:text-white">{{ ($athletes->count() > 1) ? $athletes->count() : '' }} {{ Str::plural('athlete', $athletes->count()) }}</b> eligible for the <b class="text-gray-900 dark:text-white">{{ $age_groups[$age_group] }} {{ $gender_group }}</b> ladder.
                 To be considered for the ladder, players <b class="text-gray-900 dark:text-white">{{ $from_club_message }}</b> must have played since the start of <b class="text-gray-900 dark:text-white">{{ \Carbon\Carbon::now()->startOfYear()->subYears(1)->format('F jS, Y') }}</b>. This project is not affiliated with Table Tennis Queensland (TTQ), <a class="underline text-gray-900 dark:text-white" href="https://www.tabletennisqld.org/eventsttq/rankings" target="_blank">please visit their website</a> for more info about official state rankings
             </p>
 
