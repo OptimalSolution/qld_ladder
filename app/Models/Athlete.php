@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Services\AthleteService;
+use App\Services\RatingsService;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class Athlete extends Model
 {
@@ -33,8 +35,11 @@ class Athlete extends Model
 
     public function scopeRecentlyPlayed($query)
     {
+        $ineligible_ids = (new RatingsService())->ineligibleRatingsCentralIDList();
+        Debugbar::info('Ineligible IDs: ' . implode(', ', $ineligible_ids));
         return $query->where('last_played', '>=', now()->startOfYear()->subYears(1))
                      ->where('stdev', '<', 200)
+                     ->whereNotIn('ratings_central_id', $ineligible_ids)
                      ->where(function ($query) {
                         $query->whereHas('eventInfo', function ($subQuery) {
                             $subQuery->where('number_of_events', '>=', 2);

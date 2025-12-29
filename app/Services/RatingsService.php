@@ -92,6 +92,19 @@ class RatingsService
     {
         return $player_data['Province'] === 'QLD' && 
                 $player_data['Country'] === 'AUS' && 
-                $player_data['Deceased'] === '';
+                $player_data['Deceased'] === '' &&
+                !in_array($player_data['ID'], $this->ineligibleRatingsCentralIDList());
     }
-} 
+
+    public function ineligibleRatingsCentralIDList()
+    {
+        return [
+            '107402',
+            '148599',
+            '150170',
+            '149127',
+            '161713',
+            '161712',
+        ];
+    }
+}
