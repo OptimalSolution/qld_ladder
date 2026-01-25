@@ -28,8 +28,6 @@ class AthleteService
         return Cache::remember($cacheKey, 0, function () use ($gender, $age_group, $club_id, $name_pattern) {
             $query = Athlete::with(['club:ratings_central_club_id,name,website', 'eventInfo'])
                             ->recentlyPlayed();
-
-            $this->playerCheck($query, $name_pattern, 'Initial');
     
             DebugBar::info('Recent Athletes - Unfiltered: ' . $query->count());
             if ($gender !== 'Mixed') {
@@ -37,15 +35,11 @@ class AthleteService
                 $query->where('sex', $gender[0]); 
                 DebugBar::info('Recent Athletes: Filtered by gender - ' . $gender . ' - ' . $query->count());
             }
-
-            $this->playerCheck($query, $name_pattern, 'Gender Filtered');
     
             if ($age_group) {
                 $this->applyAgeGroupFilter($query, $age_group);
                 DebugBar::info('Recent Athletes: Filtered by age group - ' . $age_group . ' - ' . $query->count());
             }
-
-            $this->playerCheck($query, $name_pattern, 'Age Group Filtered');
 
             // Region & sub-region filter
             if (str_starts_with($club_id, 'region-') || str_starts_with($club_id, 'sub-region-')) {
@@ -66,7 +60,7 @@ class AthleteService
                 $query->where('club_id', $club_id);
                 Debugbar::info('Recent Athletes: Filtered by club - ' . $club_id);
             }
-            $this->playerCheck($query, $name_pattern, 'Region & Sub-region Filtered');
+            
             return $query->orderByDesc('rating')->get();
         });
     }
