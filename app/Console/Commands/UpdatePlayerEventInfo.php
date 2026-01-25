@@ -13,7 +13,7 @@ class UpdatePlayerEventInfo extends Command
      *
      * @var string
      */
-    protected $signature = 'cron:update-player-event-info {--batch-size=100}';
+    protected $signature = 'cron:update-player-event-info {--batch-size=500}';
 
     /**
      * The console command description.
@@ -30,10 +30,12 @@ class UpdatePlayerEventInfo extends Command
         $batch_size = $this->option('batch-size');
         $this->info('Updating event info for individual players from RatingsCentral');
 
-        $athletes = Athlete::recentlyPlayed()->where(function($query) {
-            $query->whereDoesntHave('eventInfo')
-                  ->orWhereHas('eventInfo', function($subQuery) {
-                      $subQuery->where('number_of_events', '<', 2);
+        $athletes = Athlete::with(['club:ratings_central_club_id,name,website', 'eventInfo'])
+            ->where('last_played', '>=', now()->startOfYear()->subYears(1))
+            ->where(function($query) {
+                $query->whereDoesntHave('eventInfo')
+                    ->orWhereHas('eventInfo', function($subQuery) {
+                        $subQuery->where('number_of_events', '<', 2);
                   });
         })
         ->leftJoin('event_infos', 'athletes.ratings_central_id', '=', 'event_infos.athlete_id')
