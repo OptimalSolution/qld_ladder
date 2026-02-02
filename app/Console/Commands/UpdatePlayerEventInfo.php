@@ -13,7 +13,7 @@ class UpdatePlayerEventInfo extends Command
      *
      * @var string
      */
-    protected $signature = 'cron:update-player-event-info {--batch-size=500}';
+    protected $signature = 'cron:update-player-event-info {--batch-size=1000}';
 
     /**
      * The console command description.
@@ -39,7 +39,8 @@ class UpdatePlayerEventInfo extends Command
                   });
         })
         ->leftJoin('event_infos', 'athletes.ratings_central_id', '=', 'event_infos.athlete_id')
-        ->orderBy('event_infos.updated_at', 'asc')
+        // ->orderBy('event_infos.updated_at', 'asc')
+        ->orderBy('athletes.name', 'asc')
         ->select('athletes.*');
 
         $waiting_athletes = $athletes->count();
@@ -47,12 +48,14 @@ class UpdatePlayerEventInfo extends Command
 
         $athletes = $athletes->take($batch_size)->get();
 
+        // dd($athletes->slice(0, 5)->toArray());
+
         $tally = 0;
         foreach ($athletes as $athlete) {
 
             sleep(rand(3, 10));
             $tally++;
-            $this->info("========  {$athlete->name} ({$tally}/" . $athletes->count() . ") ======== ");
+            $this->info("========  {$athlete->name}:{$athlete->ratings_central_id} ({$tally}/" . $athletes->count() . ") ======== ");
 
             try {
                 $response = Http::get('https://www.ratingscentral.com/PlayerHistory.php?PlayerID=' . $athlete->ratings_central_id . '&CSV_Output=Text');
