@@ -55,4 +55,10 @@ class ClubService
             return Tag::with('clubs')->select('id', 'name')->where('group_name', 'Sub Regions')->orderBy('name')->get();
         });
     }
+
+    // get club id from ratings central club id
+    public function getClubProvinceById($club_id)
+    {
+        return Club::where('ratings_central_club_id', $club_id)->first()?->province ?? null;
+    }
 } 

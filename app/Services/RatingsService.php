@@ -3,9 +3,19 @@
 namespace App\Services;
 
 use App\Models\Athlete;
+use App\Services\ClubService;
 
 class RatingsService
 {
+    private $club_service;
+    private $current_state_filter;
+    
+    public function __construct()
+    {
+        $this->club_service = new ClubService();
+        $this->current_state_filter = 'Queensland';
+    }
+
     public function updateRatingsCentralRatingsFromStoredFile($file, $update_existing_only = false)
     {
         if (!file_exists($file)) {
@@ -32,7 +42,14 @@ class RatingsService
                     continue;
                 } else {
                     
+                    
+
                     $player_data = array_combine($header, $row);
+
+                    // if ($player_data['ID'] == 87550) {
+                    //     dd($player_data);
+                    // }
+
                     if (! $this->eligibleRatingsCentralAthlete($player_data)) {
                         continue;
                     }
@@ -44,7 +61,18 @@ class RatingsService
                     } elseif (!empty($player_data['Club'])) {
                         $club_id = $player_data['Club'];
                     }
-                    
+
+                    if (array_key_exists($player_data['ID'], $this->clubIDOverrideList())) {
+                        $club_id = $this->clubIDOverrideList()[$player_data['ID']];
+                        // dd('Override found for ' . $player_data['ID'] . ' - ' . $club_id);
+                        
+                    }
+
+                    $club_province = $this->club_service->getClubProvinceById($club_id);
+                    if ($club_province !== $this->current_state_filter) {
+                        continue;
+                    }
+
                     $update_data = [
                         'name' => $player_data['Name'],
                         'rating' => $player_data['Rating'],
@@ -90,10 +118,16 @@ class RatingsService
 
     private function eligibleRatingsCentralAthlete($player_data)
     {
-        return $player_data['Province'] === 'QLD' && 
-                $player_data['Country'] === 'AUS' && 
-                $player_data['Deceased'] === '' &&
-                !in_array($player_data['ID'], $this->ineligibleRatingsCentralIDList());
+        return $player_data['Deceased'] === '' && !in_array($player_data['ID'], $this->ineligibleRatingsCentralIDList()) &&
+                ((empty($player_data['Province']) && !empty($player_data['TTA']) && !empty($player_data['Club']) && intval($player_data['Club']) > 0) ||
+                ($player_data['Province'] === 'QLD' && $player_data['Country'] === 'AUS'));
+    }
+
+    public function clubIDOverrideList()
+    {
+        return [
+            '73689' => '175',
+        ];
     }
 
     public function ineligibleRatingsCentralIDList()
