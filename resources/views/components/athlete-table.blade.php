@@ -16,7 +16,7 @@
     <table class="w-full text-lg text-left rtl:text-right text-gray-800 dark:text-gray-200">
         <thead class="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr class="dark:bg-gray-900">
-                <th scope="col" class="px-3 py-3" colspan="{{ count($columns) - 1 }}">
+                <th scope="col" class="px-3 py-3" colspan="{{ count($columns) - 0 }}">
                     <label for="default-search" class="mb-1 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 start-0 flex items-center ml-1 ps-2 pointer-events-none">
