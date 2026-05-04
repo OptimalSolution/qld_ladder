@@ -18,7 +18,17 @@ class DownloadRatingsCentralZip extends Command
 
         $result = exec('node -v', $output, $code);
         Log::info('Node version: ' . $result);
-        $result = exec('cd ' . base_path() . '/scripts && node download-rc-zip.js', $output, $code);
+
+        $scriptsPath = base_path('scripts');
+        $previousCwd = getcwd();
+        chdir($scriptsPath);
+        try {
+            $result = exec('node download-rc-zip.js', $output, $code);
+        } finally {
+            if ($previousCwd !== false) {
+                chdir($previousCwd);
+            }
+        }
     
         if ($code !== 0) {
             Log::error('Download script failed. Output', ['output' => $output]);

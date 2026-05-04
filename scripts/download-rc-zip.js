@@ -1,3 +1,12 @@
+const nodeMajor = parseInt(process.versions.node.split('.')[0], 10);
+if (nodeMajor < 18) {
+  console.error(
+    `download-rc-zip.js requires Node.js 18 or later (found ${process.version}). Playwright 1.53+ uses syntax your Node cannot parse.`
+  );
+  console.error('Example: nvm install 20 && nvm use 20');
+  process.exit(1);
+}
+
 require('dotenv').config({ path: '../.env' });
 const { chromium } = require('playwright');
 const fs = require('fs');
