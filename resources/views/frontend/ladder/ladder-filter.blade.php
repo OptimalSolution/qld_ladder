@@ -201,6 +201,13 @@
                 :athletes="$athletes" 
                 :columns="!empty($club_id) && is_numeric($club_id) ? ['rung', 'name', 'rating', 'age', 'gender'] : ['rung', 'name', 'rating', 'age', 'gender', 'events', 'club']"
             />
+
+            @if(filled(config('app.version')))
+                <p class="mt-8 text-center text-md font-medium tracking-wide text-gray-400 dark:text-gray-600" aria-hidden="true">
+                    Powered by Ponglytics Version {{ config('app.version') }}
+                </p>
+            @endif
+
             <x-scroll-to-top />
     </section>
 @endsection
