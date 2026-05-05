@@ -6,9 +6,16 @@ use App\Models\Athlete;
 use App\Models\Club;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardSegments
 {
+    /**
+     * Aggregate KPI counts for {@see \App\Http\Controllers\Backend\BackendController::index()}.
+     * Invalidated via {@see self::flushDashboardCountsCache()} when athlete, club, or event-info rows change.
+     */
+    private const CACHE_KEY_AGGREGATED_COUNTS = 'dashboard_segments.aggregated_counts.v1';
+
     public const LADDER_CLUBS = 'ladder_clubs';
 
     public const LADDER_ATHLETES = 'ladder_athletes';
@@ -160,6 +167,49 @@ class DashboardSegments
     public static function uncheckedAthletesQuery(): Builder
     {
         return Athlete::recentlyPlayed()->whereDoesntHave('eventInfo');
+    }
+
+    public static function flushDashboardCountsCache(): void
+    {
+        Cache::forget(self::CACHE_KEY_AGGREGATED_COUNTS);
+    }
+
+    /**
+     * Cached dashboard KPI counts (expensive segment queries). Stays warm until underlying data changes.
+     *
+     * @return array{
+     *     athletes_count: int,
+     *     junior_athletes_count: int,
+     *     senior_athletes_count: int,
+     *     ladder_club_count: int,
+     *     club_count: int,
+     *     ladder_athletes_count: int,
+     *     ladder_juniors_count: int,
+     *     ladder_seniors_count: int,
+     *     registered_ladder_athletes_count: int,
+     *     inaccurate_birthdate_count: int,
+     *     athletes_with_just_1_event_count: int,
+     *     unchecked_athletes: int
+     * }
+     */
+    public static function aggregatedDashboardCounts(): array
+    {
+        return Cache::rememberForever(self::CACHE_KEY_AGGREGATED_COUNTS, function (): array {
+            return [
+                'athletes_count' => Athlete::count(),
+                'junior_athletes_count' => self::globalJuniorAthletesQuery()->count(),
+                'senior_athletes_count' => self::globalSeniorAthletesQuery()->count(),
+                'ladder_club_count' => self::ladderClubsQuery()->count(),
+                'club_count' => Club::count(),
+                'ladder_athletes_count' => self::ladderAthletesQuery()->count(),
+                'ladder_juniors_count' => self::ladderJuniorsQuery()->count(),
+                'ladder_seniors_count' => self::ladderSeniorsQuery()->count(),
+                'registered_ladder_athletes_count' => self::registeredLadderAthletesQuery()->count(),
+                'inaccurate_birthdate_count' => self::inaccurateBirthdateQuery()->count(),
+                'athletes_with_just_1_event_count' => self::athletesWithJustOneEventQuery()->count(),
+                'unchecked_athletes' => self::uncheckedAthletesQuery()->count(),
+            ];
+        });
     }
 
     /**
