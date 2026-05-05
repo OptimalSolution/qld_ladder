@@ -28,7 +28,7 @@
             </x-backend.section-header>
 
             <!-- Dashboard Content Area -->
-            @include("backend.includes.dashboard_demo_data")
+            @include("backend.includes.dashboard_cards") 
             <!-- / Dashboard Content Area -->
         </div>
     </div>
