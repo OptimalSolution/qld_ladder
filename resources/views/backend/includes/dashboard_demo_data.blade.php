@@ -1,7 +1,16 @@
+<style>
+    a.dashboard-drilldown-card:hover {
+        filter: brightness(1.06);
+    }
+</style>
 
 <div class="row">
     <div class="col-sm-6 col-lg-3">
-        <div class="card bg-info mb-4 text-white">
+        <a
+            href="{{ route("backend.dashboard.segment", "ladder_clubs") }}"
+            class="card bg-info mb-4 text-white text-decoration-none shadow-sm dashboard-drilldown-card d-block"
+            aria-label="{{ __("View list of clubs with ladder athletes") }}"
+        >
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $ladder_club_count }}</div>
                 <div>Clubs with ladder athletes</div>
@@ -17,11 +26,15 @@
                 </div>
                 <small class="text-medium-emphasis-inverse">{{ $club_percentage }}% of {{ $club_count }} clubs</small>
             </div>
-        </div>
+        </a>
     </div>
     <!-- /.col-->
     <div class="col-sm-6 col-lg-3">
-        <div class="card bg-primary mb-4 text-white">
+        <a
+            href="{{ route("backend.dashboard.segment", "ladder_athletes") }}"
+            class="card bg-primary mb-4 text-white text-decoration-none shadow-sm dashboard-drilldown-card d-block"
+            aria-label="{{ __("View list of ladder athletes") }}"
+        >
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $ladder_athletes_count }}</div>
                 <div>Ladder Athletes</div>
@@ -37,12 +50,16 @@
                 </div>
                 <small class="text-medium-emphasis-inverse">{{ $ladder_athletes_percentage }}% of {{ $athletes_count }} athletes</small>
             </div>
-        </div>
+        </a>
     </div>
     <!-- /.col-->
     
     <div class="col-sm-6 col-lg-3">
-        <div class="card bg-primary mb-4 text-white">
+        <a
+            href="{{ route("backend.dashboard.segment", "ladder_juniors") }}"
+            class="card bg-primary mb-4 text-white text-decoration-none shadow-sm dashboard-drilldown-card d-block"
+            aria-label="{{ __("View list of ladder juniors") }}"
+        >
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $ladder_juniors_count }}</div>
                 <div>Ladder Juniors</div>
@@ -58,11 +75,15 @@
                 </div>
                 <small class="text-medium-emphasis-inverse">{{ $ladder_juniors_percentage }}% of {{ $junior_athletes_count }} juniors</small>
             </div>
-        </div>
+        </a>
     </div>
     <!-- /.col-->
     <div class="col-sm-6 col-lg-3">
-        <div class="card bg-primary mb-4 text-white">
+        <a
+            href="{{ route("backend.dashboard.segment", "ladder_seniors") }}"
+            class="card bg-primary mb-4 text-white text-decoration-none shadow-sm dashboard-drilldown-card d-block"
+            aria-label="{{ __("View list of ladder seniors") }}"
+        >
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $ladder_seniors_count }}</div>
                 <div>Ladder Seniors</div>
@@ -78,7 +99,7 @@
                 </div>
                 <small class="text-medium-emphasis-inverse">{{ $ladder_seniors_percentage }}% of {{ $senior_athletes_count }} seniors</small>
             </div>
-        </div>
+        </a>
     </div>
     <!-- /.col-->
 </div>
@@ -86,7 +107,11 @@
 
 <div class="row">
     <div class="col-sm-6 col-lg-3">
-        <div class="card bg-primary mb-4 text-white">
+        <a
+            href="{{ route("backend.dashboard.segment", "registered_ladder") }}"
+            class="card bg-primary mb-4 text-white text-decoration-none shadow-sm dashboard-drilldown-card d-block"
+            aria-label="{{ __("View list of TTA registered ladder athletes") }}"
+        >
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $registered_ladder_athletes_count }}</div>
                 <div>TTA Registered Ladder Athletes</div>
@@ -102,11 +127,15 @@
                 </div>
                 <small class="text-medium-emphasis-inverse">{{ $registered_ladder_athletes_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
             </div>
-        </div>
+        </a>
     </div>
     <!-- /.col-->
     <div class="col-sm-6 col-lg-3">
-        <div class="card mb-4">
+        <a
+            href="{{ route("backend.dashboard.segment", "one_event") }}"
+            class="card mb-4 text-body text-decoration-none shadow-sm dashboard-drilldown-card d-block"
+            aria-label="{{ __("View list of athletes with just one event") }}"
+        >
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $athletes_with_just_1_event_count }}</div>
                 <div>Athletes with just 1 event</div>
@@ -122,11 +151,15 @@
                 </div>
                 <small class="text-medium-emphasis">{{ $athletes_with_just_1_event_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
             </div>
-        </div>
+        </a>
     </div>
     <!-- /.col-->
     <div class="col-sm-6 col-lg-3">
-        <div class="card bg-danger mb-4 text-white">
+        <a
+            href="{{ route("backend.dashboard.segment", "inaccurate_birthdate") }}"
+            class="card bg-danger mb-4 text-white text-decoration-none shadow-sm dashboard-drilldown-card d-block"
+            aria-label="{{ __("View list of athletes with inaccurate birth dates") }}"
+        >
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $inaccurate_birthdate_count }}</div>
                 <div>Inaccurate birth dates</div>
@@ -142,14 +175,18 @@
                 </div>
                 <small class="text-medium-emphasis-inverse">{{ $inaccurate_birthdate_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
             </div>
-        </div>
+        </a>
     </div>
     <div class="col-sm-6 col-lg-3">
-        <div class="card mb-4 text-white{{ $unchecked_athletes > 0 ? ' bg-danger' : '' }}">
+        <a
+            href="{{ route("backend.dashboard.segment", "unchecked") }}"
+            class="card mb-4 text-decoration-none shadow-sm dashboard-drilldown-card d-block {{ $unchecked_athletes > 0 ? 'bg-danger text-white' : 'text-body' }}"
+            aria-label="{{ __("View list of unchecked athletes") }}"
+        >
             <div class="card-body">
                 <div class="fs-4 fw-semibold">{{ $unchecked_athletes }}</div>
                 <div>Unchecked Athletes</div>
-                <div class="progress progress-white progress-thin my-2">
+                <div class="progress {{ $unchecked_athletes > 0 ? 'progress-white' : '' }} progress-thin my-2">
                     <div
                         class="progress-bar"
                         role="progressbar"
@@ -159,9 +196,9 @@
                         aria-valuemax="100"
                     ></div>
                 </div>
-                <small class="text-medium-emphasis">{{ $unchecked_athletes_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
+                <small class="{{ $unchecked_athletes > 0 ? 'text-medium-emphasis-inverse' : 'text-medium-emphasis' }}">{{ $unchecked_athletes_percentage }}% of {{ $ladder_athletes_count }} ladder athletes</small>
             </div>
-        </div>
+        </a>
     </div>
     <!-- /.col-->
     

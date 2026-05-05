@@ -28,11 +28,11 @@
             </x-backend.section-header>
 
             <!-- Dashboard Content Area -->
-
+            @include("backend.includes.dashboard_demo_data")
             <!-- / Dashboard Content Area -->
         </div>
     </div>
 
     {{-- Demo content --}}
-    @include("backend.includes.dashboard_demo_data")
+    
 @endsection

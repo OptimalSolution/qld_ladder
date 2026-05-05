@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Ponglytics'),
 
+    'version' => env('APP_VERSION'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

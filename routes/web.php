@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\Frontend\LadderController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\WebsiteController;
 use App\Livewire\Privacy;
 use App\Livewire\Terms;
+use App\Support\DashboardSegments;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\WebsiteController;
 
 /*
 *
@@ -27,7 +27,6 @@ require __DIR__.'/auth.php';
 // home route
 Route::get('home', [LadderController::class, 'index'])->name('home');
 
-
 // ladder sub groups
 // 301 redirects for old ladder sub group routes
 Route::redirect('age-divisions/', '/', 301);
@@ -35,7 +34,6 @@ Route::redirect('age-divisions/{gender}/{group}', '/', 301);
 Route::redirect('gender-groups/{gender_group?}', '/', 301);
 Route::redirect('club-groups/{club_id?}/{club_slug?}/{gender_group?}', '/', 301);
 Route::redirect('clubs/{club_id?}/{club_slug?}/{gender_group?}', '/', 301);
-
 
 Route::get('qld/{gender_group?}/{age_group?}/{club_id?}/{club_slug?}/', [LadderController::class, 'ladderFilter'])->name('ladder-filter');
 
@@ -78,13 +76,16 @@ Route::group(['namespace' => 'App\Http\Controllers\Frontend', 'as' => 'frontend.
 * --------------------------------------------------------------------
 */
 Route::group(['namespace' => 'App\Http\Controllers\Backend', 'prefix' => 'admin', 'as' => 'backend.', 'middleware' => ['auth', 'can:view_backend']], function () {
-    
+
     /**
      * Backend Dashboard
      * Namespaces indicate folder structure.
      */
     Route::get('/', 'BackendController@index')->name('home');
     Route::get('dashboard', 'BackendController@index')->name('dashboard');
+    Route::get('dashboard/segment/{segment}', 'BackendController@dashboardSegment')
+        ->name('dashboard.segment')
+        ->whereIn('segment', DashboardSegments::keys());
     Route::post('upload/ratings', 'BackendController@uploadRatings')->name('upload.ratings');
     Route::post('update/ladder', 'BackendController@updateLadder')->name('update.ladder');
 
