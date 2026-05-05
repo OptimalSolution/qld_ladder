@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
+use App\Models\Athlete;
+use App\Models\Club;
+use App\Models\EventInfo;
+use App\Support\DashboardSegments;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -49,8 +52,11 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
-    public function registerEventListeners()
+    public function registerEventListeners(): void
     {
-
+        foreach ([Athlete::class, Club::class, EventInfo::class] as $modelClass) {
+            $modelClass::saved(static fn () => DashboardSegments::flushDashboardCountsCache());
+            $modelClass::deleted(static fn () => DashboardSegments::flushDashboardCountsCache());
+        }
     }
 }

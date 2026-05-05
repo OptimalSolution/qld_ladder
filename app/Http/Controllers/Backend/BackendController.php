@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Athlete;
-use App\Models\Club;
 use App\Models\Setting;
 use App\Support\DashboardSegments;
 use Carbon\Carbon;
@@ -24,58 +22,31 @@ class BackendController extends Controller
         $rc_zip_last_processed_raw = Setting::get('rc_zip_last_processed');
         $rc_zip_last_processed = $rc_zip_last_processed_raw ? Carbon::parse($rc_zip_last_processed_raw)->format('F jS, h:i A') : '[Never]';
 
-        /********************
-         * Global Stats
-         ********************/
-        $athletes_count = Athlete::count();
+        $counts = DashboardSegments::aggregatedDashboardCounts();
 
-        $junior_athletes = DashboardSegments::globalJuniorAthletesQuery();
-        $senior_athletes = DashboardSegments::globalSeniorAthletesQuery();
-
-        $junior_athletes_count = $junior_athletes->count();
-        $senior_athletes_count = $senior_athletes->count();
-
-        /********************
-         * Ladder Stats
-         ********************/
-
-        $ladder_club_count = DashboardSegments::ladderClubsQuery()->count();
-
-        $club_count = Club::count();
+        $athletes_count = $counts['athletes_count'];
+        $junior_athletes_count = $counts['junior_athletes_count'];
+        $senior_athletes_count = $counts['senior_athletes_count'];
+        $ladder_club_count = $counts['ladder_club_count'];
+        $club_count = $counts['club_count'];
         $club_percentage = $club_count > 0 ? round($ladder_club_count / $club_count * 100) : 0;
-
-        $ladder_athletes_count = DashboardSegments::ladderAthletesQuery()->count();
-
-        $ladder_juniors_count = DashboardSegments::ladderJuniorsQuery()->count();
-
-        $ladder_seniors_count = DashboardSegments::ladderSeniorsQuery()->count();
-
-        $registered_ladder_athletes = DashboardSegments::registeredLadderAthletesQuery();
-        $registered_ladder_athletes_count = $registered_ladder_athletes->count();
+        $ladder_athletes_count = $counts['ladder_athletes_count'];
+        $ladder_juniors_count = $counts['ladder_juniors_count'];
+        $ladder_seniors_count = $counts['ladder_seniors_count'];
+        $registered_ladder_athletes_count = $counts['registered_ladder_athletes_count'];
 
         $ladder_juniors_percentage = $junior_athletes_count > 0 ? round($ladder_juniors_count / $junior_athletes_count * 100) : 0;
         $ladder_seniors_percentage = $senior_athletes_count > 0 ? round($ladder_seniors_count / $senior_athletes_count * 100) : 0;
         $ladder_athletes_percentage = $athletes_count > 0 ? round($ladder_athletes_count / $athletes_count * 100) : 0;
         $registered_ladder_athletes_percentage = $ladder_athletes_count > 0 ? round($registered_ladder_athletes_count / $ladder_athletes_count * 100) : 0;
 
-        /********************
-         * Birthday Stats
-         ********************/
-        $inaccurate_birthdate_count = DashboardSegments::inaccurateBirthdateQuery()->count();
-
+        $inaccurate_birthdate_count = $counts['inaccurate_birthdate_count'];
         $inaccurate_birthdate_percentage = $ladder_athletes_count > 0 ? round($inaccurate_birthdate_count / $ladder_athletes_count * 100) : 0;
 
-        /********************
-         * Athletes with just 1 event
-         ********************/
-        $athletes_with_just_1_event_count = DashboardSegments::athletesWithJustOneEventQuery()->count();
-
+        $athletes_with_just_1_event_count = $counts['athletes_with_just_1_event_count'];
         $athletes_with_just_1_event_percentage = $ladder_athletes_count > 0 ? round($athletes_with_just_1_event_count / $ladder_athletes_count * 100) : 0;
 
-        /********************
-         * Unchecked Athletes
-         ********************/
-        $unchecked_athletes = DashboardSegments::uncheckedAthletesQuery()->count();
+        $unchecked_athletes = $counts['unchecked_athletes'];
         $unchecked_athletes_percentage = $ladder_athletes_count > 0 ? round($unchecked_athletes / $ladder_athletes_count * 100) : 0;
 
         return view('backend.index', compact(

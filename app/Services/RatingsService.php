@@ -42,13 +42,7 @@ class RatingsService
                     continue;
                 } else {
                     
-                    
-
                     $player_data = array_combine($header, $row);
-
-                    // if ($player_data['ID'] == 87550) {
-                    //     dd($player_data);
-                    // }
 
                     if (! $this->eligibleRatingsCentralAthlete($player_data)) {
                         continue;
