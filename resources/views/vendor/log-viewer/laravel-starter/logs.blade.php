@@ -54,7 +54,7 @@ $module_icon = 'fa-solid fa-list-check';
                                 @foreach ($row as $key => $value)
                                     <td class="{{ $key == 'date' ? 'text-left' : 'text-center' }}">
                                         @if ($key == 'date')
-                                            <span class="badge text-bg-primary">{{ $value }}</span>
+                                            <span class="badge text-bg-primary">{{ $value === 'laravel' ? 'laravel.log' : $value }}</span>
                                         @elseif ($value == 0)
                                             <span class="badge empty">{{ $value }}</span>
                                         @else

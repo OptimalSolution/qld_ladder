@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\LogViewer\InclusiveLogFilesystem;
 use App\Models\Athlete;
 use App\Models\Club;
 use App\Models\EventInfo;
 use App\Support\DashboardSegments;
+use Arcanedev\LogViewer\Contracts\Utilities\Filesystem as LogViewerFilesystemContract;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
@@ -18,7 +20,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->extend(LogViewerFilesystemContract::class, function ($_filesystem, $app) {
+            /** @var \Illuminate\Contracts\Foundation\Application $app */
+            $config = $app['config'];
+
+            return (new InclusiveLogFilesystem(
+                $app['files'],
+                $config->get('log-viewer.storage-path')
+            ))->setPattern(
+                $config->get('log-viewer.pattern.prefix', LogViewerFilesystemContract::PATTERN_PREFIX),
+                $config->get('log-viewer.pattern.date', LogViewerFilesystemContract::PATTERN_DATE),
+                $config->get('log-viewer.pattern.extension', LogViewerFilesystemContract::PATTERN_EXTENSION)
+            );
+        });
     }
 
     /**

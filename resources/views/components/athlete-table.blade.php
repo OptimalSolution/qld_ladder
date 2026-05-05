@@ -4,6 +4,14 @@
     'emptyMessage' => 'No athletes are currently eligible for the ladder'
 ])
 
+@php
+
+    $ratingsLastUpdatedRaw = setting('ratings_last_updated');
+    $ratingsLastUpdatedFormatted = $ratingsLastUpdatedRaw
+        ? \Carbon\Carbon::parse($ratingsLastUpdatedRaw)->timezone(config('app.timezone'))->format('j/m/y g:i a')
+        : null;
+@endphp
+
 <div id="scrollInfo" class="md:hidden text-lg text-gray-500 dark:text-gray-300 p-2 bg-gray-50 dark:bg-gray-800 flex items-center justify-end scroll-info transition-opacity duration-300">
     <span>Scroll table for more info</span>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-1 mt-[2px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="animation: scrollArrow 0.5s ease-in-out infinite;">
@@ -17,15 +25,22 @@
         <thead class="text-md text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr class="dark:bg-gray-900">
                 <th scope="col" class="px-3 py-3" colspan="{{ count($columns) - 0 }}">
-                    <label for="default-search" class="mb-1 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ml-1 ps-2 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                            </svg>
+                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 w-full">
+                        <div class="shrink-0">
+                            <label for="athlete-search" class="mb-1 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 start-0 flex items-center ml-1 ps-2 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </div>
+                                <input type="search" id="athlete-search" class="block w-80 max-w-full m-0 p-2 ps-10 text-sm text-gray-900 border rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search athletes..." />
+                            </div>
                         </div>
-                        <input type="search" id="athlete-search" class="block w-80 m-0 p-2 ps-10 text-sm text-gray-900 border rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search athletes..." />
-                    </div>                    
+                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-600 whitespace-nowrap text-left sm:text-right sm:ml-auto mt-2 sm:mt-0">
+                            Last updated: {{ $ratingsLastUpdatedFormatted ?? '—' }}
+                        </p>
+                    </div>
                 </th>
                 <th scope="col col-span-4" class="px-2 py-3 hidden">
                     <button type="button" disabled class="flex items-center justify-center text-gray-400 bg-gray-200 cursor-not-allowed font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-700 dark:text-gray-500">

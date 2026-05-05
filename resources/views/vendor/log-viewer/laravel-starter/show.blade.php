@@ -15,7 +15,7 @@ $module_icon = 'fa-solid fa-list-check';
         </x-backend.breadcrumb-item>
         <x-backend.breadcrumb-item
             route="{{ route('log-viewer::logs.list') }}">@lang('Daily Log')</x-backend.breadcrumb-item>
-        <x-backend.breadcrumb-item type="active">@lang('Log') [{{ $log->date }}]</x-backend.breadcrumb-item>
+        <x-backend.breadcrumb-item type="active">@lang('Log') [{{ $log->date === 'laravel' ? 'laravel.log' : $log->date }}]</x-backend.breadcrumb-item>
     </x-backend.breadcrumbs>
 @endsection
 
