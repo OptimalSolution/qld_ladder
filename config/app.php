@@ -15,7 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'Ponglytics'),
 
-    'version' => env('APP_VERSION'),
+    'version' => env('APP_VERSION', '1.1.24'),
 
     /*
     |--------------------------------------------------------------------------
