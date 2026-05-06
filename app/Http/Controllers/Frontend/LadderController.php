@@ -11,8 +11,8 @@ use App\Services\AthleteService;
 use Modules\Tag\Models\Tag;
 use App\Services\ClubService;
 use Debugbar;
-
-
+use App\Models\Setting;
+use Carbon\Carbon;
 
 class LadderController extends Controller
 {
@@ -59,12 +59,17 @@ class LadderController extends Controller
         $athletes = $this->athleteService->getRecentlyPlayedAthletes($gender_group, $this->age_groups[$age_group], $club_id);
         $clubs = $this->clubService->getClubs();
         $selected_location = $this->getLocationFromClubId($club_id);
+        
+        $ratings_last_processed_raw = Setting::get('rc_zip_last_processed');
+        $ratings_last_processed = $ratings_last_processed_raw ? Carbon::parse($ratings_last_processed_raw)->format('F jS, h:i A') : '[Never]';
+        
         return view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug', 'clubs', 'selected_location'))
                 ->with('age_groups', $this->age_groups)
                 ->with('junior_age_groups', $this->junior_age_groups)
                 ->with('senior_age_groups', $this->senior_age_groups)
                 ->with('junior_age_bands', $this->junior_age_bands)
-                ->with('senior_age_bands', $this->senior_age_bands);
+                ->with('senior_age_bands', $this->senior_age_bands)
+                ->with('ratings_last_processed', $ratings_last_processed);
     }
 
     public function getLocationFromClubId($club_id)

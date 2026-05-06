@@ -1,20 +1,9 @@
 @props([
     'athletes',
+    'ratings_last_processed',
     'columns' => ['rung', 'name', 'rating', 'age', 'gender', 'events', 'club'],
     'emptyMessage' => 'No athletes are currently eligible for the ladder'
 ])
-
-@php
-    // ratings_last_updated is only written when the RC CSV bytes change (see update:rc-ratings).
-    // ratings_last_checked is written every run — use it so production still shows a time after verify-only runs.
-    $ratingsLastImportRaw = setting('ratings_last_updated');
-    $ratingsLastCheckedRaw = setting('ratings_last_checked');
-    $ratingsDisplayRaw = filled($ratingsLastImportRaw) ? $ratingsLastImportRaw : $ratingsLastCheckedRaw;
-    $ratingsDisplayLabel = filled($ratingsLastImportRaw) ? 'Last updated' : 'Last checked';
-    $ratingsDisplayFormatted = $ratingsDisplayRaw
-        ? \Carbon\Carbon::parse($ratingsDisplayRaw)->timezone(config('app.timezone'))->format('j/m/y g:i a')
-        : null;
-@endphp
 
 <div id="scrollInfo" class="md:hidden text-lg text-gray-500 dark:text-gray-300 p-2 bg-gray-50 dark:bg-gray-800 flex items-center justify-end scroll-info transition-opacity duration-300">
     <span>Scroll table for more info</span>
@@ -41,8 +30,8 @@
                                 <input type="search" id="athlete-search" class="block w-80 max-w-full m-0 p-2 ps-10 text-sm text-gray-900 border rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search athletes..." />
                             </div>
                         </div>
-                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-600 whitespace-nowrap text-left sm:text-right sm:ml-auto mt-2 sm:mt-0" title="{{ filled($ratingsLastImportRaw) ? 'Ratings file changed and was re-imported' : 'RatingsCentral was polled; CSV matched existing file (no re-import)' }}">
-                            {{ $ratingsDisplayLabel }}: {{ $ratingsDisplayFormatted ?? '—' }}
+                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-600 whitespace-nowrap text-left sm:text-right sm:ml-auto mt-2 sm:mt-0" title="Last updated: {{ $ratings_last_processed }}">
+                            Last updated: {{ $ratings_last_processed ?? '—' }}
                         </p>
                     </div>
                 </th>
@@ -132,7 +121,7 @@
                            data-tooltip-placement="top"
                         @endif
                            class="text-blue-500">
-                            {{ $athlete->rating }} {!! $athlete->eventInfo?->ratingSign !!}
+                            {{ $athlete->rating }} {{-- $athlete->eventInfo?->ratingSign --}}
                         </a>
                         <div id="rating-tooltip-{{ $athlete->id }}" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                             {!! $athlete->eventInfo->relative_point_change ?? '' !!} since the last event

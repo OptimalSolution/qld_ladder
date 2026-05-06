@@ -198,6 +198,7 @@
 
 
             <x-athlete-table 
+                :ratings_last_processed="$ratings_last_processed"
                 :athletes="$athletes" 
                 :columns="!empty($club_id) && is_numeric($club_id) ? ['rung', 'name', 'rating', 'age', 'gender'] : ['rung', 'name', 'rating', 'age', 'gender', 'events', 'club']"
             />
