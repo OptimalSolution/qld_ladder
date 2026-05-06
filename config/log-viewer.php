@@ -73,6 +73,14 @@ return [
     'per-page' => 30,
 
     /* -----------------------------------------------------------------
+     |  Maximum bytes read per log file request
+     | -----------------------------------------------------------------
+     |  Prevents memory exhaustion when a log file grows very large.
+     */
+
+    'max-read-bytes' => env('LOG_VIEWER_MAX_READ_BYTES', 8 * 1024 * 1024),
+
+    /* -----------------------------------------------------------------
      |  Download settings
      | -----------------------------------------------------------------
      */
