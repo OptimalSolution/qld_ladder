@@ -13,6 +13,7 @@ use App\Services\ClubService;
 use Debugbar;
 use App\Models\Setting;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class LadderController extends Controller
 {
@@ -63,13 +64,24 @@ class LadderController extends Controller
         $ratings_last_processed_raw = Setting::get('rc_zip_last_processed');
         $ratings_last_processed = $ratings_last_processed_raw ? Carbon::parse($ratings_last_processed_raw)->format('F jS, h:i A') : '[Never]';
         
-        return view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug', 'clubs', 'selected_location'))
+        $view = view('frontend.ladder.ladder-filter', compact('athletes', 'gender_group', 'age_group', 'club_id', 'club_slug', 'clubs', 'selected_location'))
                 ->with('age_groups', $this->age_groups)
                 ->with('junior_age_groups', $this->junior_age_groups)
                 ->with('senior_age_groups', $this->senior_age_groups)
                 ->with('junior_age_bands', $this->junior_age_bands)
                 ->with('senior_age_bands', $this->senior_age_bands)
                 ->with('ratings_last_processed', $ratings_last_processed);
+
+        // For guests (the vast majority), cache the fully-rendered HTML so we skip
+        // re-rendering the multi-thousand-row table on every hit. Authed users (admin
+        // nav differs via @auth) always get a fresh render. Invalidated daily by the
+        // cron:update-ladder cache:clear.
+        if (auth()->guest()) {
+            $htmlKey = 'ladder-html-' . md5("$gender_group|$age_group|$club_id|$club_slug");
+            return response(Cache::rememberForever($htmlKey, fn () => $view->render()));
+        }
+
+        return $view;
     }
 
     public function getLocationFromClubId($club_id)
