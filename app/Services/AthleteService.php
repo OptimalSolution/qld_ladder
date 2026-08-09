@@ -25,20 +25,19 @@ class AthleteService
         $cacheKey = 'recently-played-athletes-filtered-' . md5($gender . '-' . $age_group . '-' . $club_id);
        
         $name_pattern = 'Shly';
-        return Cache::remember($cacheKey, 0, function () use ($gender, $age_group, $club_id, $name_pattern) {
+        // rememberForever: the ladder data changes once per day; the cron:update-ladder
+        // command runs cache:clear each morning, so this self-invalidates.
+        return Cache::rememberForever($cacheKey, function () use ($gender, $age_group, $club_id, $name_pattern) {
             $query = Athlete::with(['club:ratings_central_club_id,name,website', 'eventInfo'])
                             ->recentlyPlayed();
-    
-            DebugBar::info('Recent Athletes - Unfiltered: ' . $query->count());
+
             if ($gender !== 'Mixed') {
                 // TODO: Change this to a validated gender that exists in the source data
-                $query->where('sex', $gender[0]); 
-                DebugBar::info('Recent Athletes: Filtered by gender - ' . $gender . ' - ' . $query->count());
+                $query->where('sex', $gender[0]);
             }
-    
+
             if ($age_group) {
                 $this->applyAgeGroupFilter($query, $age_group);
-                DebugBar::info('Recent Athletes: Filtered by age group - ' . $age_group . ' - ' . $query->count());
             }
 
             // Region & sub-region filter
