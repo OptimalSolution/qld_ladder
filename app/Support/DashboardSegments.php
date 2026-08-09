@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\Models\Athlete;
 use App\Models\Club;
+use App\Services\RatingsService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
@@ -167,6 +168,54 @@ class DashboardSegments
     public static function uncheckedAthletesQuery(): Builder
     {
         return Athlete::recentlyPlayed()->whereDoesntHave('eventInfo');
+    }
+
+    /**
+     * Athletes that do NOT appear on the ladder, each tagged with the single primary
+     * reason they were filtered out. Membership = the negation of {@see Athlete::scopeRecentlyPlayed()}
+     * (exclusion list / no recent event / provisional rating / only 1 event) UNION athletes
+     * with a missing or placeholder birth date (which drop out of every age-group ladder).
+     *
+     * Reason precedence: exclusion list > no event in window > provisional rating >
+     * only 1 event > no birth date.
+     */
+    public static function excludedFromLadderQuery(?string $search = null): Builder
+    {
+        $window = now()->startOfYear()->subYears(1)->format('Y-m-d');
+        $ageMin = self::ageMinimum()->format('Y-m-d');
+        $ineligible = (new RatingsService())->ineligibleRatingsCentralIDList();
+        $placeholders = implode(',', array_fill(0, count($ineligible), '?'));
+
+        $reasonCase = "CASE
+            WHEN athletes.ratings_central_id IN ($placeholders) THEN 'On the exclusion list'
+            WHEN athletes.last_played IS NULL OR athletes.last_played < ? THEN 'No event in the eligibility window'
+            WHEN athletes.stdev >= 200 THEN 'Provisional rating (stdev >= 200)'
+            WHEN EXISTS (SELECT 1 FROM event_infos e WHERE e.athlete_id = athletes.ratings_central_id AND e.number_of_events < 2) THEN 'Only 1 event since cutoff'
+            WHEN athletes.birth_date IS NULL OR athletes.birth_date = '' OR athletes.birth_date > ? THEN 'No birth date'
+            ELSE NULL END";
+
+        $query = Athlete::query()
+            ->select('athletes.id', 'athletes.name', 'athletes.ratings_central_id')
+            ->selectRaw("$reasonCase as reason", array_merge($ineligible, [$window, $ageMin]))
+            ->where(function (Builder $q) use ($window, $ageMin, $ineligible) {
+                $q->whereIn('ratings_central_id', $ineligible)
+                    ->orWhereNull('last_played')
+                    ->orWhere('last_played', '<', $window)
+                    ->orWhere('stdev', '>=', 200)
+                    ->orWhereHas('eventInfo', fn (Builder $e) => $e->where('number_of_events', '<', 2))
+                    ->orWhereNull('birth_date')
+                    ->orWhere('birth_date', '')
+                    ->orWhere('birth_date', '>', $ageMin);
+            });
+
+        if ($search !== null && $search !== '') {
+            $query->where(function (Builder $q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('ratings_central_id', 'like', '%' . $search . '%');
+            });
+        }
+
+        return $query->orderBy('name');
     }
 
     public static function flushDashboardCountsCache(): void
