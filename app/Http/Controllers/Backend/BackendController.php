@@ -50,13 +50,25 @@ class BackendController extends Controller
         $unchecked_athletes_percentage = $ladder_athletes_count > 0 ? round($unchecked_athletes / $ladder_athletes_count * 100) : 0;
 
         $excluded_search = trim((string) $request->query('excluded_search', ''));
-        $excluded_athletes = DashboardSegments::excludedFromLadderQuery($excluded_search ?: null)
+
+        $excluded_reason = (string) $request->query('excluded_reason', '');
+        if (! in_array($excluded_reason, DashboardSegments::EXCLUSION_REASONS, true)) {
+            $excluded_reason = '';
+        }
+
+        $excluded_reason_counts = DashboardSegments::excludedReasonCounts($excluded_search ?: null);
+        $excluded_total = array_sum($excluded_reason_counts);
+
+        $excluded_athletes = DashboardSegments::excludedFromLadderQuery($excluded_search ?: null, $excluded_reason ?: null)
             ->paginate(25, ['*'], 'excluded_page')
             ->withQueryString();
 
         return view('backend.index', compact(
             'excluded_athletes',
             'excluded_search',
+            'excluded_reason',
+            'excluded_reason_counts',
+            'excluded_total',
             'athletes_count',
             'junior_athletes_count',
             'senior_athletes_count',
