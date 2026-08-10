@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Athlete;
+use App\Models\LadderExclusion;
 use App\Services\ClubService;
+use Illuminate\Support\Facades\Cache;
 
 class RatingsService
 {
@@ -126,14 +128,10 @@ class RatingsService
 
     public function ineligibleRatingsCentralIDList()
     {
-        return [
-            '107402',
-            '148599',
-            '150170',
-            '149127',
-            '161713',
-            '161712',
-            '148874',
-        ];
+        // Admin-managed via Backend\LadderExclusionController; cached and invalidated
+        // by the LadderExclusion model on save/delete.
+        return Cache::rememberForever(LadderExclusion::CACHE_KEY, function () {
+            return LadderExclusion::pluck('ratings_central_id')->all();
+        });
     }
 }

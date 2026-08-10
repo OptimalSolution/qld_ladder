@@ -100,6 +100,12 @@ Route::group(['namespace' => 'App\Http\Controllers\Backend', 'prefix' => 'admin'
         $controller_name = 'SettingController';
         Route::get("{$module_name}", "{$controller_name}@index")->name("{$module_name}.index");
         Route::post("{$module_name}", "{$controller_name}@store")->name("{$module_name}.store");
+
+        // Manual ladder exclusion list (RatingsCentral IDs kept off the ladder)
+        Route::get('ladder-exclusions', 'LadderExclusionController@index')->name('ladder-exclusions.index');
+        Route::post('ladder-exclusions', 'LadderExclusionController@store')->name('ladder-exclusions.store');
+        Route::put('ladder-exclusions/{ladder_exclusion}', 'LadderExclusionController@update')->name('ladder-exclusions.update');
+        Route::delete('ladder-exclusions/{ladder_exclusion}', 'LadderExclusionController@destroy')->name('ladder-exclusions.destroy');
     });
 
     /*
