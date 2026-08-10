@@ -17,7 +17,7 @@ class BackendController extends Controller
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
         $rc_zip_last_processed_raw = Setting::get('rc_zip_last_processed');
         $rc_zip_last_processed = $rc_zip_last_processed_raw ? Carbon::parse($rc_zip_last_processed_raw)->format('F jS, h:i A') : '[Never]';
@@ -49,7 +49,14 @@ class BackendController extends Controller
         $unchecked_athletes = $counts['unchecked_athletes'];
         $unchecked_athletes_percentage = $ladder_athletes_count > 0 ? round($unchecked_athletes / $ladder_athletes_count * 100) : 0;
 
+        $excluded_search = trim((string) $request->query('excluded_search', ''));
+        $excluded_athletes = DashboardSegments::excludedFromLadderQuery($excluded_search ?: null)
+            ->paginate(25, ['*'], 'excluded_page')
+            ->withQueryString();
+
         return view('backend.index', compact(
+            'excluded_athletes',
+            'excluded_search',
             'athletes_count',
             'junior_athletes_count',
             'senior_athletes_count',
