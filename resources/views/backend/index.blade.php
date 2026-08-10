@@ -33,17 +33,44 @@
         </div>
     </div>
 
-    <div class="card mb-4">
+    <div class="card mb-4" id="excluded">
         <div class="card-body">
             <x-backend.section-header>
                 @lang("Athletes not on the ladder")
                 <span class="text-medium-emphasis fw-normal fs-6 ms-2">
-                    ({{ $excluded_athletes->total() }} {{ __("total") }})
+                    ({{ $excluded_total }} {{ __("total") }})
                 </span>
             </x-backend.section-header>
 
-            <div class="d-flex justify-content-end mb-3">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                {{-- Reason filter buttons --}}
+                <div class="d-flex flex-wrap gap-2">
+                    <a
+                        href="{{ route("backend.dashboard", array_filter(["excluded_search" => $excluded_search])) }}#excluded"
+                        class="btn btn-sm {{ $excluded_reason === "" ? "btn-primary" : "btn-outline-secondary" }}"
+                    >
+                        {{ __("All") }}
+                        <span class="badge text-bg-light ms-1">{{ $excluded_total }}</span>
+                    </a>
+                    @foreach (\App\Support\DashboardSegments::EXCLUSION_REASONS as $reason)
+                        @php $reason_count = $excluded_reason_counts[$reason] ?? 0; @endphp
+                        @if ($reason_count > 0)
+                            <a
+                                href="{{ route("backend.dashboard", array_filter(["excluded_search" => $excluded_search, "excluded_reason" => $reason])) }}#excluded"
+                                class="btn btn-sm {{ $excluded_reason === $reason ? "btn-primary" : "btn-outline-secondary" }}"
+                            >
+                                {{ $reason }}
+                                <span class="badge text-bg-light ms-1">{{ $reason_count }}</span>
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
+
+                {{-- Search --}}
                 <form method="GET" action="{{ route("backend.dashboard") }}" class="d-flex gap-2">
+                    @if ($excluded_reason !== "")
+                        <input type="hidden" name="excluded_reason" value="{{ $excluded_reason }}" />
+                    @endif
                     <input
                         type="search"
                         name="excluded_search"
@@ -56,7 +83,7 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                     @if ($excluded_search !== "")
-                        <a href="{{ route("backend.dashboard") }}" class="btn btn-outline-secondary btn-sm">
+                        <a href="{{ route("backend.dashboard", array_filter(["excluded_reason" => $excluded_reason])) }}#excluded" class="btn btn-outline-secondary btn-sm">
                             {{ __("Clear") }}
                         </a>
                     @endif

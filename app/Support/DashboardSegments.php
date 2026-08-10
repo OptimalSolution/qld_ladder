@@ -7,7 +7,9 @@ use App\Models\Club;
 use App\Services\RatingsService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class DashboardSegments
 {
@@ -171,6 +173,18 @@ class DashboardSegments
     }
 
     /**
+     * The distinct exclusion reasons in precedence order. Strings MUST match the CASE
+     * labels in {@see self::excludedBaseQuery()} exactly (used for filtering and counts).
+     */
+    public const EXCLUSION_REASONS = [
+        'On the exclusion list',
+        'No event in the eligibility window',
+        'Provisional rating (stdev >= 200)',
+        'Only 1 event since cutoff',
+        'No birth date',
+    ];
+
+    /**
      * Athletes that do NOT appear on the ladder, each tagged with the single primary
      * reason they were filtered out. Membership = the negation of {@see Athlete::scopeRecentlyPlayed()}
      * (exclusion list / no recent event / provisional rating / only 1 event) UNION athletes
@@ -179,12 +193,12 @@ class DashboardSegments
      * Reason precedence: exclusion list > no event in window > provisional rating >
      * only 1 event > no birth date.
      */
-    public static function excludedFromLadderQuery(?string $search = null): Builder
+    private static function excludedBaseQuery(?string $search = null): Builder
     {
         $window = now()->startOfYear()->subYears(1)->format('Y-m-d');
         $ageMin = self::ageMinimum()->format('Y-m-d');
         $ineligible = (new RatingsService())->ineligibleRatingsCentralIDList();
-        $placeholders = implode(',', array_fill(0, count($ineligible), '?'));
+        $placeholders = $ineligible === [] ? "''" : implode(',', array_fill(0, count($ineligible), '?'));
 
         $reasonCase = "CASE
             WHEN athletes.ratings_central_id IN ($placeholders) THEN 'On the exclusion list'
@@ -194,9 +208,11 @@ class DashboardSegments
             WHEN athletes.birth_date IS NULL OR athletes.birth_date = '' OR athletes.birth_date > ? THEN 'No birth date'
             ELSE NULL END";
 
+        $caseBindings = $ineligible === [] ? [$window, $ageMin] : array_merge($ineligible, [$window, $ageMin]);
+
         $query = Athlete::query()
             ->select('athletes.id', 'athletes.name', 'athletes.ratings_central_id')
-            ->selectRaw("$reasonCase as reason", array_merge($ineligible, [$window, $ageMin]))
+            ->selectRaw("$reasonCase as reason", $caseBindings)
             ->where(function (Builder $q) use ($window, $ageMin, $ineligible) {
                 $q->whereIn('ratings_central_id', $ineligible)
                     ->orWhereNull('last_played')
@@ -215,7 +231,38 @@ class DashboardSegments
             });
         }
 
+        return $query;
+    }
+
+    /**
+     * Paginatable list of excluded athletes, optionally narrowed to one reason. Wrapped in
+     * a subquery so the computed `reason` alias is filterable/sortable (SQLite can't use a
+     * SELECT alias in WHERE).
+     */
+    public static function excludedFromLadderQuery(?string $search = null, ?string $reason = null): QueryBuilder
+    {
+        $query = DB::query()->fromSub(self::excludedBaseQuery($search), 'excluded');
+
+        if ($reason !== null && $reason !== '') {
+            $query->where('reason', $reason);
+        }
+
         return $query->orderBy('name');
+    }
+
+    /**
+     * [reason => count] across the excluded set (respecting the search term), for the
+     * dashboard filter buttons.
+     *
+     * @return array<string, int>
+     */
+    public static function excludedReasonCounts(?string $search = null): array
+    {
+        return DB::query()->fromSub(self::excludedBaseQuery($search), 'excluded')
+            ->groupBy('reason')
+            ->selectRaw('reason, count(*) as aggregate')
+            ->pluck('aggregate', 'reason')
+            ->all();
     }
 
     public static function flushDashboardCountsCache(): void
