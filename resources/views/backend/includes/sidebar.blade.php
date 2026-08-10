@@ -92,6 +92,15 @@ $notifications_latest = optional($notifications)->take(5);
         <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
 
         @php
+            $text = __("Ladder exclusions");
+            $icon = "fa-solid fa-user-slash";
+            $permission = "edit_settings";
+            $url = route("backend.ladder-exclusions.index");
+        @endphp
+
+        <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
+
+        @php
             $module_name = "backups";
             $text = __("Backups");
             $icon = "fa-solid fa-box-archive";
